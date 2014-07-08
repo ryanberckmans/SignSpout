@@ -6,8 +6,8 @@ Business = DS.Model.extend
 
 Business.reopenClass
   FIXTURES: [
-    { name: "Larry's Giant Subs" }
-    { name: "Cricket Wireless" }
+    { id: "larry's-giant-subs", name: "Larry's Giant Subs" }
+    { id: "cricket-wireless", name: "Cricket Wireless" }
   ]
 
 `export default Business`
