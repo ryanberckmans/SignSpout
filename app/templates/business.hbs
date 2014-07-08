@@ -3,3 +3,10 @@
 {{id}}<br>
 {{name}}<br>
 {{address}}<br>
+
+<h2>Shifts</h2>
+<ul>
+  {{#each spinnerShifts}}
+    <li>Duration: {{durationInMinutes}}</li>
+  {{/each}}
+</ul>
