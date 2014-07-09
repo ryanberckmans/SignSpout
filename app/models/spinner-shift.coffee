@@ -2,7 +2,10 @@
 
 SpinnerShift = DS.Model.extend
   business: DS.belongsTo 'business', { async:true }
-  spinner: DS.belongsTo 'spinner', { async:true } 
+  spinner: DS.belongsTo 'spinner', { async:true }
+  date: DS.attr 'date'
+  startTime: DS.attr 'number' # start time of day in minutes, eg a start time of 13:11 = (60 * 13 + 11)
+  endTime: DS.attr 'number' # end time of day in minutes
   durationInMinutes: DS.attr 'number' # Will eventually have some combo of start-time, end-time, etc., for now just duration for luls
 
 SpinnerShift.reopenClass
