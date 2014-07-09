@@ -5,6 +5,7 @@ Router = Ember.Router.extend
 
 Router.map ->
   this.resource 'business', { path: '/business/:business_id' }
+  this.resource 'book-spinner', { path: '/business/:business_id/book-spinner' }
   this.resource 'spinner', { path: '/spinner/:spinner_id' }
 
 `export default Router`

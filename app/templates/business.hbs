@@ -4,9 +4,14 @@
 {{name}}<br>
 {{address}}<br>
 
+{{#link-to 'book-spinner' id}}Book Spinner{{/link-to}}<br>
+{{#link-to 'spinner' 'ryan-berckmans'}}Ryan{{/link-to}}<br>
+
 <h2>Shifts</h2>
+
+{{spinnerShifts.length}}
 <ul>
   {{#each spinnerShifts}}
-    <li>Duration: {{durationInMinutes}}, Spinner: {{spinner.firstName}} {{spinner.lastName}}</li>
+    <li>{{id}} Spinner: {{spinner.firstName}} {{spinner.lastName}}</li>
   {{/each}}
 </ul>
