@@ -12,6 +12,6 @@
 Shift count: {{spinnerShifts.length}}
 <ul>
   {{#each spinnerShifts}}
-    <li>{{id}} Spinner: {{spinner.firstName}} {{spinner.lastName}}</li>
+    <li>Date: {{date}} Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
   {{/each}}
 </ul>
