@@ -5,6 +5,13 @@ Spinner = DS.Model.extend
   firstName: DS.attr 'string'
   lastName: DS.attr 'string'
 
+  # Add a SpinnerShift to this Spinner. Mutate and save only this Spinner; the SpinnerShift is updated elsewhere.
+  addSpinnerShift: (spinnerShift) ->
+    _spinner = this
+    this.get('spinnerShifts').then (spinnerShifts) ->
+        spinnerShifts.addObject spinnerShift
+        _spinner.save()
+
 Spinner.reopenClass
   FIXTURES: [
     {
