@@ -5,6 +5,13 @@ Business = DS.Model.extend
   name: DS.attr 'string'
   address: DS.attr 'string'
 
+  # Add a SpinnerShift to this Business. Mutate and save only this Business; the SpinnerShift is updated elsewhere.
+  addSpinnerShift: (spinnerShift) ->
+    _business = this
+    this.get('spinnerShifts').then (spinnerShifts) ->
+        spinnerShifts.addObject spinnerShift
+        _business.save()
+
 Business.reopenClass
   FIXTURES: [
     { 

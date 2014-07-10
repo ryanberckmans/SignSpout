@@ -8,9 +8,7 @@ controller = Ember.ObjectController.extend
       newSpinnerShift.save()
 
       # I can use newSpinnerShift immediately, because the model is instantiated locally and given an id by emberfire adapter. Suppose so, anyway :0
-      business.get('spinnerShifts').then (spinnerShifts) ->
-        spinnerShifts.addObject newSpinnerShift
-        business.save()
+      business.addSpinnerShift newSpinnerShift
 
       this.transitionToRoute 'business', business      
       null
