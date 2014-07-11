@@ -4,3 +4,8 @@
 
 <h2>Available Shifts</h2>
 
+<ul>
+  {{#each}}
+    <li>Date: {{date}} Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{/each}}
+</ul>

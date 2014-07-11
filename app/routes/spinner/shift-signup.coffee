@@ -1,12 +1,11 @@
 `import Ember from 'ember'`
 
 route = Ember.Route.extend  
-  model: -> []
-    # WIP
-    #filteredSpinnerShifts = null
-    #this.store.find('spinner', params.spinner_id).then (spinner) ->
-      #filteredSpinnerShifts = this.store.filter 'spinner-shifts', {spinner: null}, (spinnerShift) ->
-       # spinner.canWorkShift spinnerShift
-    #return filteredSpinnerShifts
+  model: ->
+    spinner = this.modelFor 'spinner'
+    store = this.store
+    return store.find('spinner-shift').then ->
+      return store.filter 'spinner-shift', (spinnerShift) ->
+        return spinnerShift.get('spinner') == null && spinner.canWorkShift spinnerShift
 
 `export default route`
