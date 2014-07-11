@@ -12,20 +12,4 @@ Business = DS.Model.extend
         spinnerShifts.addObject spinnerShift
         _business.save()
 
-Business.reopenClass
-  FIXTURES: [
-    { 
-      id: "larry's-giant-subs"
-      name: "Larry's Giant Subs"
-      address: "4479 Deerwood Lake Pkwy #1, Jacksonville, FL 32216"
-      spinnerShifts: [3]
-    }
-    { 
-      id: "cricket-wireless"
-      name: "Cricket Wireless"
-      address: "8221 Southside Blvd #13, Jacksonville, FL 32256"
-      spinnerShifts: [1,2]
-    }
-  ]
-
 `export default Business`

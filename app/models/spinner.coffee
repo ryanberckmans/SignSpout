@@ -8,9 +8,9 @@ Spinner = DS.Model.extend
   # canWorkShift returns true if this Spinner is eligible to work the passed SpinnerShift. 
   # Eventually, ineligiblity may arise from any number of sources - one shift per day, no more than X hours per week, this guy can't work Tuesdays, spinner blacklisted by a company, etc.
   # For now, return true for each shift
-  canWorkShift: ((spinnerShift) ->
+  canWorkShift: (spinnerShift) ->
     spinnerShift.get 'date' # placeholder so coffeescript doesn't complain about unused spinnerShift
-    true).property()
+    true
 
   # Add a SpinnerShift to this Spinner. Mutate and save only this Spinner; the SpinnerShift is updated elsewhere.
   addSpinnerShift: (spinnerShift) ->
@@ -18,21 +18,5 @@ Spinner = DS.Model.extend
     this.get('spinnerShifts').then (spinnerShifts) ->
         spinnerShifts.addObject spinnerShift
         _spinner.save()
-
-Spinner.reopenClass
-  FIXTURES: [
-    {
-      id: 'ryan-berckmans'
-      spinnerShifts: [2,3]
-      firstName: 'Ryan'
-      lastName: 'Berckmans'
-    }
-    {
-      id: 'toby'
-      spinnerShifts: [1]
-      firstName: 'Toby'
-      lastName: 'Jones Berckmans'
-    }
-  ]
 
 `export default Spinner`
