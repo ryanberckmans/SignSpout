@@ -10,7 +10,7 @@ controller = Ember.ObjectController.extend
       # I can use newSpinnerShift immediately, because the model is instantiated locally and given an id by emberfire adapter. Suppose so, anyway :0
       business.addSpinnerShift newSpinnerShift
 
-      this.transitionToRoute 'business', business      
+      this.transitionToRoute 'business', business
       null
 
 `export default controller`

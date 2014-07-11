@@ -1,6 +1,8 @@
 `import DS from 'ember-data'`
 
 Spinner = DS.Model.extend
+  # Warning, when using belongsTo:hasMany, the belongsTo side must be set BEFORE the hasMany side.
+  # Ie, SpinnerShift.belongsTo Spinner must be set BEFORE Spinner.hasMany SpinnerShift.
   spinnerShifts: DS.hasMany 'spinner-shift', { async: true }
   firstName: DS.attr 'string'
   lastName: DS.attr 'string'
