@@ -17,7 +17,8 @@
     "ember-list-view": "*",
     "twix": "~0.5.0",
     "moment": "~2.7.0",
-    "velocity": "~0.5.3"
+    "velocity": "~0.5.3",
+    "fontawesome": "~4.1.0"
   },
   "resolutions": {
     "twix": "~0.5.0",
