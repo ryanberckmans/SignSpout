@@ -9,6 +9,8 @@ var App = Ember.Application.extend({
   Resolver: Resolver
 });
 
+loadInitializers(App, 'emberui');
+
 loadInitializers(App, 'sign-spinners');
 
 export default App;

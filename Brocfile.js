@@ -17,4 +17,23 @@ var app = new EmberApp();
 // please specify an object with the list of modules as keys
 // along with the exports of each module as its value.
 
+app.import('vendor/velocity/jquery.velocity.js');
+
+app.import('vendor/twix/bin/twix.js');
+
+app.import({
+  development: 'vendor/ember-list-view/list-view.js',
+  production: 'vendor/ember-list-view/list-view.prod.js',
+});
+
+app.import('vendor/moment/moment.js');
+
+app.import('vendor/emberui/dist/named-amd/emberui.js', {
+  exports: {
+    'emberui': ['default']
+  }
+});
+app.import('vendor/emberui/dist/emberui.css');
+app.import('vendor/emberui/dist/default-theme.css');
+
 module.exports = app.toTree();

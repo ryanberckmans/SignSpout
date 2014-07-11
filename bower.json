@@ -12,6 +12,17 @@
     "ember-load-initializers": "stefanpenner/ember-load-initializers#0.0.2",
     "ember-qunit-notifications": "^0.0.3",
     "ember-cli-test-loader": "rjackson/ember-cli-test-loader#0.0.2",
-    "emberfire": "~1.0.13"
+    "emberfire": "~1.0.13",
+    "emberui": "~0.2.3",
+    "ember-list-view": "*",
+    "twix": "~0.5.0",
+    "moment": "~2.7.0",
+    "velocity": "~0.5.3"
+  },
+  "resolutions": {
+    "twix": "~0.5.0",
+    "moment": "~2.7.0",
+    "jquery": ">= 1.7.0 <= 2.1.0",
+    "ember-resolver": "master"
   }
 }
