@@ -5,6 +5,13 @@ Spinner = DS.Model.extend
   firstName: DS.attr 'string'
   lastName: DS.attr 'string'
 
+  # canWorkShift returns true if this Spinner is eligible to work the passed SpinnerShift. 
+  # Eventually, ineligiblity may arise from any number of sources - one shift per day, no more than X hours per week, this guy can't work Tuesdays, spinner blacklisted by a company, etc.
+  # For now, return true for each shift
+  canWorkShift: ((spinnerShift) ->
+    spinnerShift.get 'date' # placeholder so coffeescript doesn't complain about unused spinnerShift
+    true).property()
+
   # Add a SpinnerShift to this Spinner. Mutate and save only this Spinner; the SpinnerShift is updated elsewhere.
   addSpinnerShift: (spinnerShift) ->
     _spinner = this
