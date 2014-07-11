@@ -1,9 +1,8 @@
 <h2>Book Spinner</h2>
 
-Id of newly-created, unsaved SpinnnerShift: {{id}}<br>
+new shift id: {{id}}<br>
+new shift date: {{date}}<br>
 
-<button {{action "saveSpinnerShift" }}>Book Spinner</button>
+{{eui-calendar selectAction='setSpinnerShiftDate' allowMultiple=false disablePast=true}}<br>
 
-<div>
-  {{eui-button label='Book Spinner'}}
-</div>
+{{eui-button label='Book Spinner' style='primary' size='large' action='saveSpinnerShift' icon='fa fa-check'}}
