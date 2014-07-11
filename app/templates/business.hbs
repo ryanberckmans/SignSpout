@@ -1,17 +1,6 @@
-<h1>BUSINESS</h1>
+<h1>Business</h1>
 
-{{id}}<br>
-{{name}}<br>
-{{address}}<br>
+{{#link-to 'business.index'}}<button>{{name}} Homepage</button>{{/link-to}}
+{{#link-to 'business.book-spinner'}}<button>Book Spinner</button>{{/link-to}}
 
-{{#link-to 'book-spinner' id}}Book Spinner{{/link-to}}<br>
-{{#link-to 'spinner' 'ryan-berckmans'}}Ryan{{/link-to}}<br>
-
-<h2>Shifts</h2>
-
-Shift count: {{spinnerShifts.length}}
-<ul>
-  {{#each spinnerShifts}}
-    <li>Date: {{date}} Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
-  {{/each}}
-</ul>
+{{outlet}}

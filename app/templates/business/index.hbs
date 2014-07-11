@@ -1,0 +1,14 @@
+<h2>business.index</h2>
+
+{{id}}<br>
+{{name}}<br>
+{{address}}<br>
+
+<h2>Shifts</h2>
+
+Shift count: {{spinnerShifts.length}}
+<ul>
+  {{#each spinnerShifts}}
+    <li>Date: {{date}} Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{/each}}
+</ul>

@@ -1,5 +1,4 @@
 `import DS from 'ember-data'`
-`import Ember from 'ember'`
 
 SpinnerShift = DS.Model.extend
   # Warning, when using belongsTo:hasMany, the belongsTo side must be set BEFORE the hasMany side.
