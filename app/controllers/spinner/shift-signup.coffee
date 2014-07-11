@@ -3,15 +3,11 @@
 controller = Ember.ArrayController.extend
   needs: 'spinner'
 
-  #actions:
-  #  signupForSpinnerShift: (spinner, spinnerShift) ->
-  #    # TODO - this action should be in BusinessRoute, where the business object is in scope.
-  #    spinner = null #
-  #    spinner.addSpinnerShift spinnerShift
-  #    spinnerShift.setSpinner spinner
-  #    this.transitionToRoute 'spinner', spinner
-  #    null
-
-#  availableShifts: 
+  actions:
+    signupForSpinnerShift: (spinnerShift) ->
+      spinner = this.get 'controllers.spinner.model'
+      spinner.addSpinnerShift spinnerShift
+      spinnerShift.setSpinner spinner
+      null
 
 `export default controller`
