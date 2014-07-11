@@ -1,4 +1,5 @@
 `import DS from 'ember-data'`
+`import Ember from 'ember'`
 
 SpinnerShift = DS.Model.extend
   business: DS.belongsTo 'business', { async:true }
@@ -8,7 +9,7 @@ SpinnerShift = DS.Model.extend
   # Set the Spinner for this SpinnerShift. Mutate and save only this SpinnerShift; the Spinner is updated elsewhere.
   # There isn't a corresponding setBusiness because SpinnerShift should always have its business set upon creation.
   setSpinner: (spinner) ->
-    this.assert 'spinnerShift already had a spinner', !this.spinner
+    Ember.assert 'spinnerShift already had a spinner', !this.spinner
     this.set 'spinner', spinner
     this.save()
 
