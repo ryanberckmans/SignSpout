@@ -1,13 +1,7 @@
-<h1>SPINNER</h1>
+<h1>Spinner</h1>
 
-Id: {{id}}<br>
-Name: {{firstName}} {{lastName}}<br>
+{{#link-to 'spinner.index'}}<button>spinner homepage</button>{{/link-to}}
+{{#link-to 'spinner.shift-signup'}}<button>get work</button>{{/link-to}}
 
-<h2>Your Shifts</h2>
 
-Shift count: {{spinnerShifts.length}}
-<ul>
-  {{#each spinnerShifts}}
-    <li>Date: {{date}}, Business: {{business.name}}</li>
-  {{/each}}
-</ul>
+{{outlet}}
