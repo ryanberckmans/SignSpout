@@ -8,7 +8,7 @@ SpinnerShift = DS.Model.extend
   # Set the Spinner for this SpinnerShift. Mutate and save only this SpinnerShift; the Spinner is updated elsewhere.
   # There isn't a corresponding setBusiness because SpinnerShift should always have its business set upon creation.
   setSpinner: (spinner) ->
-    Ember.assert 'spinnerShift already had a spinner', !this.spinner
+    this.assert 'spinnerShift already had a spinner', !this.spinner
     this.set 'spinner', spinner
     this.save()
 
