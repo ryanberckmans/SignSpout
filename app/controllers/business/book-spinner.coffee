@@ -4,8 +4,11 @@ controller = Ember.ObjectController.extend
   needs: 'business'
 
   actions:
-    setSpinnerShiftDate: (newSpinnerShiftMoment) ->
-      @get('model').set 'startDateAndTime', newSpinnerShiftMoment.toDate()
+    setSpinnerShiftDate: (newSpinnerShiftDateAsMoment) ->
+      @set 'selectedDateAsMoment', newSpinnerShiftDateAsMoment
+      startDateAndTime = moment(@get('model').get 'startDateAndTime')
+      startDateAndTime.date(newSpinnerShiftDateAsMoment.date());
+      @get('model').set 'startDateAndTime', startDateAndTime.toDate()
       null
 
     saveSpinnerShift: ->
@@ -22,22 +25,20 @@ controller = Ember.ObjectController.extend
       this.transitionToRoute 'business'
       null
 
-  # earliest(latest)ShiftStart(End)TimeOfDayAsMoment is the earliest (latest) time of day, on the currently selected day, that a shift may start (finish)
-  earliestShiftStartTimeOfDayAsMoment: (->
-    moment(@get 'startDateAndTime').hour(7).startOf 'hour' # ie, 7am is the earliest shift start time of day
-  ).property 'startDateAndTime'
+  ##############################
+  # Static Properties
 
-  latestShiftEndTimeOfDayAsMoment: (->
-    moment(@get 'startDateAndTime').hour(19).startOf 'hour' # ie, 7pm is the latest shift end time of day
-  ).property 'startDateAndTime'
-
+  earliestShiftStartTimeOfDayAsMoment: moment().hour(7).startOf 'hour' # ie, 7am is the earliest shift start time of day
+  
+  latestShiftEndTimeOfDayAsMoment: moment().hour(19).startOf 'hour' # ie, 7pm is the latest shift end time of day
+  
   shiftMinimumDurationInMinutes: 120
-
+  
   latestShiftStartTimeOfDayAsMoment: (->
     @get('latestShiftEndTimeOfDayAsMoment').subtract 'minutes', @get('shiftMinimumDurationInMinutes')
-    ).property 'latestShiftEndTimeOfDayAsMoment', 'shiftMinimumDurationInMinutes'
-
-  # Instead of allowing the user to type in a shift start time of day, or select any start time, only permit a set of start times, such as allowing shifts to start on the half hour.
+  ).property 'latestShiftEndTimeOfDayAsMoment', 'shiftMinimumDurationInMinutes'
+  
+  # Instead of allowing the user to type in a shift start time of day, or select an arbitrary start time, only permit a set of start times, such as shifts starting on the half hour
   shiftStartTimesOfDayAsMoments: (->
     shiftStartTimesOfDay = []
     latestShiftStartTimeOfDayAsMoment = @get 'latestShiftStartTimeOfDayAsMoment'
@@ -49,11 +50,28 @@ controller = Ember.ObjectController.extend
     shiftStartTimesOfDay
   ).property 'earliestShiftStartTimeOfDayAsMoment', 'latestShiftStartTimeOfDayAsMoment'
 
-  shiftEndTimesOfDayAsMoments: (->
-    shiftEndTimesOfDay = []
-  ).property() # TBD depends on currently selected start time, minimum duration and the latest shift end time
+  shiftStartTimesOfDayStrings: (->
+    shiftStartTimesOfDayStrings = []
+    shiftStartTimesOfDayStrings.push s.format('h:mma') for s in @get 'shiftStartTimesOfDayAsMoments'
+    shiftStartTimesOfDayStrings
+  ).property 'shiftStartTimesOfDayAsMoments'
 
-  soonestBookingDateAsMoment: moment().add('days', 1) # ie tomorrow is the soonest you can book a shift
-  latestBookingDateAsMoment: moment().add('days', 8) # ie a week from tomorrow is the soonest you can book a shift
+  ##############################
+  # Properties based on the time now. TBD - what happens if the user leaves the page open past midnight and then books a shift? Then they would be able to book a shift with less than 24 hours notice.
+
+  soonestBookingDateAsMoment: moment().add('days', 1).startOf 'day' # ie tomorrow is the soonest you can book a shift
+  latestBookingDateAsMoment: moment().add('days', 8).startOf 'day' # ie a week from tomorrow is the soonest you can book a shift
+
+  ##############################
+  # Current User Selections
+
+  selectedDateAsMoment: null #@get 'soonestBookingDateAsMoment' # ie, the default selected day is the soonest booking day
+  selectedStartTimeOfDayAsMoment: null #@get 'earliestShiftStartTimeOfDayAsMoment' # ie, the default start time of day is the earliest
+  selectedEndTimeOfDayAsMoment: null #@get 'latestShiftEndTimeOfDayAsMoment' # ie, the default end time of day is the latest
+
+  shiftEndTimesOfDayAsMoments: (->
+    # TBD - shiftEndTimesOfDayAsMoments populated dynamically, based on selectedStartTimeOfDayAsMoment
+    []
+  ).property() # TBD depends on currently selected start time, minimum duration and the latest shift end time
 
 `export default controller`

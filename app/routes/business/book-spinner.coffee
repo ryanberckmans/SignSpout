@@ -3,10 +3,10 @@
 route = Ember.Route.extend  
   model: ->
     business = @modelFor 'business'
-    @store.createRecord 'spinner-shift', { business: business }
+    @store.createRecord 'spinner-shift', { business: business, startDateAndTime: new Date() }
 
   setupController: (controller, model) ->
     @_super(controller, model)
-    controller.send 'setSpinnerShiftDate', moment() # TODO this should be a default timeOfDay for the earliest booking date, and it should set endTime too.
+    controller.send 'setSpinnerShiftDate', controller.get('soonestBookingDateAsMoment')
 
 `export default route`

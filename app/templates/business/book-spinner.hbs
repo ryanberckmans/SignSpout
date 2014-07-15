@@ -4,7 +4,9 @@ new shift id: {{id}}<br>
 new shift start date: {{startDateAndTime}}<br>
 new shift end date: {{endDateAndTime}}<br>
 
-{{eui-calendar selectAction='setSpinnerShiftDate' showNextMonth=false allowMultiple=false selectionBinding='soonestBookingDateAsMoment' maxPastDateBinding='soonestBookingDateAsMoment' maxFutureDateBinding='latestBookingDateAsMoment'}}<br>
+{{eui-calendar selectAction='setSpinnerShiftDate' showNextMonth=false allowMultiple=false selectionBinding='soonestBookingDateAsMoment' maxPastDateBinding='soonestBookingDateAsMoment' maxFutureDateBinding='latestBookingDateAsMoment'}}<br><br>
+
+{{view Ember.Select content=shiftStartTimesOfDayStrings}}
 
 
 <br>
@@ -12,4 +14,5 @@ Earliest shift start: {{earliestShiftStartTimeOfDayAsMoment}}<br>
 Latest shift end: {{latestShiftEndTimeOfDayAsMoment}}<br>
 Latest shirt start: {{latestShiftStartTimeOfDayAsMoment}}<br>
 Start times: {{shiftStartTimesOfDayAsMoments}}<br>
+End times: {{shiftEndTimesOfDayAsMoments}}<br>
 {{eui-button label='Book Spinner' style='primary' size='large' action='saveSpinnerShift' icon='fa fa-check'}}
