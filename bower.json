@@ -13,17 +13,16 @@
     "ember-qunit-notifications": "^0.0.3",
     "ember-cli-test-loader": "rjackson/ember-cli-test-loader#0.0.2",
     "emberfire": "~1.0.13",
-    "emberui": "~0.2.3",
+    "emberui": "master",
     "ember-list-view": "*",
-    "twix": "~0.5.0",
+    "twix": "~0.4.0",
     "moment": "~2.7.0",
     "velocity": "~0.5.3",
     "fontawesome": "~4.1.0"
   },
   "resolutions": {
-    "twix": "~0.5.0",
-    "moment": "~2.7.0",
-    "jquery": ">= 1.7.0 <= 2.1.0",
-    "ember-resolver": "master"
+    "ember-resolver": "master",
+    "moment": "2.7.0",
+    "jquery": "2.1.1"
   }
 }
