@@ -2,11 +2,11 @@
   "name": "sign-spinners",
   "dependencies": {
     "handlebars": "~1.3.0",
-    "jquery": "^1.11.1",
+    "jquery": "^2.1.1",
     "qunit": "~1.12.0",
     "ember-qunit": "~0.1.5",
     "ember": "1.5.1",
-    "ember-resolver": "~0.1.1",
+    "ember-resolver": "master",
     "loader": "stefanpenner/loader.js#1.0.0",
     "ember-cli-shims": "stefanpenner/ember-cli-shims#0.0.2",
     "ember-load-initializers": "stefanpenner/ember-load-initializers#0.0.2",
@@ -21,7 +21,6 @@
     "fontawesome": "~4.1.0"
   },
   "resolutions": {
-    "ember-resolver": "master",
     "moment": "2.7.0",
     "jquery": "2.1.1"
   }
