@@ -2,7 +2,11 @@
 
 route = Ember.Route.extend  
   model: ->
-    business = this.modelFor 'business'
-    this.store.createRecord 'spinner-shift', { business: business, date: new Date() }    
+    business = @modelFor 'business'
+    @store.createRecord 'spinner-shift', { business: business }
+
+  setupController: (controller, model) ->
+    @_super(controller, model)
+    controller.send 'setSpinnerShiftDate', controller.get('soonestBookingDateAsMoment')
 
 `export default route`
