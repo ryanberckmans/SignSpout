@@ -18,15 +18,6 @@ var app = new EmberApp();
 // please specify an object with the list of modules as keys
 // along with the exports of each module as its value.
 
-
-// Should probably be using pickFiles here, but I wanted to keep it simple, since I barely understand broccoli
-//app.import('vendor/fontawesome/css/font-awesome.css');
-//var fontTree = pickFiles('vendor/fontawesome/fonts', {
-//  srcDir: '/',
-//  files: ['fontawesome-webfont.eot','fontawesome-webfont.ttf','fontawesome-webfont.svg','fontawesome-webfont.woff', 'FontAwesome.otf'],
-//  destDir: '/assets/fonts'
-//});
-
 app.import('vendor/fontawesome/css/font-awesome.min.css');
 var fontawesomeFonts = PickFiles('vendor/fontawesome/fonts',{
   srcDir: '/',
