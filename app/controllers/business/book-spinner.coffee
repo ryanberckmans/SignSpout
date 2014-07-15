@@ -22,10 +22,32 @@ controller = Ember.ObjectController.extend
       this.transitionToRoute 'business'
       null
 
-  # earliestShiftStartAsMoment is the earliest time of day, on the currently selected day, that a shift may start
-  earliestShiftStartAsMoment: (->
-    moment(@get 'date').hour(7).startOf 'hour' # ie, 7am is the earliest start
-  ).property('date')
+  # earliest(latest)ShiftStart(End)TimeOfDayAsMoment is the earliest (latest) time of day, on the currently selected day, that a shift may start (finish)
+  earliestShiftStartTimeOfDayAsMoment: (->
+    moment(@get 'date').hour(7).startOf 'hour' # ie, 7am is the earliest shift start time of day
+  ).property 'date'
+
+  latestShiftEndTimeOfDayAsMoment: (->
+    moment(@get 'date').hour(19).startOf 'hour' # ie, 7pm is the latest shift end time of day
+  ).property 'date'
+
+  shiftMinimumDurationInMinutes: 120
+
+  latestShiftStartTimeOfDayAsMoment: (->
+    @get('latestShiftEndTimeOfDayAsMoment').subtract 'minutes', @get('shiftMinimumDurationInMinutes')
+    ).property 'latestShiftEndTimeOfDayAsMoment', 'shiftMinimumDurationInMinutes'
+
+  # Instead of allowing the user to type in a shift start time of day, or select any start time, only permit a set of start times, such as allowing shifts to start on the half hour.
+  shiftStartTimesOfDayAsMoments: (->
+    shiftStartTimesOfDay = []
+    latestShiftStartTimeOfDayAsMoment = @get 'latestShiftStartTimeOfDayAsMoment'
+    nextShiftStartTime = @get('earliestShiftStartTimeOfDayAsMoment').clone()
+    loop
+      shiftStartTimesOfDay.push nextShiftStartTime
+      nextShiftStartTime = nextShiftStartTime.clone().add 'minutes', 30 # ie allow shift start times in increments of 30 minutes
+      break unless nextShiftStartTime.isBefore(latestShiftStartTimeOfDayAsMoment) or nextShiftStartTime.isSame(latestShiftStartTimeOfDayAsMoment, 'minute')
+    shiftStartTimesOfDay
+  ).property 'earliestShiftStartTimeOfDayAsMoment', 'latestShiftStartTimeOfDayAsMoment'
 
   soonestBookingDateAsMoment: moment().add('days', 1) # ie tomorrow is the soonest you can book a shift
   latestBookingDateAsMoment: moment().add('days', 8) # ie a week from tomorrow is the soonest you can book a shift
