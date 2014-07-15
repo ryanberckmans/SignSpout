@@ -4,8 +4,8 @@ controller = Ember.ObjectController.extend
   needs: 'business'
 
   actions:
-    setSpinnerShiftDate: (moment) ->
-      this.get('model').set 'date', moment.toDate()
+    setSpinnerShiftDate: (newSpinnerShiftMoment) ->
+      this.get('model').set 'date', newSpinnerShiftMoment.toDate()
       null
 
     saveSpinnerShift: ->
