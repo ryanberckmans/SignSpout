@@ -5,7 +5,7 @@ controller = Ember.ObjectController.extend
 
   actions:
     setSpinnerShiftDate: (newSpinnerShiftMoment) ->
-      this.get('model').set 'date', newSpinnerShiftMoment.toDate()
+      @get('model').set 'startDateAndTime', newSpinnerShiftMoment.toDate()
       null
 
     saveSpinnerShift: ->
@@ -24,12 +24,12 @@ controller = Ember.ObjectController.extend
 
   # earliest(latest)ShiftStart(End)TimeOfDayAsMoment is the earliest (latest) time of day, on the currently selected day, that a shift may start (finish)
   earliestShiftStartTimeOfDayAsMoment: (->
-    moment(@get 'date').hour(7).startOf 'hour' # ie, 7am is the earliest shift start time of day
-  ).property 'date'
+    moment(@get 'startDateAndTime').hour(7).startOf 'hour' # ie, 7am is the earliest shift start time of day
+  ).property 'startDateAndTime'
 
   latestShiftEndTimeOfDayAsMoment: (->
-    moment(@get 'date').hour(19).startOf 'hour' # ie, 7pm is the latest shift end time of day
-  ).property 'date'
+    moment(@get 'startDateAndTime').hour(19).startOf 'hour' # ie, 7pm is the latest shift end time of day
+  ).property 'startDateAndTime'
 
   shiftMinimumDurationInMinutes: 120
 
@@ -48,6 +48,10 @@ controller = Ember.ObjectController.extend
       break unless nextShiftStartTime.isBefore(latestShiftStartTimeOfDayAsMoment) or nextShiftStartTime.isSame(latestShiftStartTimeOfDayAsMoment, 'minute')
     shiftStartTimesOfDay
   ).property 'earliestShiftStartTimeOfDayAsMoment', 'latestShiftStartTimeOfDayAsMoment'
+
+  shiftEndTimesOfDayAsMoments: (->
+    shiftEndTimesOfDay = []
+  ).property() # TBD depends on currently selected start time, minimum duration and the latest shift end time
 
   soonestBookingDateAsMoment: moment().add('days', 1) # ie tomorrow is the soonest you can book a shift
   latestBookingDateAsMoment: moment().add('days', 8) # ie a week from tomorrow is the soonest you can book a shift

@@ -1,7 +1,8 @@
 <h2>Book Spinner</h2>
 
 new shift id: {{id}}<br>
-new shift date: {{date}}<br>
+new shift start date: {{startDateAndTime}}<br>
+new shift end date: {{endDateAndTime}}<br>
 
 {{eui-calendar selectAction='setSpinnerShiftDate' showNextMonth=false allowMultiple=false selectionBinding='soonestBookingDateAsMoment' maxPastDateBinding='soonestBookingDateAsMoment' maxFutureDateBinding='latestBookingDateAsMoment'}}<br>
 
