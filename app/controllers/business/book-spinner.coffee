@@ -22,4 +22,12 @@ controller = Ember.ObjectController.extend
       this.transitionToRoute 'business'
       null
 
+  # earliestShiftStartAsMoment is the earliest time of day, on the currently selected day, that a shift may start
+  earliestShiftStartAsMoment: (->
+    moment(@get 'date').hour(7).startOf 'hour' # ie, 7am is the earliest start
+  ).property('date')
+
+  soonestBookingDateAsMoment: moment().add('days', 1) # ie tomorrow is the soonest you can book a shift
+  latestBookingDateAsMoment: moment().add('days', 8) # ie a week from tomorrow is the soonest you can book a shift
+
 `export default controller`
