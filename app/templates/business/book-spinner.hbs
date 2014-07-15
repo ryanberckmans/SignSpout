@@ -3,6 +3,9 @@
 new shift id: {{id}}<br>
 new shift date: {{date}}<br>
 
-{{eui-calendar selectAction='setSpinnerShiftDate' allowMultiple=false disablePast=true}}<br>
+{{eui-calendar selectAction='setSpinnerShiftDate' showNextMonth=false allowMultiple=false selectionBinding='soonestBookingDateAsMoment' maxPastDateBinding='soonestBookingDateAsMoment' maxFutureDateBinding='latestBookingDateAsMoment'}}<br>
 
+
+<br>
+Earliest shift start: {{earliestShiftStartAsMoment}}<br>
 {{eui-button label='Book Spinner' style='primary' size='large' action='saveSpinnerShift' icon='fa fa-check'}}
