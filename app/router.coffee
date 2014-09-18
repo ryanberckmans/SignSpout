@@ -1,7 +1,8 @@
 `import Ember from 'ember'`
+`import config from './config/environment'`
 
 Router = Ember.Router.extend
-  location: SignSpinnersENV.locationType
+  location: config.locationType
 
 Router.map ->
   this.resource 'business', { path: '/business/:business_id' }, ->
