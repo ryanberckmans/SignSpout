@@ -1,18 +1,59 @@
 <h2>Book Spinner</h2>
 
+<!-- {{eui-calendar selectAction='setSpinnerShiftDate' showNextMonth=false allowMultiple=false selectionBinding='soonestBookingDateAsMoment' maxPastDateBinding='soonestBookingDateAsMoment' maxFutureDateBinding='latestBookingDateAsMoment'}}<br><br> -->
+
+Date {{view Ember.Select content=bookingDatesStruct
+                    optionValuePath="content.dateAsMoment"
+                    optionLabelPath="content.dateAsString"
+                    value=selectedDateAsMoment}}
+<br>
+Start time {{view Ember.Select content=shiftStartTimesOfDayStruct 
+                    optionValuePath="content.timeAsMoment" 
+                    optionLabelPath="content.timeAsString"
+                    value=selectedStartTimeOfDayAsMoment}}
+<br>
+End time {{view Ember.Select content=shiftEndTimesOfDayStruct 
+                    optionValuePath="content.timeAsMoment" 
+                    optionLabelPath="content.timeAsString"
+                    value=selectedEndTimeOfDayAsMoment}}
+<br>
+
+{{eui-button label='Book Spinner' style='primary' size='large' action='saveSpinnerShift' icon='fa fa-check'}}
+
+<h3> Debug </h3>
+
+selected date: {{selectedDateAsMoment}}<br>
+selected start time: {{selectedStartTimeOfDayAsMoment}}<br>
+selected start date+time: {{selectedStartDateAndTimeAsMoment}}<br>
+selected end date+time: {{selectedEndDateAndTimeAsMoment}}<br>
 new shift id: {{id}}<br>
 new shift start date: {{startDateAndTime}}<br>
 new shift end date: {{endDateAndTime}}<br>
-
-{{eui-calendar selectAction='setSpinnerShiftDate' showNextMonth=false allowMultiple=false selectionBinding='soonestBookingDateAsMoment' maxPastDateBinding='soonestBookingDateAsMoment' maxFutureDateBinding='latestBookingDateAsMoment'}}<br><br>
-
-{{view Ember.Select content=shiftStartTimesOfDayStrings}}
-
-
-<br>
 Earliest shift start: {{earliestShiftStartTimeOfDayAsMoment}}<br>
 Latest shift end: {{latestShiftEndTimeOfDayAsMoment}}<br>
-Latest shirt start: {{latestShiftStartTimeOfDayAsMoment}}<br>
+Latest shift start: {{latestShiftStartTimeOfDayAsMoment}}<br>
 Start times: {{shiftStartTimesOfDayAsMoments}}<br>
 End times: {{shiftEndTimesOfDayAsMoments}}<br>
-{{eui-button label='Book Spinner' style='primary' size='large' action='saveSpinnerShift' icon='fa fa-check'}}
+<h4> Start Times struct </h4>
+  {{shiftStartTimesOfDayStruct.length}}
+  <ul>
+  {{#each obj in shiftStartTimesOfDayStruct}}
+    <li>{{obj.timeAsString}}, {{obj.timeAsMoment}}</li>
+  {{/each}}
+  </ul>
+
+<h4> End Times struct </h4>
+  {{shiftEndTimesOfDayStruct.length}}
+  <ul>
+  {{#each obj in shiftEndTimesOfDayStruct}}
+    <li>{{obj.timeAsString}}, {{obj.timeAsMoment}}</li>
+  {{/each}}
+  </ul>
+
+<h4> Dates struct </h4>
+  {{bookingDatesStruct.length}}
+  <ul>
+  {{#each obj in bookingDatesStruct}}
+    <li>{{obj.dateAsString}}, {{obj.dateAsMoment}}</li>
+  {{/each}}
+  </ul>
