@@ -9,7 +9,7 @@ controller = Ember.ArrayController.extend
       # WARNING WARNING
       # spinnerShift.setSpinner must occur BEFORE spinner.addSpinnerShift, or else setSpinner will fail silently and not update the SpinnerShift model
       # Ie, the belongsTo side must be set before the hasMany side.
-      spinnerShift.setSpinner spinner
+      return unless spinnerShift.setSpinner spinner # setSpinner() returns true if the spinner was successfully set
       # spinner.addSpinnerShift must occur AFTER spinnerShift.setSpinner
       spinner.addSpinnerShift spinnerShift
       null
