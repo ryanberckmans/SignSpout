@@ -38,19 +38,22 @@
       "business" : "cricket-wireless",
       "spinner" : "ryan-berckmans",
       "startDateAndTime" : "Wed, 16 Jul 2014 14:30:00 GMT",
-      "endDateAndTime" : "Wed, 16 Jul 2014 18:30:00 GMT"
+      "endDateAndTime" : "Wed, 16 Jul 2014 18:30:00 GMT",
+      "state" : "matched"
     }, 
     "abc1" : {
       "business" : "cricket-wireless",
       "spinner" : "toby",
       "startDateAndTime" : "Sat, 12 Jul 2014 11:30:00 GMT",
-      "endDateAndTime" : "Sat, 12 Jul 2014 16:30:00 GMT"
+      "endDateAndTime" : "Sat, 12 Jul 2014 16:30:00 GMT",
+      "state" : "matched"
     }, 
     "abc2": {
       "business" : "larry's-giant-subs",
       "spinner" : "toby",
       "startDateAndTime" : "Sat, 12 Jul 2014 07:30:00 GMT",
-      "endDateAndTime" : "Sat, 12 Jul 2014 11:30:00 GMT"
+      "endDateAndTime" : "Sat, 12 Jul 2014 11:30:00 GMT",
+      "state" : "matched"
     }
   }
 }
