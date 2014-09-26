@@ -28,5 +28,11 @@ BusinessController = Ember.ObjectController.extend ClockMixin,
     @get('matchedShifts').filter (spinnerShift) ->
       now.isAfter(moment(spinnerShift.get 'startDateAndTime')) && now.isBefore(moment(spinnerShift.get 'endDateAndTime'))
   ).property 'matchedShifts.@each', 'eachMinute'
+
+  postLiveShifts: (->
+    now = moment()
+    @get('matchedShifts').filter (spinnerShift) ->
+      now.isAfter(moment(spinnerShift.get 'endDateAndTime'))
+  ).property 'matchedShifts.@each', 'eachMinute'
   
 `export default BusinessController`

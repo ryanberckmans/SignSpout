@@ -25,6 +25,16 @@ Live count: {{controllers.business.liveShifts.length}}
   {{/each}}
 </ul>
 
+<h3>PostLive shifts</h3>
+
+PostLive count: {{controllers.business.postLiveShifts.length}}
+
+<ul>
+  {{#each controllers.business.postLiveShifts}}
+    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{/each}}
+</ul>
+
 <h3>Unmatched shifts</h3>
 
 Unmatched count: {{controllers.business.unmatchedShifts.length}}
