@@ -15,6 +15,16 @@ Shift count: {{spinnerShifts.length}}
 
 <h2>Debug</h2>
 
+<h3>Live shifts</h3>
+
+Live count: {{controllers.business.liveShifts.length}}
+
+<ul>
+  {{#each controllers.business.liveShifts}}
+    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{/each}}
+</ul>
+
 <h3>Unmatched shifts</h3>
 
 Unmatched count: {{controllers.business.unmatchedShifts.length}}
@@ -44,3 +54,9 @@ Cancelled count: {{controllers.business.cancelledShifts.length}}
     <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
   {{/each}}
 </ul>
+
+<h3>Clock</h3>
+
+Seconds: {{controllers.business.eachSecond}}<br>
+Minutes: {{controllers.business.eachMinute}}<br>
+Hours: {{controllers.business.eachHour}}<br>
