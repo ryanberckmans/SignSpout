@@ -105,6 +105,7 @@ controller = Ember.ObjectController.extend
   ##############################
   # Shift booking date
   #  TBD - what happens if the user leaves the page open past midnight and then books a shift? Then they would be able to book a shift with less than 24 hours notice.
+  #        --> can probbly have bookingDatesAsMoments depend on ClockMixin.eachMinute, and the dropdown boxes should update automatically.
   ##############################
 
   bookingDatesAsMoments: [ # ie tomorrow is the soonest you can book, and a week from tomorrow is the latest you can book a shift
