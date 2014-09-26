@@ -25,13 +25,14 @@ SpinnerShift = DS.Model.extend
   
   # Private. Transition this SpinnerShift to the error state.
   # DOES save()
+  # Returns false
   _error: (reason = "(no reason given)") ->
     currentState = @get 'state'
     Ember.Logger.warn "SpinnerShift " + @get('id') + " errored while in state " + currentState + ". Reason: " + reason
     @set 'state', STATE_ERROR
     @set 'errorReason', reason
     @save()
-    null
+    false
 
   # Convenience functions to query current state
   unmatched: ->
@@ -46,6 +47,7 @@ SpinnerShift = DS.Model.extend
   # Set the Spinner for this SpinnerShift. Mutate and save only this SpinnerShift; the Spinner is updated elsewhere.
   # There isn't a corresponding setBusiness because SpinnerShift should always have its business set upon creation.
   # Requires STATE_UNMATCHED or will transition to STATE_ERROR
+  # Returns true if the spinner was set successfully
   setSpinner: (spinner) ->
     # Embedding state logic in public action functions isn't a particularly scalable or maintainable way to manage a state machine,
     # However, it is a simple way to start
@@ -54,5 +56,15 @@ SpinnerShift = DS.Model.extend
     @set 'spinner', spinner
     @_change_state STATE_MATCHED, "matched to spinner " + spinner.get('id')
     @save()
+    true
+
+  # Cancel this shift
+  # Returns true if the shift was cancelled successfully
+  cancel: ->
+    unless @get('state') == STATE_UNMATCHED
+      return @_error 'attempted to cancel shift when state != STATE_UNMATCHED'
+    @_change_state STATE_CANCELLED, "cancelled shift by calling cancel()"
+    @save()
+    true
 
 `export default SpinnerShift`
