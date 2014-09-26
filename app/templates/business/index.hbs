@@ -12,3 +12,35 @@ Shift count: {{spinnerShifts.length}}
     <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
   {{/each}}
 </ul>
+
+<h2>Debug</h2>
+
+<h3>Unmatched shifts</h3>
+
+Unmatched count: {{controllers.business.unmatchedShifts.length}}
+
+<ul>
+  {{#each controllers.business.unmatchedShifts}}
+    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{/each}}
+</ul>
+
+<h3>Matched shifts</h3>
+
+Matched count: {{controllers.business.matchedShifts.length}}
+
+<ul>
+  {{#each controllers.business.matchedShifts}}
+    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{/each}}
+</ul>
+
+<h3>Cancelled shifts</h3>
+
+Cancelled count: {{controllers.business.cancelledShifts.length}}
+
+<ul>
+  {{#each controllers.business.cancelledShifts}}
+    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{/each}}
+</ul>
