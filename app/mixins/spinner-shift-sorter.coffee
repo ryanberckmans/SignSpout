@@ -29,6 +29,12 @@ SpinnerShiftSorterMixin = Ember.Mixin.create
         spinnerShift.errored()
   ).property 'spinnerShifts.@each.state'
 
+  upcomingShifts: (->
+    now = moment()
+    @get('matchedShifts').filter (spinnerShift) ->
+      now.isBefore(moment(spinnerShift.get 'startDateAndTime'))
+  ).property 'matchedShifts.@each', 'eachMinute'
+
   liveShifts: (->
     now = moment()
     @get('matchedShifts').filter (spinnerShift) ->

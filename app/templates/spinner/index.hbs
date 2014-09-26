@@ -34,6 +34,16 @@ PostLive count: {{controllers.spinner.postLiveShifts.length}}
   {{/each}}
 </ul>
 
+<h3>Upcoming shifts</h3>
+
+Upcoming count: {{controllers.spinner.upcomingShifts.length}}
+
+<ul>
+  {{#each controllers.spinner.upcomingShifts}}
+    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{/each}}
+</ul>
+
 <h3>Completed shifts</h3>
 
 Completed count: {{controllers.spinner.completedShifts.length}}
@@ -70,6 +80,16 @@ Cancelled count: {{controllers.spinner.cancelledShifts.length}} - Should always 
 
 <ul>
   {{#each controllers.spinner.cancelledShifts}}
+    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{/each}}
+</ul>
+
+<h3>Errored shifts</h3>
+
+Errored count: {{controllers.spinner.erroredShifts.length}}
+
+<ul>
+  {{#each controllers.spinner.erroredShifts}}
     <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
   {{/each}}
 </ul>
