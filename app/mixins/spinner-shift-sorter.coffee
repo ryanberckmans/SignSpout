@@ -14,6 +14,11 @@ SpinnerShiftSorterMixin = Ember.Mixin.create
         spinnerShift.matched()
   ).property 'spinnerShifts.@each.state'
 
+  completedShifts: (->
+    @get('spinnerShifts').filter (spinnerShift) ->
+        spinnerShift.completed()
+  ).property 'spinnerShifts.@each.state'
+
   cancelledShifts: (->
     @get('spinnerShifts').filter (spinnerShift) ->
         spinnerShift.cancelled()

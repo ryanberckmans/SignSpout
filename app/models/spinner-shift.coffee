@@ -3,6 +3,7 @@
 
 STATE_UNMATCHED = "unmatched"
 STATE_MATCHED   = "matched"
+STATE_COMPLETED = "completed"
 STATE_CANCELLED = "cancelled"
 STATE_ERROR     = "error"
 
@@ -15,6 +16,7 @@ SpinnerShift = DS.Model.extend
   endDateAndTime:   DS.attr 'date' # ISO 8601. Example of UTC date-time that is ISO 8601 compliant: "2014-07-16T14:30Z" is July 16th, 2014, at 2:30pm UTC.
   state: DS.attr 'string', { defaultValue: STATE_UNMATCHED }
   errorReason: DS.attr 'string' # only defined if state == STATE_ERROR
+  spinnerRating: DS.attr 'number' # Integer 1-5 star rating
 
   # Private. Change this SpinnerShift's state to the passed newState
   # does NOT save() - must be persisted elsewhere
@@ -39,6 +41,8 @@ SpinnerShift = DS.Model.extend
     @get('state') == STATE_UNMATCHED
   matched: ->
     @get('state') == STATE_MATCHED
+  completed: ->
+    @get('state') == STATE_COMPLETED
   cancelled: ->
     @get('state') == STATE_CANCELLED
   errored: ->
@@ -64,6 +68,26 @@ SpinnerShift = DS.Model.extend
     unless @get('state') == STATE_UNMATCHED
       return @_error 'attempted to cancel shift when state != STATE_UNMATCHED'
     @_change_state STATE_CANCELLED, "cancelled shift by calling cancel()"
+    @save()
+    true
+
+  # Set the spinnerRating, expects an integer 1 <= x <= 5 star rating
+  # Returns true if the spinnerRating was set successfully
+  setSpinnerRating: (spinnerRating) ->
+    unless @get('state') == STATE_MATCHED
+      return @_error 'attempted to set spinner rating when state != STATE_MATCHED'
+    unless moment().isAfter(moment(@get 'endDateAndTime'))
+      return @_error 'attempted to set spinner rating before shift was over'
+    if typeof spinnerRating == 'number'
+      Ember.Logger.debug "SpinnerShift " + @get('id') + " received setSpinnerRating " + spinnerRating
+      spinnerRating = Math.round(spinnerRating)
+      spinnerRating = 1 if spinnerRating < 1
+      spinnerRating = 5 if spinnerRating > 5
+    else
+      return @_error 'attempted to set spinner rating with a non-number'
+    @set 'spinnerRating', spinnerRating
+    Ember.Logger.info "SpinnerShift " + @get('id') + " set spinnerRating to " + spinnerRating
+    @_change_state STATE_COMPLETED, 'completed after spinnerRating was set'
     @save()
     true
 
