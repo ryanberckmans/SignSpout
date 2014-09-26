@@ -34,6 +34,16 @@ PostLive count: {{controllers.spinner.postLiveShifts.length}}
   {{/each}}
 </ul>
 
+<h3>Completed shifts</h3>
+
+Completed count: {{controllers.spinner.completedShifts.length}}
+
+<ul>
+  {{#each controllers.spinner.completedShifts}}
+    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}, SpinnerRating: {{spinnerRating}}</li>
+  {{/each}}
+</ul>
+
 <h3>Matched shifts</h3>
 
 Matched count: {{controllers.spinner.matchedShifts.length}}

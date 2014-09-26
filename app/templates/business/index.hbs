@@ -30,8 +30,21 @@ Live count: {{controllers.business.liveShifts.length}}
 PostLive count: {{controllers.business.postLiveShifts.length}}
 
 <ul>
-  {{#each controllers.business.postLiveShifts}}
-    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{#each shift in controllers.business.postLiveShifts}}
+    <li>
+      Start: {{shift.startDateAndTime}}, End: {{shift.endDateAndTime}}, State: {{shift.state}}, Spinner: {{#if shift.spinner}}{{shift.spinner.firstName}} {{shift.spinner.lastName}}{{else}}(no spinner yet){{/if}}<br>
+      How did it go? {{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=shift spinnerRating=1 icon='fa fa-star'}}{{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=shift spinnerRating=2 icon='fa fa-star'}}{{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=shift spinnerRating=3 icon='fa fa-star'}}{{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=shift spinnerRating=4 icon='fa fa-star'}}{{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=shift spinnerRating=5 icon='fa fa-star'}}
+    </li>
+  {{/each}}
+</ul>
+
+<h3>Completed shifts</h3>
+
+Completed count: {{controllers.business.completedShifts.length}}
+
+<ul>
+  {{#each controllers.business.completedShifts}}
+    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}, SpinnerRating: {{spinnerRating}}</li>
   {{/each}}
 </ul>
 
