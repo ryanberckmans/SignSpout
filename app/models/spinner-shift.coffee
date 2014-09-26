@@ -33,6 +33,16 @@ SpinnerShift = DS.Model.extend
     @save()
     null
 
+  # Convenience functions to query current state
+  unmatched: ->
+    @get('state') == STATE_UNMATCHED
+  matched: ->
+    @get('state') == STATE_MATCHED
+  cancelled: ->
+    @get('state') == STATE_CANCELLED
+  errored: ->
+    @get('state') == STATE_ERROR
+
   # Set the Spinner for this SpinnerShift. Mutate and save only this SpinnerShift; the Spinner is updated elsewhere.
   # There isn't a corresponding setBusiness because SpinnerShift should always have its business set upon creation.
   # Requires STATE_UNMATCHED or will transition to STATE_ERROR
