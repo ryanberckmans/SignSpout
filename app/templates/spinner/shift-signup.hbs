@@ -6,6 +6,6 @@
 
 <ul>
   {{#each availableShifts}}
-    <li><button {{action 'signupForSpinnerShift' this}}>Take Shift</button> Start: {{startDateAndTime}}, End: {{endDateAndTime}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+    <li><button {{action 'signupForSpinnerShift' this}}>Take Shift</button> Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
   {{/each}}
 </ul>
