@@ -11,3 +11,61 @@ Shift count: {{spinnerShifts.length}}
     <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, Business: {{business.name}}, State: {{state}}</li>
   {{/each}}
 </ul>
+
+<h2>Debug</h2>
+
+<h3>Live shifts</h3>
+
+Live count: {{controllers.spinner.liveShifts.length}}
+
+<ul>
+  {{#each controllers.spinner.liveShifts}}
+    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{/each}}
+</ul>
+
+<h3>PostLive shifts</h3>
+
+PostLive count: {{controllers.spinner.postLiveShifts.length}}
+
+<ul>
+  {{#each controllers.spinner.postLiveShifts}}
+    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{/each}}
+</ul>
+
+<h3>Matched shifts</h3>
+
+Matched count: {{controllers.spinner.matchedShifts.length}}
+
+<ul>
+  {{#each controllers.spinner.matchedShifts}}
+    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{/each}}
+</ul>
+
+<h3>Unmatched shifts</h3>
+
+Unmatched count: {{controllers.spinner.unmatchedShifts.length}} - Should always be zero since this is from spinner point of view
+
+<ul>
+  {{#each controllers.spinner.unmatchedShifts}}
+    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{/each}}
+</ul>
+
+<h3>Cancelled shifts</h3>
+
+Cancelled count: {{controllers.spinner.cancelledShifts.length}} - Should always be zero since, at this time, shifts may only be cancelled before a spinner is matched
+
+<ul>
+  {{#each controllers.spinner.cancelledShifts}}
+    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{/each}}
+</ul>
+
+<h3>Clock</h3>
+
+Seconds: {{controllers.spinner.eachSecond}}<br>
+Minutes: {{controllers.spinner.eachMinute}}<br>
+Hours: {{controllers.spinner.eachHour}}<br>
