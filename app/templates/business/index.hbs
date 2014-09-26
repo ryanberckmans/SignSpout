@@ -53,8 +53,11 @@ Completed count: {{controllers.business.completedShifts.length}}
 Unmatched count: {{controllers.business.unmatchedShifts.length}}
 
 <ul>
-  {{#each controllers.business.unmatchedShifts}}
-    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{#each shift in controllers.business.unmatchedShifts}}
+    <li>
+      Start: {{shift.startDateAndTime}}, End: {{shift.endDateAndTime}}, State: {{shift.state}}, Spinner: {{#if shift.spinner}}{{shift.spinner.firstName}} {{shift.spinner.lastName}}{{else}}(no spinner yet){{/if}}
+      {{eui-button action='cancelSpinnerShift' size='small' spinnerShift=shift label='Cancel'}}
+    </li>
   {{/each}}
 </ul>
 
