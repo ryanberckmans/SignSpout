@@ -22,4 +22,8 @@ AuthenticatedRouteMixin = Ember.Mixin.create
       @_super transition
       @requireAuthentication()
 
+  isAuthenticatedObserver: (->
+    @requireAuthentication()
+  ).observes 'auth.isAuthenticated'
+
 `export default AuthenticatedRouteMixin`
