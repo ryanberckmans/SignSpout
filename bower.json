@@ -19,7 +19,8 @@
     "twix": "~0.4.0",
     "moment": "~2.6.0",
     "velocity": "~1.0.0",
-    "fontawesome": "~4.1.0"
+    "fontawesome": "~4.1.0",
+    "firebase-simple-login": "~1.6.4"
   },
   "resolutions": {
     "ember-data": "1.0.0-beta.8"
