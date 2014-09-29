@@ -1,6 +1,10 @@
 <h2 id='title'>Welcome to Ember.js</h2>
 
 <a href="/"><button>Reload</button></a><br>
+{{#if auth.isAuthenticated}}
+  Logged in as {{auth.email}} with uid {{auth.uid}}
+  <button {{action 'logout'}}>Log out</button><br>
+{{/if}}
 {{#link-to 'index'}}<button>Index</button>{{/link-to}}
 {{#link-to 'business' "larry's-giant-subs"}}<button>Larry's Homepage</button>{{/link-to}}
 {{#link-to 'business' "cricket-wireless"}}<button>Cricket's Homepage</button>{{/link-to}}
