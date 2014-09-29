@@ -1,5 +1,9 @@
 
-<h1>PUBLIC INDEX</h1>
-This will be the public landing page
-(1) user isn't logged in, display landing page with login box
-(2) user logged in... should never hit this page.
+<h1>USS Sign Spinners :)</h1>
+
+{{#if auth.isAuthenticated}}
+  Logged in as {{auth.email}} with uid {{auth.uid}}
+  <button {{action 'logout'}}>Log out</button><br>
+{{/if}}
+
+<button {{action 'loginWithEmail'}}>Login with Email+Pass</button>
