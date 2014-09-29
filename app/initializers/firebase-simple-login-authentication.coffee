@@ -36,14 +36,13 @@ FirebaseSimpleLoginAuthenticator = Ember.Object.extend
           Ember.Logger.error 'FirebaseSimpleLoginAuthenticator error: ' + error
           # TBD handle every error code - https://www.firebase.com/docs/web/guide/user-auth.html#section-full-error
         else if authenticatedUser
+          Ember.Logger.info 'FirebaseSimpleLogin authenticated ' + authenticatedUser.uid + ', provider: ' + authenticatedUser.provider
           _this.set 'isAuthenticated', true
           _this.set '_firebaseSimpleLoginUserObject', authenticatedUser
-          Ember.Logger.info 'FirebaseSimpleLogin authenticated ' + authenticatedUser.uid + ', provider: ' + authenticatedUser.provider
-          # TBD - link uid
         else
+          Ember.Logger.info 'FirebaseSimpleLogin logged out'
           _this.set 'isAuthenticated', false
           _this.set '_firebaseSimpleLoginUserObject', null
-          Ember.Logger.info 'FirebaseSimpleLogin logged out'
         
         # See above note on authenticationInProgress
         if _this.get 'authenticationInProgress'
@@ -58,6 +57,7 @@ FirebaseSimpleLoginAuthenticator = Ember.Object.extend
     if @get '_firebaseSimpleLoginUserObject'
       Ember.Logger.error 'expected _firebaseSimpleLoginUserObject to be null on loginWithEmail'
       return
+    Ember.Logger.debug 'calling FirebaseSimpleLogin.login with email+password'
     @_firebaseSimpleLoginClient.login 'password', email: email, password: password
 
   logout: ->
@@ -67,6 +67,7 @@ FirebaseSimpleLoginAuthenticator = Ember.Object.extend
     unless @get '_firebaseSimpleLoginUserObject'
       Ember.Logger.error 'expected _firebaseSimpleLoginUserObject to exist on logout'
       return
+    Ember.Logger.debug 'calling FirebaseSimpleLogin.logout'
     @_firebaseSimpleLoginClient.logout()
 
 FirebaseSimpleLoginAuthenticationInitializer =
