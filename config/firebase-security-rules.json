@@ -1,22 +1,29 @@
 {
+  // Global read/write Firebase rules for quick paste
+  // DO NOT UNCOMMENT. Just for pasting into firebase gui when uploading test data { "rules": { ".read": true, ".write": true } }
+  // Production rules follow...
+
   "rules": {
     "authentication": {
-      "business": {
-        "$uid": {
-          // allow authenticated user to create his user record, cannot be modified or deleted
-          ".write": "!data.exists() && newData.exists() && $uid === auth.uid",
-          ".validate": "newData.hasChildren(['business_id', 'email'])",
+      "$uid": {
+        // allow authenticated user to create his user record, cannot be modified or deleted
+        ".write": "!data.exists() && newData.exists() && $uid === auth.uid",
+        // user must have email, and at least one of business_id and spinner_id (and possibly both)
+        ".validate": "newData.child('email').exists() && (newData.child('business_id').exists() || newData.child('spinner_id').exists())",
 
-          "business_id": {
-            ".validate": "root.child('businesses/'+newData.val()).exists()" // TODO - nothing prevents two users from pointing to the same business, ie a new user snagging a business
-          },
+        "business_id": {
+          ".validate": "root.child('businesses/'+newData.val()).exists()" // TODO - nothing prevents two users from pointing to the same business, ie a new user snagging a business
+        },
 
-          "email": {
-            ".validate": "newData.val() === auth.email"
-          },
+        "spinner_id": {
+          ".validate": "root.child('spinners/'+newData.val()).exists()" // TODO - nothing prevents two users from pointing to the same spinner, ie a new user snagging a spinner
+        },
 
-          "$other": { ".validate": false }
-        }
+        "email": {
+          ".validate": "newData.val() === auth.email"
+        },
+
+        "$other": { ".validate": false }
       }
     },
 
@@ -27,22 +34,22 @@
         ".validate": "newData.hasChildren(['name', 'address'])",
 
         "name": {
-          ".write": "!data.exists() || $business_id === root.child('authentication/business/'+auth.uid+'/business_id').val()",
+          ".write": "!data.exists() || $business_id === root.child('authentication/'+auth.uid+'/business_id').val()",
           ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 45"
         },
 
         "address": {
-          ".write": "!data.exists() || $business_id === root.child('authentication/business/'+auth.uid+'/business_id').val()",
+          ".write": "!data.exists() || $business_id === root.child('authentication/'+auth.uid+'/business_id').val()",
           ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 100"
         },
 
         "spinnerShifts": {
           "$spinner_shift_id": {
-            // The absence of a business_id .write rule is specifically so spinnerShifts cannot be deleted.
+            // The absence of a business_id .write rule is specifically so spinnerShifts cannot be deleted. Whereas we eventually want to allow updates for business name and address?? Why did I do this again?
             // 1. allow creates, cannot modify or delete
             // 2. by the owning business
             // 3. where spinner_shift_id is a valid SpinnerShift
-            ".write": "!data.exists() && newData.exists() && $business_id === root.child('authentication/business/'+auth.uid+'/business_id').val() && root.child('spinnerShifts/'+$spinner_shift_id).exists()",
+            ".write": "!data.exists() && newData.exists() && $business_id === root.child('authentication/'+auth.uid+'/business_id').val() && root.child('spinnerShifts/'+$spinner_shift_id).exists()",
             ".validate": "newData.isBoolean()"
           }
         },
@@ -55,11 +62,32 @@
       ".read": "true",
 
       "$spinner_shift_id": {
+        // Business updates to this SpinnerShift
         // 1. create, but not update or delete, if the user owns this business
         // 2. delete if the user owns this business, and this business isn't associated with this spinnerShift, ie a dangling reference that needs to be cleaned up
-        ".write": "(!data.exists() && newData.exists() && newData.child('business').val() === root.child('authentication/business/'+auth.uid+'/business_id').val()) ||
-                   (data.exists() && !newData.exists() && data.child('business').val() === root.child('authentication/business/'+auth.uid+'/business_id').val() &&
-                      !root.child('businesses/'+data.child('business').val()+'/spinnerShifts/'+$spinner_shift_id).exists())",
+        //
+        // OR
+        //
+        // Spinner may update a SpinnerShift if all of these are true
+        // 1. old state is unmatched
+        // 2. new state is matched
+        // 3. user is a spinner
+        // 4. new spinner is user
+        // 5. business, startDateAndTime, endDateAndTime are not modified. 
+        // 6. spinnerRating doesn't exist
+        ".write": "((!data.exists() && newData.exists() && newData.child('business').val() === root.child('authentication/'+auth.uid+'/business_id').val()) ||
+                   (data.exists() && !newData.exists() && data.child('business').val() === root.child('authentication/'+auth.uid+'/business_id').val() &&
+                      !root.child('businesses/'+data.child('business').val()+'/spinnerShifts/'+$spinner_shift_id).exists()))
+                                              ||
+                                        (data.child('state').val() === 'unmatched' &&
+                                         newData.child('state').isString() && 
+                                         newData.child('state').val() === 'matched' &&
+                                         root.child('authentication/'+auth.uid+'/spinner_id').exists() &&
+                                         newData.child('spinner').val() === root.child('authentication/'+auth.uid+'/spinner_id').val() &&
+                                         data.child('startDateAndTime').val() === newData.child('startDateAndTime').val() &&
+                                         data.child('endDateAndTime').val()   === newData.child('endDateAndTime').val() &&
+                                         data.child('business').val()         === newData.child('business').val() &&
+                                         !newData.child('spinnerRating').exists())",
         ".validate": "newData.hasChildren(['business', 'startDateAndTime', 'endDateAndTime', 'state'])",
 
         "business": {
@@ -75,17 +103,19 @@
         },
 
         "state": {
-          // TBD allow writes if user is a spinner and is setting the state from "unmatched" to "matched"
-          ".validate": "newData.isString() && newData.val().length > 0" // TBD - validate state against whitelist of states
+          ".validate": "newData.isString() && (newData.val() === 'unmatched' ||
+                                               newData.val() === 'matched'   ||
+                                               newData.val() === 'completed' ||
+                                               newData.val() === 'cancelled' ||
+                                               newData.val() === 'error')" // TBD - validate that matched/completed have a spinner; cancelled/unmatched has no spinner
         },
 
         "spinner": {
-          // TBD allow writes if user is a spinner and is matching himself with this shift
           ".validate": "newData.isString() && newData.val().length > 0" // TBD - didn't integrate Spinners yet
         },
 
         "spinnerRating": {
-          ".validate": "newData.isNumber()" // TBD validate against whitelist of 1-5 star ratings
+          ".validate": "newData.isNumber()" // TBD validate against whitelist of 1-5 star ratings. Only allow setting this if the shift is matched.
         },
 
         "$other": { ".validate": false }
@@ -108,7 +138,9 @@
         },
 
         "spinnerShifts": {
-          ".validate": "newData.isBoolean()"
+          "$spinner_shift_id": {
+            ".validate": "newData.isBoolean()"
+          }
         },
 
         "$other": { ".validate": false }
