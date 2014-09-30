@@ -20,14 +20,14 @@ controller = Ember.ObjectController.extend
 
       onAssociationFail = (reason) ->
         # When failing to associate a new SpinnerShift with its Business, we must delete the new SpinnerShift avoid inconsistent state
-        Ember.Logger.warn 'book-spinner: failed to associate new spinnerShift ' + newSpinnerShift.id + ' with business ' + business.id + '. deleting this spinnerShift'
+        Ember.Logger.warn 'book-spinner: failed to associate new spinnerShift ' + newSpinnerShift.id + ' with business ' + business.id + ". deleting this spinnerShift. This error isn't rethrown and is trapped here. Reason: " + reason
         onDestroySuccess = ->
           Ember.Logger.info 'book-spinner: destroyed unassociated spinnerShift ' + newSpinnerShift.id
+          _this.set 'bookSpinnerButtonIsDisabled', false
         onDestroyFail = (failedToDestroyReason) ->
-          Ember.Logger.error 'book-spinner: failed destroy unassociated spinnerShift ' + newSpinnerShift.id
+          Ember.Logger.error 'book-spinner: failed destroy unassociated spinnerShift ' + newSpinnerShift.id + '. This error is intentionally rethrown, which will break the UI right now, because this should not happen.'
           throw failedToDestroyReason
         newSpinnerShift.destroyRecord().then onDestroySuccess, onDestroyFail
-        throw reason
       
       onSpinnerShiftCreateSuccess = ->
         Ember.Logger.info 'book-spinner: created new spinnerShift' + newSpinnerShift.id + '. attempting to associate it with business ' + business.id
@@ -37,8 +37,8 @@ controller = Ember.ObjectController.extend
         business.addSpinnerShift(newSpinnerShift).then onAssociationSuccess, onAssociationFail
 
       onSpinnerShiftCreateFail = (reason) ->
-        Ember.Logger.warn 'book-spinner: failed to create new spinner shift, most likely this user ' + _this.get('auth.uid') + ' isn\'t the owner of business ' + business.id
-        throw reason
+        Ember.Logger.warn 'book-spinner: failed to create new spinner shift, most likely this user ' + _this.get('auth.uid') + ' isn\'t the owner of business ' + business.id + ". This error isn't rethrown and is trapped here. Reason: " + reason
+        _this.set 'bookSpinnerButtonIsDisabled', false
 
       newSpinnerShift.save().then onSpinnerShiftCreateSuccess, onSpinnerShiftCreateFail
 
