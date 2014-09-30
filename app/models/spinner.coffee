@@ -19,10 +19,14 @@ Spinner = DS.Model.extend
       !alreadyWorkingThatDay
 
   # Add a SpinnerShift to this Spinner. Mutate and save only this Spinner; the SpinnerShift is updated elsewhere.
+  # @return {Promise} resolves when the passed spinnerShift is added to this Spinner
   addSpinnerShift: (spinnerShift) ->
     _spinner = this
     @get('spinnerShifts').then (spinnerShifts) ->
         spinnerShifts.addObject spinnerShift
-        _spinner.save()
+        _spinner.save().catch (reason) ->
+          Ember.Logger.error "Spinner " + _spinner.get('id') + " save() failed on addSpinnerShift with spinnerShift " + spinnerShift.get('id') + " . Rolling back this Spinner. Reason " + reason
+          _spinner.rollback()
+          throw reason
 
 `export default Spinner`
