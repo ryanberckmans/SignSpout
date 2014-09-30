@@ -1,10 +1,9 @@
 {
   "authentication" : {
-    "business": {
-      "simplelogin:1": {
-        "business_id": "cricket-wireless",
-        "email": "ryanberckmans@gmail.com"
-      }
+    "simplelogin:1": {
+      "business_id": "cricket-wireless",
+      "spinner_id": "ryan-berckmans",
+      "email": "ryanberckmans@gmail.com"
     }
   },
   "businesses" : {
