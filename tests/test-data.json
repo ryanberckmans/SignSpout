@@ -12,14 +12,16 @@
       "name" : "Cricket Wireless",
       "spinnerShifts" : {
         "abc0" : true,
-        "abc1" : true
+        "abc1" : true,
+        "abc4" : true
       }
     },
     "larry's-giant-subs" : {
       "address" : "4479 Deerwood Lake Pkwy #1, Jacksonville, FL 32216",
       "name" : "Larry's Giant Subs",
       "spinnerShifts" : {
-        "abc2" : true
+        "abc2" : true,
+        "abc3" : true
       }
     }
   },
@@ -61,6 +63,18 @@
       "startDateAndTime" : "Sat, 12 Jul 2014 07:30:00 GMT",
       "endDateAndTime" : "Sat, 12 Jul 2014 11:30:00 GMT",
       "state" : "matched"
+    },
+    "abc3": {
+      "business" : "larry's-giant-subs",
+      "startDateAndTime" : "Sat, 19 Jul 2014 08:30:00 GMT",
+      "endDateAndTime" : "Sat, 19 Jul 2014 11:30:00 GMT",
+      "state" : "unmatched"
+    },
+    "abc4": {
+      "business" : "cricket-wireless",
+      "startDateAndTime" : "Sat, 19 Jul 2014 10:00:00 GMT",
+      "endDateAndTime" : "Sat, 19 Jul 2014 13:30:00 GMT",
+      "state" : "unmatched"
     }
   }
 }
