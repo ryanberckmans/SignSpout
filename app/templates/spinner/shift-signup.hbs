@@ -5,7 +5,12 @@
 <h2>Available Shifts</h2>
 
 <ul>
-  {{#each availableShifts}}
-    <li><button {{action 'signupForSpinnerShift' this}}>Take Shift</button> Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  {{#each spinnerShift in availableShifts}}
+    <li>
+      <button {{bind-attr disabled=areTakeShiftButtonsDisabled}} {{action 'signupForSpinnerShift' spinnerShift}}>
+      {{#with spinnerShift}}
+        Take Shift</button> Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}
+      {{/with}}
+    </li>
   {{/each}}
 </ul>
