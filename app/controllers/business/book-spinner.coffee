@@ -22,8 +22,8 @@ controller = Ember.ObjectController.extend
         # When failing to associate a new SpinnerShift with its Business, we must delete the new SpinnerShift avoid inconsistent state
         Ember.Logger.warn 'book-spinner: failed to associate new spinnerShift ' + newSpinnerShift.id + ' with business ' + business.id + ". deleting this spinnerShift. This error isn't rethrown and is trapped here. Reason: " + reason
         onDestroySuccess = ->
-          Ember.Logger.info 'book-spinner: destroyed unassociated spinnerShift ' + newSpinnerShift.id
-          _this.set 'bookSpinnerButtonIsDisabled', false
+          Ember.Logger.warn 'book-spinner: destroyed unassociated spinnerShift ' + newSpinnerShift.id + '. Transitioning to business route, although no new SpinnerShift was created.'
+          _this.transitionToRoute 'business'
         onDestroyFail = (failedToDestroyReason) ->
           Ember.Logger.error 'book-spinner: failed destroy unassociated spinnerShift ' + newSpinnerShift.id + '. This error is intentionally rethrown, which will break the UI right now, because this should not happen.'
           throw failedToDestroyReason
