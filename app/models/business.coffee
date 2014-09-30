@@ -13,6 +13,9 @@ Business = DS.Model.extend
     _business = this
     this.get('spinnerShifts').then (spinnerShifts) ->
         spinnerShifts.addObject spinnerShift
-        _business.save()
+        _business.save().catch (reason) ->
+          Ember.Logger.error "Business " + _business.get('id') + " save() failed on addSpinnerShift with spinnerShift " + spinnerShift.get('id') + ". Rolling back this Business. Reason " + reason
+          _business.rollback()
+          throw reason
 
 `export default Business`
