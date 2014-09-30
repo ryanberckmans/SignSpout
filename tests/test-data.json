@@ -1,4 +1,12 @@
 {
+  "authentication" : {
+    "business": {
+      "simplelogin:1": {
+        "business_id": "cricket-wireless",
+        "email": "ryanberckmans@gmail.com"
+      }
+    }
+  },
   "businesses" : {
     "cricket-wireless" : {
       "address" : "8221 Southside Blvd #13, Jacksonville, FL 32256",
