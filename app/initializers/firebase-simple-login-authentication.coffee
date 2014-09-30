@@ -4,8 +4,8 @@
 FirebaseSimpleLoginAuthenticator = Ember.Object.extend
   # Public API
   isAuthenticated: false
-  email: Ember.computed.alias '_firebaseSimpleLoginUserObject.email'
-  uid:   Ember.computed.alias '_firebaseSimpleLoginUserObject.uid'
+  email: Ember.computed.oneWay '_firebaseSimpleLoginUserObject.email'
+  uid:   Ember.computed.oneWay '_firebaseSimpleLoginUserObject.uid'
 
   # Public. Ember.RSVP.Promise. authenticationInProgress allows clients to wait for FirebaseSimpleLogin to establish a session before relying on the value of isAuthenticated
   #
