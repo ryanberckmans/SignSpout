@@ -27,14 +27,17 @@ SpinnerShift = DS.Model.extend
   
   # Private. Transition this SpinnerShift to the error state.
   # DOES save()
-  # Returns false
+  # @return {Promise} resolves when this SpinnerShift has been saved in the error state
   _error: (reason = "(no reason given)") ->
     currentState = @get 'state'
     Ember.Logger.warn "SpinnerShift " + @get('id') + " errored while in state " + currentState + ". Reason: " + reason
     @set 'state', STATE_ERROR
     @set 'errorReason', reason
-    @save()
-    false
+    _this = this
+    @save().catch (reason) ->
+      Ember.Logger.error "SpinnerShift " + _this.get('id') + " save() failed on transition to the error state. Rolling back this SpinnerShift. Reason: " + reason
+      _this.rollback()
+      throw reason
 
   # Convenience functions to query current state
   unmatched: ->
@@ -51,7 +54,7 @@ SpinnerShift = DS.Model.extend
   # Set the Spinner for this SpinnerShift. Mutate and save only this SpinnerShift; the Spinner is updated elsewhere.
   # There isn't a corresponding setBusiness because SpinnerShift should always have its business set upon creation.
   # Requires STATE_UNMATCHED or will transition to STATE_ERROR
-  # Returns true if the spinner was set successfully
+  # @return {Promise} resolves when the spinner has been set or when state has been set to error
   setSpinner: (spinner) ->
     # Embedding state logic in public action functions isn't a particularly scalable or maintainable way to manage a state machine,
     # However, it is a simple way to start
@@ -59,20 +62,26 @@ SpinnerShift = DS.Model.extend
       return @_error 'attempted to set spinner when state != STATE_UNMATCHED'
     @set 'spinner', spinner
     @_change_state STATE_MATCHED, "matched to spinner " + spinner.get('id')
-    @save()
-    true
+    _this = this
+    @save().catch (reason) ->
+      Ember.Logger.error "SpinnerShift " + _this.get('id') + " save() failed on setSpinner with spinner " + spinner.get('id') + ". Rolling back this SpinnerShift. Reason " + reason
+      _this.rollback()
+      throw reason
 
   # Cancel this shift
-  # Returns true if the shift was cancelled successfully
+  # @return {Promise} resolves when state has been set to cancelled or error
   cancel: ->
     unless @get('state') == STATE_UNMATCHED
       return @_error 'attempted to cancel shift when state != STATE_UNMATCHED'
     @_change_state STATE_CANCELLED, "cancelled shift by calling cancel()"
-    @save()
-    true
+    _this = this
+    @save().catch (reason) ->
+      Ember.Logger.error "SpinnerShift " + _this.get('id') + " save() failed on cancel. Rolling back this SpinnerShift. Reason " + reason
+      _this.rollback()
+      throw reason
 
   # Set the spinnerRating, expects an integer 1 <= x <= 5 star rating
-  # Returns true if the spinnerRating was set successfully
+  # @return {Promise} resolves when the rating has been set or state set to error
   setSpinnerRating: (spinnerRating) ->
     unless @get('state') == STATE_MATCHED
       return @_error 'attempted to set spinner rating when state != STATE_MATCHED'
@@ -88,7 +97,10 @@ SpinnerShift = DS.Model.extend
     @set 'spinnerRating', spinnerRating
     Ember.Logger.info "SpinnerShift " + @get('id') + " set spinnerRating to " + spinnerRating
     @_change_state STATE_COMPLETED, 'completed after spinnerRating was set'
-    @save()
-    true
+    _this = this
+    @save().catch (reason) ->
+      Ember.Logger.error "SpinnerShift " + _this.get('id') + " save() failed on setSpinnerRating. Rolling back this SpinnerShift. Reason " + reason
+      _this.rollback()
+      throw reason
 
 `export default SpinnerShift`
