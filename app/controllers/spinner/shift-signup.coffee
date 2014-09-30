@@ -14,8 +14,8 @@ controller = Ember.ArrayController.extend
         _this.set 'areTakeShiftButtonsDisabled', false
 
       onAddSpinnerShiftFail = (reason) ->
-        Ember.Logger.error "shift-signup: spinner " + spinner.id + " failed to add spinnerShift " + spinnerShift.id + ". The spinner was already set on the spinnerShift, and we're now inconsistent. This error cannot be recovered from right now, since SpinnerShift has no api to delete a matched spinner and revert to unmatched. What I really need here is a transaction() on the Spinner and SpinnerShift. Emberfire doesn't support transactions as of 2014/10."
-        throw reason
+        Ember.Logger.error "shift-signup: spinner " + spinner.id + " failed to add spinnerShift " + spinnerShift.id + ". The spinner was already set on the spinnerShift, and we're now inconsistent. This error cannot be recovered from right now, since SpinnerShift has no api to delete a matched spinner and revert to unmatched. What I really need here is a transaction() on the Spinner and SpinnerShift. Emberfire doesn't support transactions as of 2014/10. This error isn't rethrown and is trapped here. Reason: " + reason
+        _this.set 'areTakeShiftButtonsDisabled', false
 
       onSetSpinnerSuccess = ->
         Ember.Logger.info "shift-signup: spinnerShift " + spinnerShift.id + " had spinner set to " + spinner.id
@@ -23,8 +23,8 @@ controller = Ember.ArrayController.extend
         spinner.addSpinnerShift(spinnerShift).then onAddSpinnerShiftSuccess, onAddSpinnerShiftFail
 
       onSetSpinnerFail = (reason) ->
-        Ember.Logger.error "shift-signup: spinnerShift " + spinnerShift.id + " failed to set spinner " + spinner.id
-        throw reason
+        Ember.Logger.error "shift-signup: spinnerShift " + spinnerShift.id + " failed to set spinner " + spinner.id + ". This error isn't rethrown and is trapped here. Reason: " + reason
+        _this.set 'areTakeShiftButtonsDisabled', false
 
       # WARNING WARNING
       # spinnerShift.setSpinner must occur BEFORE spinner.addSpinnerShift, or else setSpinner will fail silently and not update the SpinnerShift model
