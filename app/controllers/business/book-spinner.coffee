@@ -5,17 +5,47 @@ controller = Ember.ObjectController.extend
 
   actions:
     saveSpinnerShift: ->
-      business = this.get 'controllers.business.model'
+      _this = this
 
+      @set 'bookSpinnerButtonIsDisabled', true
+
+      business = @get 'controllers.business.model'
+      
       # this.model is a newly-instantiated, unsaved SpinnerShift. The Business is associated with the SpinnerShift at the time of instantiation. See routes/business/book-spinner.
-      newSpinnerShift = this.get 'model'
-      newSpinnerShift.save()
+      newSpinnerShift = @get 'model'
 
-      # Warning, when using belongsTo:hasMany, the belongsTo side must be set BEFORE the hasMany side.
-      # Ie, SpinnerShift.belongsTo Business must be set BEFORE Business.hasMany SpinnerShift.
-      business.addSpinnerShift newSpinnerShift
+      onAssociationSuccess = ->
+        Ember.Logger.info 'book-spinner: associated new spinnerShift ' + newSpinnerShift.id + ' with business ' + business.id
+        _this.transitionToRoute 'business'
 
-      this.transitionToRoute 'business'
+      onAssociationFail = (reason) ->
+        # When failing to associate a new SpinnerShift with its Business, we must delete the new SpinnerShift avoid inconsistent state
+        Ember.Logger.warn 'book-spinner: failed to associate new spinnerShift ' + newSpinnerShift.id + ' with business ' + business.id + '. deleting this spinnerShift'
+        onDestroySuccess = ->
+          Ember.Logger.info 'book-spinner: destroyed unassociated spinnerShift ' + newSpinnerShift.id
+        onDestroyFail = (failedToDestroyReason) ->
+          Ember.Logger.error 'book-spinner: failed destroy unassociated spinnerShift ' + newSpinnerShift.id
+          throw failedToDestroyReason
+        newSpinnerShift.destroyRecord().then onDestroySuccess, onDestroyFail
+        throw reason
+      
+      onSpinnerShiftCreateSuccess = ->
+        Ember.Logger.info 'book-spinner: created new spinnerShift' + newSpinnerShift.id + '. attempting to associate it with business ' + business.id
+
+        # Warning, when using belongsTo:hasMany, the belongsTo side must be set BEFORE the hasMany side.
+        # Ie, SpinnerShift.belongsTo Business must be set BEFORE Business.hasMany SpinnerShift.
+        business.addSpinnerShift(newSpinnerShift).then onAssociationSuccess, onAssociationFail
+
+      onSpinnerShiftCreateFail = (reason) ->
+        Ember.Logger.warn 'book-spinner: failed to create new spinner shift, most likely this user ' + _this.get('auth.uid') + ' isn\'t the owner of business ' + business.id
+        throw reason
+
+      newSpinnerShift.save().then onSpinnerShiftCreateSuccess, onSpinnerShiftCreateFail
+
+      # TODO TODO TODO
+      # TODO TODO TODO - when anything fails, need transition to some kind of error page. Or set an error message. Can't just transition back to 'business' silently
+      # TODO TODO TODO
+      
       null
 
   ##############################
@@ -135,6 +165,8 @@ controller = Ember.ObjectController.extend
   ##############################
   # Current User Selections - keeps track of page state as the user clicks around
   ##############################
+
+  bookSpinnerButtonIsDisabled: null    # default value set in routes/business/book-spinner setupController
 
   selectedDateAsMoment: null           # default value set in routes/business/book-spinner setupController
   selectedStartTimeOfDayAsMoment: null # default value set in routes/business/book-spinner setupController
