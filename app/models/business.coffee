@@ -8,6 +8,7 @@ Business = DS.Model.extend
   address: DS.attr 'string'
 
   # Add a SpinnerShift to this Business. Mutate and save only this Business; the SpinnerShift is updated elsewhere.
+  # @return {Promise} Returns a promise that resolves when spinnerShift has been added to this business
   addSpinnerShift: (spinnerShift) ->
     _business = this
     this.get('spinnerShifts').then (spinnerShifts) ->
