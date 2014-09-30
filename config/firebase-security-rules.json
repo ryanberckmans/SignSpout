@@ -75,6 +75,27 @@
         // 4. new spinner is user
         // 5. business, startDateAndTime, endDateAndTime are not modified. 
         // 6. spinnerRating doesn't exist
+        //
+        // OR
+        //
+        // Business may cancel an unmatched shift if all these are true
+        // 1. old state is unmatched
+        // 2. new state is cancelled
+        // 3. user owns this business
+        // 4. business is not modified
+        // 4* technically I should check for everything else. Spinner doesn't exist, rating doesn't exist, business doesn't change.
+        //    This is more than a little ridiculous, I need to find a way to simplify these rules.
+        //
+        // OR
+        //
+        // Business may set spinnerRating if all these are true
+        // 1. old state is matched
+        // 2. new state is completed
+        // 3. user owns this business
+        // 4. old spinnerRating doesn't exist
+        // 5. new spinnerRating does exist
+        // 6. nothing else is modified
+        //    These rules are totally fucking ridiculous. REFACTOR
         ".write": "((!data.exists() && newData.exists() && newData.child('business').val() === root.child('authentication/'+auth.uid+'/business_id').val()) ||
                    (data.exists() && !newData.exists() && data.child('business').val() === root.child('authentication/'+auth.uid+'/business_id').val() &&
                       !root.child('businesses/'+data.child('business').val()+'/spinnerShifts/'+$spinner_shift_id).exists()))
@@ -87,7 +108,24 @@
                                          data.child('startDateAndTime').val() === newData.child('startDateAndTime').val() &&
                                          data.child('endDateAndTime').val()   === newData.child('endDateAndTime').val() &&
                                          data.child('business').val()         === newData.child('business').val() &&
-                                         !newData.child('spinnerRating').exists())",
+                                         !newData.child('spinnerRating').exists())
+                                              ||
+                                        (data.child('state').val() === 'unmatched' &&
+                                         newData.child('state').isString() &&
+                                         newData.child('state').val() === 'cancelled' &&
+                                         data.child('business').val() === root.child('authentication/'+auth.uid+'/business_id').val() &&
+                                         data.child('business').val() === newData.child('business').val())
+                                              ||
+                                        (data.child('state').val()    === 'matched' &&
+                                         newData.child('state').isString() &&
+                                         newData.child('state').val() === 'completed' &&
+                                         data.child('business').val() === root.child('authentication/'+auth.uid+'/business_id').val() &&
+                                         !data.child('spinnerRating').exists() &&
+                                         newData.child('spinnerRating').exists() &&
+                                         data.child('startDateAndTime').val() === newData.child('startDateAndTime').val() &&
+                                         data.child('endDateAndTime').val()   === newData.child('endDateAndTime').val() &&
+                                         data.child('business').val()         === newData.child('business').val() &&
+                                         data.child('spinner').val()          === newData.child('spinner').val())",
         ".validate": "newData.hasChildren(['business', 'startDateAndTime', 'endDateAndTime', 'state'])",
 
         "business": {
@@ -116,6 +154,10 @@
 
         "spinnerRating": {
           ".validate": "newData.isNumber()" // TBD validate against whitelist of 1-5 star ratings. Only allow setting this if the shift is matched.
+        },
+
+        "errorReason": {
+          ".validate": "newData.isString()"
         },
 
         "$other": { ".validate": false }
