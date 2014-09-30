@@ -94,7 +94,25 @@
 
     "spinners": {
       ".read": "true",
-      ".write": "true"
+      ".write": "true",
+
+      "$spinner_id": {
+        ".validate": "newData.hasChildren(['firstName', 'lastName'])",
+
+        "firstName": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 45"
+        },
+
+        "lastName": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 45"
+        },
+
+        "spinnerShifts": {
+          ".validate": "newData.isBoolean()"
+        },
+
+        "$other": { ".validate": false }
+      }
     },
 
     "$other": { ".validate": false }
