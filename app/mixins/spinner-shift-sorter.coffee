@@ -33,18 +33,18 @@ SpinnerShiftSorterMixin = Ember.Mixin.create
     now = moment()
     @get('matchedShifts').filter (spinnerShift) ->
       now.isBefore(moment(spinnerShift.get 'startDateAndTime'))
-  ).property 'matchedShifts.@each', 'eachMinute'
+  ).property 'matchedShifts.@each', 'eachSecond'
 
   liveShifts: (->
     now = moment()
     @get('matchedShifts').filter (spinnerShift) ->
       now.isAfter(moment(spinnerShift.get 'startDateAndTime')) && now.isBefore(moment(spinnerShift.get 'endDateAndTime'))
-  ).property 'matchedShifts.@each', 'eachMinute'
+  ).property 'matchedShifts.@each', 'eachSecond'
 
   postLiveShifts: (->
     now = moment()
     @get('matchedShifts').filter (spinnerShift) ->
       now.isAfter(moment(spinnerShift.get 'endDateAndTime'))
-  ).property 'matchedShifts.@each', 'eachMinute'
+  ).property 'matchedShifts.@each', 'eachSecond'
 
 `export default SpinnerShiftSorterMixin`
