@@ -21,7 +21,9 @@
       "spinnerShifts" : {
         "abc0" : true,
         "abc1" : true,
-        "abc4" : true
+        "abc4" : true,
+        "abc5" : true,
+        "abc6" : true
       }
     },
     "larry's-giant-subs" : {
@@ -80,8 +82,20 @@
     },
     "abc4": {
       "business" : "cricket-wireless",
-      "startDateAndTime" : "Sat, 19 Jul 2014 10:00:00 GMT",
-      "endDateAndTime" : "Sat, 19 Jul 2014 13:30:00 GMT",
+      "startDateAndTime" : "Sun, 20 Jul 2014 10:00:00 GMT",
+      "endDateAndTime" : "Sun, 20 Jul 2014 13:30:00 GMT",
+      "state" : "unmatched"
+    },
+    "abc5": {
+      "business" : "cricket-wireless",
+      "startDateAndTime" : "Sat, 19 Jul 2014 09:30:00 GMT",
+      "endDateAndTime" : "Sat, 19 Jul 2014 11:30:00 GMT",
+      "state" : "unmatched"
+    },
+    "abc6": {
+      "business" : "cricket-wireless",
+      "startDateAndTime" : "Fri, 15 Jul 2015 09:30:00 GMT",
+      "endDateAndTime" : "Fri, 15 Jul 2015 11:30:00 GMT",
       "state" : "unmatched"
     }
   }
