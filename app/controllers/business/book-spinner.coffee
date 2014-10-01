@@ -4,15 +4,14 @@ controller = Ember.ObjectController.extend
   needs: 'business'
 
   actions:
-    saveSpinnerShift: ->
+    createSpinnerShift: ->
       _this = this
 
       @set 'bookSpinnerButtonIsDisabled', true
 
       business = @get 'controllers.business.model'
-      
-      # this.model is a newly-instantiated, unsaved SpinnerShift. The Business is associated with the SpinnerShift at the time of instantiation. See routes/business/book-spinner.
-      newSpinnerShift = @get 'model'
+
+      newSpinnerShift = @store.createRecord 'spinner-shift', { business: business, startDateAndTime: @get('selectedStartDateAndTimeAsMoment').toDate(), endDateAndTime: @get('selectedEndDateAndTimeAsMoment').toDate() }
 
       onAssociationSuccess = ->
         Ember.Logger.info 'book-spinner: associated new spinnerShift ' + newSpinnerShift.id + ' with business ' + business.id
@@ -29,18 +28,20 @@ controller = Ember.ObjectController.extend
           throw failedToDestroyReason
         newSpinnerShift.destroyRecord().then onDestroySuccess, onDestroyFail
       
-      onSpinnerShiftCreateSuccess = ->
+      onSpinnerShiftSaveSuccess = ->
         Ember.Logger.info 'book-spinner: created new spinnerShift' + newSpinnerShift.id + '. attempting to associate it with business ' + business.id
 
         # Warning, when using belongsTo:hasMany, the belongsTo side must be set BEFORE the hasMany side.
         # Ie, SpinnerShift.belongsTo Business must be set BEFORE Business.hasMany SpinnerShift.
         business.addSpinnerShift(newSpinnerShift).then onAssociationSuccess, onAssociationFail
 
-      onSpinnerShiftCreateFail = (reason) ->
+      onSpinnerShiftSaveFail = (reason) ->
         Ember.Logger.warn 'book-spinner: failed to create new spinner shift, most likely this user ' + _this.get('auth.uid') + ' isn\'t the owner of business ' + business.id + ". This error isn't rethrown and is trapped here. Reason: " + reason
+        newSpinnerShift.rollback() # Since the newSpinnerShift failed to save, it's now transient and inconsistent, and should be deleted from the store. rollback() on a new record causes deletion from the store.
+        Ember.Logger.debug 'book-spinner: newSpinnerShift, which failed to save, has been deleted from the local store'
         _this.set 'bookSpinnerButtonIsDisabled', false
 
-      newSpinnerShift.save().then onSpinnerShiftCreateSuccess, onSpinnerShiftCreateFail
+      newSpinnerShift.save().then onSpinnerShiftSaveSuccess, onSpinnerShiftSaveFail
 
       # TODO TODO TODO
       # TODO TODO TODO - when anything fails, need transition to some kind of error page. Or set an error message. Can't just transition back to 'business' silently
@@ -193,13 +194,5 @@ controller = Ember.ObjectController.extend
     defaultEndTimeOfDay = shiftEndTimesOfDayAsMoments[shiftEndTimesOfDayAsMoments.length-1] unless defaultEndTimeOfDay
     @set 'selectedEndTimeOfDayAsMoment', defaultEndTimeOfDay
   ).observes 'shiftEndTimesOfDayAsMoments'
-
-  selectedStartDateAndTimeChanged: (->
-    @get('model').set 'startDateAndTime', @get('selectedStartDateAndTimeAsMoment').toDate()
-  ).observes 'selectedStartDateAndTimeAsMoment'
-
-  selectedEndDateAndTimeChanged: (->
-    @get('model').set 'endDateAndTime', @get('selectedEndDateAndTimeAsMoment').toDate()
-  ).observes 'selectedEndDateAndTimeAsMoment'
 
 `export default controller`

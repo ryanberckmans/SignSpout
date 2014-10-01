@@ -18,7 +18,7 @@ End time {{view Ember.Select content=shiftEndTimesOfDayStruct
                     value=selectedEndTimeOfDayAsMoment}}
 <br>
 
-{{eui-button label='Book Spinner' style='primary' size='large' disabled=bookSpinnerButtonIsDisabled action='saveSpinnerShift' icon='fa fa-check'}}
+{{eui-button label='Book Spinner' style='primary' size='large' disabled=bookSpinnerButtonIsDisabled action='createSpinnerShift' icon='fa fa-check'}}
 
 <h3> Debug </h3>
 
@@ -26,9 +26,6 @@ selected date: {{selectedDateAsMoment}}<br>
 selected start time: {{selectedStartTimeOfDayAsMoment}}<br>
 selected start date+time: {{selectedStartDateAndTimeAsMoment}}<br>
 selected end date+time: {{selectedEndDateAndTimeAsMoment}}<br>
-new shift id: {{id}}<br>
-new shift start date: {{startDateAndTime}}<br>
-new shift end date: {{endDateAndTime}}<br>
 Earliest shift start: {{earliestShiftStartTimeOfDayAsMoment}}<br>
 Latest shift end: {{latestShiftEndTimeOfDayAsMoment}}<br>
 Latest shift start: {{latestShiftStartTimeOfDayAsMoment}}<br>
