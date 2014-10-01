@@ -28,7 +28,9 @@
     },
 
     "businesses": {
-      ".read": "true",
+      ".read": "auth !== null",
+
+      // TODO - I need to refactor business .write rules and make them similar to spinner rules.
 
       "$business_id": {
         ".validate": "newData.hasChildren(['name', 'address'])",
@@ -59,7 +61,7 @@
     },
 
     "spinnerShifts": {
-      ".read": "true",
+      ".read": "auth !== null",
 
       "$spinner_shift_id": {
         // Business updates to this SpinnerShift
@@ -165,22 +167,29 @@
     },
 
     "spinners": {
-      ".read": "true",
-      ".write": "true",
+      ".read": "auth !== null",
 
       "$spinner_id": {
+        // create, but not update or delete, for any authenticated user
+        ".write": "!data.exists() && root.child('authentication/'+auth.uid).exists()",
         ".validate": "newData.hasChildren(['firstName', 'lastName'])",
 
         "firstName": {
+          // This rule will allow a user to save() their Spinner model in Ember, without actually permitting changes to firstName
+          ".write": "data.exists() && newData.val() === data.val() && $spinner_id === root.child('authentication/'+auth.uid+'/spinner_id').val()",
           ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 45"
         },
 
         "lastName": {
+          // This rule will allow a user to save() their Spinner model in Ember, without actually permitting changes to lastName
+          ".write": "data.exists() && newData.val() === data.val() && $spinner_id === root.child('authentication/'+auth.uid+'/spinner_id').val()",
           ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 45"
         },
 
         "spinnerShifts": {
           "$spinner_shift_id": {
+            // create, but not update or delete, for this user's spinner
+            ".write": "!data.exists() && newData.exists() && $spinner_id === root.child('authentication/'+auth.uid+'/spinner_id').val() && root.child('spinnerShifts/'+$spinner_shift_id).exists()",
             ".validate": "newData.isBoolean()"
           }
         },
