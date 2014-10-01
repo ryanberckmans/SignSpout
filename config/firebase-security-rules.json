@@ -5,25 +5,78 @@
 
   "rules": {
     "authentication": {
-      "$uid": {
-        // create, but not modify or delete, for any authenticated user's own authentication
-        ".write": "!data.exists() && newData.exists() && $uid === auth.uid",
-        // user must have email, and at least one of business_id and spinner_id (and possibly both)
-        ".validate": "newData.child('email').exists() && (newData.child('business_id').exists() || newData.child('spinner_id').exists())",
+      // owned_{businesses,spinners} lists the {businesses,spinners} which are associated with an authentication. This prevents two users from pointing to the same business/spinner.
+      // This data must be set simultaneously with authentication/users/$uid/business_id - they do mutual validation
+      //   Note that the simultaneous update requirement can be removed by setting owned_businesses/$business_id before users/$uid is created.
+      //   However, although this simplifies validation, it creates an unhappy rollback scenario whereby if users/$uid fails to create, we now have a dangling
+      //   reference in owned_businesses/$business_id. With simultaneous updates, authentication is set atomically.
+      // create, but not update or delete, when the {business,spinner}_id exists and the users auth specifies that id
+      "owned_businesses": {
+        "$business_id": {
+          // create, but not update or delete
+          // business_id should
+          //   be a valid business_id
+          //   be set simultaneously in authentication/users/$uid/business_id
+          ".write": "auth !== null &&
+                     !data.exists() &&
+                     newData.exists() &&
+                     root.child('businesses/'+$business_id).exists() &&
+                     newData.parent().parent().child('users/'+auth.uid+'/business_id').val() === $business_id",
+          // value set to auth.uid which is simultaneously validated in users/$uid/business_id
+          ".validate": "newData.val() === auth.uid"
+        }
+      },
 
-        "business_id": {
-          ".validate": "root.child('businesses/'+newData.val()).exists()" // TODO - nothing prevents two users from pointing to the same business, ie a new user snagging a business
-        },
+      // See comment on owned_businesses
+      "owned_spinners": {
+        "$spinner_id": {
+          // create, but not update or delete
+          // spinner_id should
+          //   be a valid spinner_id
+          //   be set simultaneously in authentication/users/$uid/spinner_id
+          ".write": "auth !== null &&
+                     !data.exists() &&
+                     newData.exists() &&
+                     root.child('spinners/'+$spinner_id).exists() &&
+                     newData.parent().parent().child('users/'+auth.uid+'/spinner_id').val() === $spinner_id",
+          // value set to auth.uid which is simultaneously validated in users/$uid/spinner_id
+          ".validate": "newData.val() === auth.uid"
+        }
+      },
 
-        "spinner_id": {
-          ".validate": "root.child('spinners/'+newData.val()).exists()" // TODO - nothing prevents two users from pointing to the same spinner, ie a new user snagging a spinner
-        },
+      "users": {
+        "$uid": {
+          // create, but not modify or delete, for any authenticated user's own authentication
+          ".write": "!data.exists() && newData.exists() && $uid === auth.uid",
+          // user must have email, and at least one of business_id and spinner_id (and possibly both)
+          ".validate": "newData.child('email').exists() && (newData.child('business_id').exists() || newData.child('spinner_id').exists())",
 
-        "email": {
-          ".validate": "newData.val() === auth.email"
-        },
+          "business_id": {
+            // business_id should
+            //   be a valid business_id
+            //   not yet exist in authentication/owned_businesses
+            //   be set in authentication/owned_businesses simultaneously
+            ".validate": "root.child('businesses/'+newData.val()).exists() &&
+                          !root.child('authentication/owned_businesses/'+newData.val()).exists() &&
+                          newData.parent().parent().parent().child('owned_businesses/'+newData.val()).val() === auth.uid"
+          },
 
-        "$other": { ".validate": false }
+          "spinner_id": {
+            // spinner_id should
+            //   be a valid spinner_id
+            //   not yet exist in authentication/owned_spinners
+            //   be set in authentication/owned_spinners simultaneously
+            ".validate": "root.child('spinners/'+newData.val()).exists() &&
+                          !root.child('authentication/owned_spinners/'+newData.val()).exists() &&
+                          newData.parent().parent().parent().child('owned_spinners/'+newData.val()).val() === auth.uid"
+          },
+
+          "email": {
+            ".validate": "newData.val() === auth.email"
+          },
+
+          "$other": { ".validate": false }
+        }
       }
     },
 
@@ -32,25 +85,25 @@
 
       "$business_id": {
         // create, but not update or delete, for any authenticated user
-        ".write": "!data.exists() && root.child('authentication/'+auth.uid).exists()",
+        ".write": "!data.exists() && root.child('authentication/users/'+auth.uid).exists()",
         ".validate": "newData.hasChildren(['name', 'address'])",
 
         "name": {
           // This rule will allow a user to save() their Business model in Ember, without actually permitting changes to name
-          ".write": "data.exists() && newData.val() === data.val() && $business_id === root.child('authentication/'+auth.uid+'/business_id').val()",
+          ".write": "data.exists() && newData.val() === data.val() && $business_id === root.child('authentication/users/'+auth.uid+'/business_id').val()",
           ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 45"
         },
 
         "address": {
           // This rule will allow a user to save() their Business model in Ember, without actually permitting changes to address
-          ".write": "data.exists() && newData.val() === data.val() && $business_id === root.child('authentication/'+auth.uid+'/business_id').val()",
+          ".write": "data.exists() && newData.val() === data.val() && $business_id === root.child('authentication/users/'+auth.uid+'/business_id').val()",
           ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 100"
         },
 
         "spinnerShifts": {
           "$spinner_shift_id": {
             // create, but not update or delete, for this user's business
-            ".write": "!data.exists() && newData.exists() && $business_id === root.child('authentication/'+auth.uid+'/business_id').val() && root.child('spinnerShifts/'+$spinner_shift_id).exists()",
+            ".write": "!data.exists() && newData.exists() && $business_id === root.child('authentication/users/'+auth.uid+'/business_id').val() && root.child('spinnerShifts/'+$spinner_shift_id).exists()",
             ".validate": "newData.isBoolean()"
           }
         },
@@ -97,15 +150,15 @@
         // 5. new spinnerRating does exist
         // 6. nothing else is modified
         //    This rule is totally fucking ridiculous. REFACTOR
-        ".write": "((!data.exists() && newData.exists() && newData.child('business').val() === root.child('authentication/'+auth.uid+'/business_id').val()) ||
-                   (data.exists() && !newData.exists() && data.child('business').val() === root.child('authentication/'+auth.uid+'/business_id').val() &&
+        ".write": "((!data.exists() && newData.exists() && newData.child('business').val() === root.child('authentication/users/'+auth.uid+'/business_id').val()) ||
+                   (data.exists() && !newData.exists() && data.child('business').val() === root.child('authentication/users/'+auth.uid+'/business_id').val() &&
                       !root.child('businesses/'+data.child('business').val()+'/spinnerShifts/'+$spinner_shift_id).exists()))
                                               ||
                                         (data.child('state').val() === 'unmatched' &&
                                          newData.child('state').isString() && 
                                          newData.child('state').val() === 'matched' &&
-                                         root.child('authentication/'+auth.uid+'/spinner_id').exists() &&
-                                         newData.child('spinner').val() === root.child('authentication/'+auth.uid+'/spinner_id').val() &&
+                                         root.child('authentication/users/'+auth.uid+'/spinner_id').exists() &&
+                                         newData.child('spinner').val() === root.child('authentication/users/'+auth.uid+'/spinner_id').val() &&
                                          data.child('startDateAndTime').val() === newData.child('startDateAndTime').val() &&
                                          data.child('endDateAndTime').val()   === newData.child('endDateAndTime').val() &&
                                          data.child('business').val()         === newData.child('business').val() &&
@@ -114,13 +167,13 @@
                                         (data.child('state').val() === 'unmatched' &&
                                          newData.child('state').isString() &&
                                          newData.child('state').val() === 'cancelled' &&
-                                         data.child('business').val() === root.child('authentication/'+auth.uid+'/business_id').val() &&
+                                         data.child('business').val() === root.child('authentication/users/'+auth.uid+'/business_id').val() &&
                                          data.child('business').val() === newData.child('business').val())
                                               ||
                                         (data.child('state').val()    === 'matched' &&
                                          newData.child('state').isString() &&
                                          newData.child('state').val() === 'completed' &&
-                                         data.child('business').val() === root.child('authentication/'+auth.uid+'/business_id').val() &&
+                                         data.child('business').val() === root.child('authentication/users/'+auth.uid+'/business_id').val() &&
                                          !data.child('spinnerRating').exists() &&
                                          newData.child('spinnerRating').exists() &&
                                          data.child('startDateAndTime').val() === newData.child('startDateAndTime').val() &&
@@ -175,25 +228,25 @@
 
       "$spinner_id": {
         // create, but not update or delete, for any authenticated user
-        ".write": "!data.exists() && root.child('authentication/'+auth.uid).exists()",
+        ".write": "!data.exists() && root.child('authentication/users/'+auth.uid).exists()",
         ".validate": "newData.hasChildren(['firstName', 'lastName'])",
 
         "firstName": {
           // This rule will allow a user to save() their Spinner model in Ember, without actually permitting changes to firstName
-          ".write": "data.exists() && newData.val() === data.val() && $spinner_id === root.child('authentication/'+auth.uid+'/spinner_id').val()",
+          ".write": "data.exists() && newData.val() === data.val() && $spinner_id === root.child('authentication/users/'+auth.uid+'/spinner_id').val()",
           ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 45"
         },
 
         "lastName": {
           // This rule will allow a user to save() their Spinner model in Ember, without actually permitting changes to lastName
-          ".write": "data.exists() && newData.val() === data.val() && $spinner_id === root.child('authentication/'+auth.uid+'/spinner_id').val()",
+          ".write": "data.exists() && newData.val() === data.val() && $spinner_id === root.child('authentication/users/'+auth.uid+'/spinner_id').val()",
           ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 45"
         },
 
         "spinnerShifts": {
           "$spinner_shift_id": {
             // create, but not update or delete, for this user's spinner
-            ".write": "!data.exists() && newData.exists() && $spinner_id === root.child('authentication/'+auth.uid+'/spinner_id').val() && root.child('spinnerShifts/'+$spinner_shift_id).exists()",
+            ".write": "!data.exists() && newData.exists() && $spinner_id === root.child('authentication/users/'+auth.uid+'/spinner_id').val() && root.child('spinnerShifts/'+$spinner_shift_id).exists()",
             ".validate": "newData.isBoolean()"
           }
         },

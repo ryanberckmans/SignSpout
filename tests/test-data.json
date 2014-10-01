@@ -1,9 +1,17 @@
 {
   "authentication" : {
-    "simplelogin:1": {
-      "business_id": "cricket-wireless",
-      "spinner_id": "ryan-berckmans",
-      "email": "ryanberckmans@gmail.com"
+    "owned_businesses": {
+      "cricket-wireless": "simplelogin:1"
+    },
+    "owned_spinners": {
+      "ryan-berckmans": "simplelogin:1"
+    },
+    "users": {
+      "simplelogin:1": {
+        "business_id": "cricket-wireless",
+        "spinner_id": "ryan-berckmans",
+        "email": "ryanberckmans@gmail.com"
+      }
     }
   },
   "businesses" : {
