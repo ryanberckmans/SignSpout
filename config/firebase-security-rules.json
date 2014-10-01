@@ -46,6 +46,7 @@
 
       "users": {
         "$uid": {
+          ".read": "$uid === auth.uid",
           // create, but not modify or delete, for any authenticated user's own authentication
           ".write": "!data.exists() && newData.exists() && $uid === auth.uid",
           // user must have email, and at least one of business_id and spinner_id (and possibly both)
