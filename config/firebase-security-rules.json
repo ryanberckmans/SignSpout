@@ -6,7 +6,7 @@
   "rules": {
     "authentication": {
       "$uid": {
-        // allow authenticated user to create his user record, cannot be modified or deleted
+        // create, but not modify or delete, for any authenticated user's own authentication
         ".write": "!data.exists() && newData.exists() && $uid === auth.uid",
         // user must have email, and at least one of business_id and spinner_id (and possibly both)
         ".validate": "newData.child('email').exists() && (newData.child('business_id').exists() || newData.child('spinner_id').exists())",
@@ -30,27 +30,26 @@
     "businesses": {
       ".read": "auth !== null",
 
-      // TODO - I need to refactor business .write rules and make them similar to spinner rules.
-
       "$business_id": {
+        // create, but not update or delete, for any authenticated user
+        ".write": "!data.exists() && root.child('authentication/'+auth.uid).exists()",
         ".validate": "newData.hasChildren(['name', 'address'])",
 
         "name": {
-          ".write": "!data.exists() || $business_id === root.child('authentication/'+auth.uid+'/business_id').val()",
+          // This rule will allow a user to save() their Business model in Ember, without actually permitting changes to name
+          ".write": "data.exists() && newData.val() === data.val() && $business_id === root.child('authentication/'+auth.uid+'/business_id').val()",
           ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 45"
         },
 
         "address": {
-          ".write": "!data.exists() || $business_id === root.child('authentication/'+auth.uid+'/business_id').val()",
+          // This rule will allow a user to save() their Business model in Ember, without actually permitting changes to address
+          ".write": "data.exists() && newData.val() === data.val() && $business_id === root.child('authentication/'+auth.uid+'/business_id').val()",
           ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 100"
         },
 
         "spinnerShifts": {
           "$spinner_shift_id": {
-            // The absence of a business_id .write rule is specifically so spinnerShifts cannot be deleted. Whereas we eventually want to allow updates for business name and address?? Why did I do this again?
-            // 1. allow creates, cannot modify or delete
-            // 2. by the owning business
-            // 3. where spinner_shift_id is a valid SpinnerShift
+            // create, but not update or delete, for this user's business
             ".write": "!data.exists() && newData.exists() && $business_id === root.child('authentication/'+auth.uid+'/business_id').val() && root.child('spinnerShifts/'+$spinner_shift_id).exists()",
             ".validate": "newData.isBoolean()"
           }
@@ -97,7 +96,7 @@
         // 4. old spinnerRating doesn't exist
         // 5. new spinnerRating does exist
         // 6. nothing else is modified
-        //    These rules are totally fucking ridiculous. REFACTOR
+        //    This rule is totally fucking ridiculous. REFACTOR
         ".write": "((!data.exists() && newData.exists() && newData.child('business').val() === root.child('authentication/'+auth.uid+'/business_id').val()) ||
                    (data.exists() && !newData.exists() && data.child('business').val() === root.child('authentication/'+auth.uid+'/business_id').val() &&
                       !root.child('businesses/'+data.child('business').val()+'/spinnerShifts/'+$spinner_shift_id).exists()))
@@ -131,7 +130,7 @@
         ".validate": "newData.hasChildren(['business', 'startDateAndTime', 'endDateAndTime', 'state'])",
 
         "business": {
-          ".validate": "root.child('businesses/' + newData.val()).exists()"
+          ".validate": "root.child('businesses/'+newData.val()).exists()"
         },
 
         "startDateAndTime": {
@@ -147,15 +146,20 @@
                                                newData.val() === 'matched'   ||
                                                newData.val() === 'completed' ||
                                                newData.val() === 'cancelled' ||
-                                               newData.val() === 'error')" // TBD - validate that matched/completed have a spinner; cancelled/unmatched has no spinner
+                                               newData.val() === 'error')" // TBD - validate that matched/completed have a spinner; cancelled/unmatched has no spinner;
+                                                                          //        validate that each state transition is legal, ie you can't go from unmatched to completed.
         },
 
         "spinner": {
-          ".validate": "newData.isString() && newData.val().length > 0" // TBD - didn't integrate Spinners yet
+          ".validate": "root.child('spinners/'+newData.val()).exists()"
         },
 
         "spinnerRating": {
-          ".validate": "newData.isNumber()" // TBD validate against whitelist of 1-5 star ratings. Only allow setting this if the shift is matched.
+          ".validate": "newData.isNumber() && (newData.val() === 1 ||
+                                               newData.val() === 2 ||
+                                               newData.val() === 3 ||
+                                               newData.val() === 4 ||
+                                               newData.val() === 5)"
         },
 
         "errorReason": {
