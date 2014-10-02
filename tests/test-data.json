@@ -1,16 +1,26 @@
 {
   "authentication" : {
     "owned_businesses": {
-      "cricket-wireless": "simplelogin:1"
+      "cricket-wireless": "simplelogin:1",
+      "larry's-giant-subs": "simplelogin:3"
     },
     "owned_spinners": {
-      "ryan-berckmans": "simplelogin:1"
+      "ryan-berckmans": "simplelogin:1",
+      "toby": "simplelogin:2"
     },
     "users": {
       "simplelogin:1": {
         "business_id": "cricket-wireless",
         "spinner_id": "ryan-berckmans",
         "email": "ryanberckmans@gmail.com"
+      },
+      "simplelogin:2": {
+        "spinner_id": "toby",
+        "email": "tobyjonesberckmans@gmail.com"
+      },
+      "simplelogin:3": {
+        "business_id": "larry's-giant-subs",
+        "email": "larrysgiantsubs@gmail.com"
       }
     }
   },
@@ -94,8 +104,8 @@
     },
     "abc6": {
       "business" : "cricket-wireless",
-      "startDateAndTime" : "Fri, 15 Jul 2015 09:30:00 GMT",
-      "endDateAndTime" : "Fri, 15 Jul 2015 11:30:00 GMT",
+      "startDateAndTime" : "Fri, 17 Jul 2015 09:30:00 GMT",
+      "endDateAndTime" : "Fri, 17 Jul 2015 11:30:00 GMT",
       "state" : "unmatched"
     }
   }
