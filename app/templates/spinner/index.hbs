@@ -7,7 +7,9 @@ Name: {{firstName}} {{lastName}}<br>
   {{render "spinner-live-shift" shift}}
 {{/each}}
 
-<h2>Your Shifts</h2>
+<h2>Debug</h2>
+
+<h3>Your Shifts</h3>
 
 Shift count: {{spinnerShifts.length}}
 <ul>
@@ -15,8 +17,6 @@ Shift count: {{spinnerShifts.length}}
     <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, Business: {{business.name}}, State: {{state}}</li>
   {{/each}}
 </ul>
-
-<h2>Debug</h2>
 
 <h3>Live shifts</h3>
 

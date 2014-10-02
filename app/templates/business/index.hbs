@@ -4,7 +4,13 @@
 {{name}}<br>
 {{address}}<br>
 
-<h2>Shifts</h2>
+{{#each shift in controllers.business.liveShifts}}
+  {{render "business-live-shift" shift}}
+{{/each}}
+
+<h2>Debug</h2>
+
+<h3>Shifts</h3>
 
 Shift count: {{spinnerShifts.length}}
 <ul>
@@ -12,8 +18,6 @@ Shift count: {{spinnerShifts.length}}
     <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
   {{/each}}
 </ul>
-
-<h2>Debug</h2>
 
 <h3>Live shifts</h3>
 
