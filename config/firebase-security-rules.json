@@ -256,6 +256,28 @@
       }
     },
 
+    "errors": {
+      "$error_id": {
+        // errors are write-once by anyone
+        ".write": "!data.exists()",
+        ".validate": "newData.hasChildren(['timestamp','stack','otherInformation'])",
+
+        "timestamp": {
+          ".validate": "newData.val() <= now"
+        },
+
+        "stack": {
+          ".validate": "newData.isString()"
+        },
+
+        "otherInformation": {
+          ".validate": "newData.isString()"
+        },
+
+        "$other": { ".validate": false }
+      }
+    },
+
     "$other": { ".validate": false }
   }
 }
