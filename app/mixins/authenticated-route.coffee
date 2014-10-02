@@ -1,29 +1,29 @@
 `import Ember from 'ember'`
 
 AuthenticatedRouteMixin = Ember.Mixin.create
+  
+  # @return {Promise} returns a Promise which will transition to index as a side effect if the user isn't authenticated
   requireAuthentication: ->
-    unless @get 'auth.isAuthenticated'
-      Ember.Logger.info 'transitioning to index due to unauthenticated user'
-      @transitionTo 'index'
-    Ember.Logger.info 'permitting access to route requiring authentication'
+    _this = this    
+    @get('auth').postInit().then ->
+      if _this.get 'auth.isAuthenticated'
+        Ember.Logger.info 'permitting access to route requiring authentication'
+      else
+        Ember.Logger.info 'transitioning to index due to unauthenticated user'
+        _this.transitionTo 'index'
+      null
 
   beforeModel: (transition, queryParams) ->
     @_super transition, queryParams
-    _this = this
-    if @get 'auth.authenticationInProgress' 
-      Ember.Logger.info 'authentication in progress, deferring authentication check'
-      @get('auth.authenticationInProgress').then -> _this.requireAuthentication()
-    else
-      @requireAuthentication()
-    null
+    return @requireAuthentication()
 
   actions:
     willTransition: (transition) ->
       @_super transition
-      @requireAuthentication()
+      return @requireAuthentication()
 
     loginWithEmail: ->
-      @get('auth').loginWithEmail 'ryanberckmans@gmail.com', 'password'
+      @get('auth').login 'ryanberckmans@gmail.com', 'password'
 
     logout: ->
       @get('auth').logout()

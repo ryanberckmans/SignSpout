@@ -27,6 +27,7 @@ FirebaseSimpleLoginAuthenticator = Ember.Object.extend
   _firebaseSimpleLoginUserObject: null  # User object provided by FirebaseSimpleLogin after successful authentication. Set to null upon logout.
 
   init: ->
+    alert 'FirebaseSimpleLoginAuthenticator should not be run, I am just keeping it around for reference'
     _this = this
 
     # See above note on authenticationInProgress
@@ -75,8 +76,6 @@ FirebaseSimpleLoginAuthenticationInitializer =
 
   # container, app is passed to initialize - add if you need them (you probably do)
   initialize: (container, application) ->
-    application.register 'auth:main', FirebaseSimpleLoginAuthenticator
-    application.inject 'controller', 'auth', 'auth:main'
-    application.inject 'route', 'auth', 'auth:main'
+    null
 
 `export default FirebaseSimpleLoginAuthenticationInitializer`
