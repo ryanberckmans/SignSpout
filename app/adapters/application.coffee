@@ -11,11 +11,14 @@ adapter = DS.FirebaseAdapter.extend
 
 # POST errors when using Firebase
 Ember.onerror = (error) ->
-  firebase = new window.Firebase 'https://' + config.firebase_instance + '.firebaseio.com/errors'
-  firebase.push
-      timestamp: window.Firebase.ServerValue.TIMESTAMP
-      stack: error.stack,
-      otherInformation: 'exception message'
-  throw error
+  try
+    firebase = new window.Firebase 'https://' + config.firebase_instance + '.firebaseio.com/errors'
+    firebase.push
+        timestamp: window.Firebase.ServerValue.TIMESTAMP
+        stack: error.stack,
+        otherInformation: 'exception message'
+  catch error
+    Ember.Logger 'error while pushing error to firebase: ' + error
+  Ember.Logger.debug 'pushed error to firebase: ' + error.message
 
 `export default adapter`
