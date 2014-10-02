@@ -24,8 +24,14 @@ AuthenticatedRouteMixin = Ember.Mixin.create
       @_super transition
       return @requireAuthentication()
 
-    loginWithEmail: ->
+    loginRyan: ->
       @get('auth').login 'ryanberckmans@gmail.com', 'password'
+
+    loginToby: ->
+      @get('auth').login 'tobyjonesberckmans@gmail.com', 'toby'
+
+    loginLarry: ->
+      @get('auth').login 'larrysgiantsubs@gmail.com', 'larrys'
 
     logout: ->
       @get('auth').logout()
