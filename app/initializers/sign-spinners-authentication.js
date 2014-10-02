@@ -1,10 +1,11 @@
 import Ember from 'ember';
 import config from '../config/environment';
+import SignSpinnersAuthenticationDataMixin from '../mixins/sign-spinners-authentication-data';
 
 var dbRef = new window.Firebase('https://' + config.firebase_instance + '.firebaseio.com');
 
 // Based on https://gist.github.com/raytiley/8976037
-var SignSpinnersAuthentication =  Ember.Object.extend({
+var SignSpinnersAuthentication =  Ember.Object.extend(SignSpinnersAuthenticationDataMixin, {
 
   //**********
   // Public
@@ -87,6 +88,7 @@ var SignSpinnersAuthentication =  Ember.Object.extend({
           // **** TBD - Must set authentication data in firebase. Be careful not to set _currentUser until the authentication data exists in Firebase.
           // ****       Observers on _currentUser will expect the logged in user to be fully-formed, ie authentication/$uid exists
           // ****
+          // ****       I should probably create some sort of manual hook here, _userJustCreated(user), so that I can implement my domain logic in SignSpinnersAuthenticationData. And rename this file FirebaseSimpleLoginAuthentication
           _this._getFirebaseSimpleLoginClient().login('password', {email: email, password: password});
         }
       });
