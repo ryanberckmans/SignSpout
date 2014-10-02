@@ -18,6 +18,8 @@ AuthenticatedRouteMixin = Ember.Mixin.create
     return @requireAuthentication()
 
   actions:
+    # TBD - willTransition actually fires when we're _leaving_ this route, without regard for the destination route.
+    #       If this route is authenticated, but the new route is unauthenticated, requireAuthentication() will be erroneously triggered
     willTransition: (transition) ->
       @_super transition
       return @requireAuthentication()
@@ -28,7 +30,7 @@ AuthenticatedRouteMixin = Ember.Mixin.create
     logout: ->
       @get('auth').logout()
 
-  isAuthenticatedObserver: (->
+  _AuthenticatedRouteMixin_isAuthenticatedObserver: (->
     @requireAuthentication()
   ).observes 'auth.isAuthenticated'
 
