@@ -16,8 +16,8 @@ TransitionToUserHomepageRouteMixin = Ember.Mixin.create
   beforeModel: (transition) ->
     this._transitionToUserHomepage()
 
-  _TransitionToUserHomepageRouteMixin_isAuthenticatedObserver: (->
+  _TransitionToUserHomepageRouteMixin_IdObserver: (->
     this._transitionToUserHomepage()
-  ).observes 'auth.businessId'
+  ).observes 'auth.businessId', 'auth.spinnerId'
 
 `export default TransitionToUserHomepageRouteMixin`
