@@ -2,7 +2,8 @@
 
 <a href="/"><button>Reload</button></a><br>
 {{#if auth.isAuthenticated}}
-  Logged in as {{auth.email}} with uid {{auth.uid}}
+  auth.isAuthenticated: {{auth.isAuthenticated}}<br>
+  Logged in as {{auth.email}} with uid {{auth.uid}}, business: {{auth.businessId}}, spinner: {{auth.spinnerId}}
   <button {{action 'logout'}}>Log out</button><br>
 {{/if}}
 {{#link-to 'index'}}<button>Index</button>{{/link-to}}
