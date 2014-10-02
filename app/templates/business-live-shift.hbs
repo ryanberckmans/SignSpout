@@ -1,7 +1,43 @@
 
 <div class="live-shift">
-  LIVE from X-Y today<br>
+  LIVE from {{startDateAndTime}}-{{endDateAndTime}} today<br>
   Spinner: {{spinner.firstName}}<br>
-  Break TBD; (1) Spinner hasn't taken break yet, (3) On break now until X, (4) Break was over at X<br>
-  Lunch TBD, same as break<br>
+  <div class="live-shift-break">
+    {{#if tooEarlyForBreak}}
+      Spinner to take {{breakLengthMinutes}}m paid break this shift
+    {{/if}}
+    {{#if canTakeBreak}}
+      {{!-- handlebars doesn't permit if (x and y) --}}
+      Spinner to receive {{breakLengthMinutes}}m break
+    {{/if}}
+    {{#if onBreak}}
+      ON BREAK. Due back at {{breakEndDateAndTimeDisplay}}
+    {{/if}}
+    {{#if breakDone}}
+      Spinner break over. Was due back at {{breakEndDateAndTimeDisplay}}
+    {{/if}}
+    <br>
+  </div>
+  {{#if shiftHasLunch}}
+    <div class="live-shift-lunch">
+      {{#if tooEarlyForLunch}}
+        Spinner to take {{lunchLengthMinutes}}m unpaid lunch this shift
+      {{/if}}
+      {{#if canTakeLunch}}
+        {{!-- handlebars doesn't permit if (x and y) --}}
+        Spinner to take {{lunchLengthMinutes}}m unpaid lunch this shift
+      {{/if}}
+      {{#if onLunch}}
+        ON LUNCH. Due back at {{lunchEndDateAndTimeDisplay}}
+      {{/if}}
+      {{#if lunchDone}}
+        Spinner lunch over. Was due back at {{lunchEndDateAndTimeDisplay}}
+      {{/if}}
+      <br>
+    </div>
+  {{/if}}
+  Working this shift right now!<br>
+  <div class=".restroom-notice">
+    Kindly allow {{spinner.firstName}} to use your restroom as needed.
+  </div>
 </div>

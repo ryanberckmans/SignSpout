@@ -1,9 +1,42 @@
 
 <div class="live-shift">
-LIVE from X-Y today<br>
-Location: {{business.name}}<br>
-Address: TBD map links using a helper {{business.address}}<br>
-Break TBD<br>
-Lunch TBD<br>
-Working this shift right now!
+  LIVE from {{startDateAndTime}}-{{endDateAndTime}} today<br>
+  Location: {{business.name}}<br>
+  Address: TBD map links using a helper {{business.address}}<br>
+  <div class="live-shift-break">
+    {{#if tooEarlyForBreak}}
+      {{breakLengthMinutes}}m break after first hour
+    {{/if}}
+    {{#if canTakeBreak}}
+      {{eui-button action='startBreak' size='medium' label='Break Time!'}}
+    {{/if}}
+    {{#if onBreak}}
+      Back at {{breakEndDateAndTimeDisplay}}
+    {{/if}}
+    {{#if breakDone}}
+      Break done
+    {{/if}}
+    <br>
+  </div>
+  {{#if shiftHasLunch}}
+    <div class="live-shift-lunch">
+      {{#if tooEarlyForLunch}}
+        {{lunchLengthMinutes}}m lunch after two hours
+      {{/if}}
+      {{#if canTakeLunch}}
+        {{eui-button action='startLunch' size='medium' label='Lunch Time!'}}
+      {{/if}}
+      {{#if onLunch}}
+        Back at {{lunchEndDateAndTimeDisplay}}
+      {{/if}}
+      {{#if lunchDone}}
+        Lunch done
+      {{/if}}
+      <br>
+    </div>
+  {{/if}}
+  Working this shift right now!<br>
+  <div class=".restroom-notice">
+    Restroom at any time, drop by {{business.name}}.
+  </div>
 </div>
