@@ -14,6 +14,14 @@ SpinnerShift = DS.Model.extend
   spinner: DS.belongsTo 'spinner', { async:true }
   startDateAndTime: DS.attr 'date' # ISO 8601. Example of UTC date-time that is ISO 8601 compliant: "2014-07-16T14:30Z" is July 16th, 2014, at 2:30pm UTC.
   endDateAndTime:   DS.attr 'date' # ISO 8601. Example of UTC date-time that is ISO 8601 compliant: "2014-07-16T14:30Z" is July 16th, 2014, at 2:30pm UTC.
+
+  # {break,lunch}{Start,End}DateAndTime have no associated functions and should be set directly.
+  # Eventually we may want to perform additional validation and create functions such as setBreakTimes( start, end )
+  breakStartDateAndTime: DS.attr 'date' # ISO 8601. Example of UTC date-time that is ISO 8601 compliant: "2014-07-16T14:30Z" is July 16th, 2014, at 2:30pm UTC.
+  breakEndDateAndTime:   DS.attr 'date' # ISO 8601. Example of UTC date-time that is ISO 8601 compliant: "2014-07-16T14:30Z" is July 16th, 2014, at 2:30pm UTC.
+  lunchStartDateAndTime: DS.attr 'date' # ISO 8601. Example of UTC date-time that is ISO 8601 compliant: "2014-07-16T14:30Z" is July 16th, 2014, at 2:30pm UTC.
+  lunchEndDateAndTime:   DS.attr 'date' # ISO 8601. Example of UTC date-time that is ISO 8601 compliant: "2014-07-16T14:30Z" is July 16th, 2014, at 2:30pm UTC.
+
   state: DS.attr 'string', { defaultValue: STATE_UNMATCHED }
   errorReason: DS.attr 'string' # only defined if state == STATE_ERROR
   spinnerRating: DS.attr 'number' # Integer 1-5 star rating
