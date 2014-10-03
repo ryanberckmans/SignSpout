@@ -1,8 +1,6 @@
 `import Ember from 'ember'`
 
-# WARNING: Any object using SpinnerShiftSorterMixin must also use ClockMixin
-#          I'd prefer to have SpinnerShiftSorterMixin = ClockMixin.extend, but this functionality isn't provided
-#          It was recommended that I use Ember.assert to check for the presence of ClockMixin, but I'm not sure where to put the actual Ember.assert line
+# Requires Clock
 SpinnerShiftSorterMixin = Ember.Mixin.create
   unmatchedShifts: (->
     @get('spinnerShifts').filter (spinnerShift) ->
@@ -33,18 +31,18 @@ SpinnerShiftSorterMixin = Ember.Mixin.create
     now = moment()
     @get('matchedShifts').filter (spinnerShift) ->
       now.isBefore(moment(spinnerShift.get 'startDateAndTime'))
-  ).property 'matchedShifts.@each', 'eachSecond'
+  ).property 'matchedShifts.@each', 'clock.eachSecond'
 
   liveShifts: (->
     now = moment()
     @get('matchedShifts').filter (spinnerShift) ->
       now.isAfter(moment(spinnerShift.get 'startDateAndTime')) && now.isBefore(moment(spinnerShift.get 'endDateAndTime'))
-  ).property 'matchedShifts.@each', 'eachSecond'
+  ).property 'matchedShifts.@each', 'clock.eachSecond'
 
   postLiveShifts: (->
     now = moment()
     @get('matchedShifts').filter (spinnerShift) ->
       now.isAfter(moment(spinnerShift.get 'endDateAndTime'))
-  ).property 'matchedShifts.@each', 'eachSecond'
+  ).property 'matchedShifts.@each', 'clock.eachSecond'
 
 `export default SpinnerShiftSorterMixin`

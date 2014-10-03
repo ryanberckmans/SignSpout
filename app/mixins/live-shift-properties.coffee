@@ -1,6 +1,6 @@
 `import Ember from 'ember'`
 
-# Requires ClockMixin
+# Requires Clock
 LiveShiftPropertiesMixin = Ember.Mixin.create
   ## Configurable Properties
 
@@ -27,7 +27,7 @@ LiveShiftPropertiesMixin = Ember.Mixin.create
     shiftMinutesElapsed = moment(Date()).diff(@get('startDateAndTime'), 'minutes')
     Ember.Logger.debug "shift minutes elapsed: " + shiftMinutesElapsed
     shiftMinutesElapsed
-  ).property 'startDateAndTime', 'eachSecond'
+  ).property 'startDateAndTime', 'clock.eachSecond'
 
   # Break Properties
 
@@ -45,11 +45,11 @@ LiveShiftPropertiesMixin = Ember.Mixin.create
 
   onBreak: (->
     @get('breakEndDateAndTime')? && moment(Date()).diff(@get('breakEndDateAndTime')) < 0
-  ).property 'eachSecond', 'breakEndDateAndTime'
+  ).property 'clock.eachSecond', 'breakEndDateAndTime'
 
   breakDone: (->
     @get('breakEndDateAndTime')? && moment(Date()).diff(@get('breakEndDateAndTime')) > 0
-  ).property 'eachSecond', 'breakEndDateAndTime'
+  ).property 'clock.eachSecond', 'breakEndDateAndTime'
 
   breakLengthMinutes: (->
     Math.round(@get('breakMinutesPerHour') * @get('shiftLengthMinutes') / 60)
@@ -79,11 +79,11 @@ LiveShiftPropertiesMixin = Ember.Mixin.create
 
   onLunch: (->
     @get('lunchEndDateAndTime')? && moment(Date()).diff(@get('lunchEndDateAndTime')) < 0
-  ).property 'eachSecond', 'lunchEndDateAndTime'
+  ).property 'clock.eachSecond', 'lunchEndDateAndTime'
 
   lunchDone: (->
     @get('lunchEndDateAndTime')? && moment(Date()).diff(@get('lunchEndDateAndTime')) > 0
-  ).property 'eachSecond', 'lunchEndDateAndTime'
+  ).property 'clock.eachSecond', 'lunchEndDateAndTime'
 
   lunchEndDateAndTimeDisplay: (->
     moment(@get 'lunchEndDateAndTime').format 'h:mma'

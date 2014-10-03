@@ -2,13 +2,19 @@
 
 INTERVAL_IN_MILLISECONDS = 500
 
-ClockMixin = Ember.Mixin.create
+Clock = Ember.Object.extend
   # From http://emberjs.com/guides/cookbook/working_with_objects/continuous_redrawing_of_views/
   
   # Public API, consumer properties should depend on "clock.{eachSecond,eachMinute,eachHour}"
   eachSecond: 0
   eachMinute: 0
   eachHour: 0
+
+  # TBD - startOfEach{Minute,Hour} fires not just every minute/hour since Clock was initialized,
+  #       but at the start of each real hour/minute, ie at 6:00am startOfEachHour fires,
+  #       and at 6:03:00am, startOfEachMinute fires
+  startOfEachMinute: null
+  startOfEachHour: null
 
   # Private
   _initialTime: moment()
@@ -25,4 +31,11 @@ ClockMixin = Ember.Mixin.create
     ), INTERVAL_IN_MILLISECONDS
   ).observes('_intervalCounter').on('init')
 
-`export default ClockMixin`
+ClockInitializer =
+  name: 'clock'
+  initialize: (container, application) ->
+    application.register 'clock:main', Clock
+    application.inject 'controller', 'clock', 'clock:main'
+    application.inject 'route', 'clock', 'clock:main'
+
+`export default ClockInitializer`
