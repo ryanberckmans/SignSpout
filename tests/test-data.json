@@ -26,7 +26,7 @@
   },
   "businesses" : {
     "cricket-wireless" : {
-      "address" : "8221 Southside Blvd #13, Jacksonville, FL 32256",
+      "address" : "Cricket Wireless, 8221 Southside Blvd #13, Jacksonville, FL 32256",
       "name" : "Cricket Wireless",
       "spinnerShifts" : {
         "abc0" : true,
@@ -37,7 +37,7 @@
       }
     },
     "larry's-giant-subs" : {
-      "address" : "4479 Deerwood Lake Pkwy #1, Jacksonville, FL 32216",
+      "address" : "Larry's Giant Subs, 4479 Deerwood Lake Pkwy #1, Jacksonville, FL 32216",
       "name" : "Larry's Giant Subs",
       "spinnerShifts" : {
         "abc2" : true,
