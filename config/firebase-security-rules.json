@@ -120,95 +120,150 @@
         // Business updates to this SpinnerShift
         // 1. create, but not update or delete, if the user owns this business
         // 2. delete if the user owns this business, and this business isn't associated with this spinnerShift, ie a dangling reference that needs to be cleaned up
-        //
-        // OR
-        //
-        // Spinner may update a SpinnerShift if all of these are true
-        // 1. old state is unmatched
-        // 2. new state is matched
-        // 3. user is a spinner
-        // 4. new spinner is user
-        // 5. business, startDateAndTime, endDateAndTime are not modified. 
-        // 6. spinnerRating doesn't exist
-        //
-        // OR
-        //
-        // Business may cancel an unmatched shift if all these are true
-        // 1. old state is unmatched
-        // 2. new state is cancelled
-        // 3. user owns this business
-        // 4. business is not modified
-        // 4* technically I should check for everything else. Spinner doesn't exist, rating doesn't exist, business doesn't change.
-        //    This is more than a little ridiculous, I need to find a way to simplify these rules.
-        //
-        // OR
-        //
-        // Business may set spinnerRating if all these are true
-        // 1. old state is matched
-        // 2. new state is completed
-        // 3. user owns this business
-        // 4. old spinnerRating doesn't exist
-        // 5. new spinnerRating does exist
-        // 6. nothing else is modified
-        //    This rule is totally fucking ridiculous. REFACTOR
-        ".write": "((!data.exists() && newData.exists() && newData.child('business').val() === root.child('authentication/users/'+auth.uid+'/business_id').val()) ||
-                   (data.exists() && !newData.exists() && data.child('business').val() === root.child('authentication/users/'+auth.uid+'/business_id').val() &&
-                      !root.child('businesses/'+data.child('business').val()+'/spinnerShifts/'+$spinner_shift_id).exists()))
-                                              ||
-                                        (data.child('state').val() === 'unmatched' &&
-                                         newData.child('state').isString() && 
-                                         newData.child('state').val() === 'matched' &&
-                                         root.child('authentication/users/'+auth.uid+'/spinner_id').exists() &&
-                                         newData.child('spinner').val() === root.child('authentication/users/'+auth.uid+'/spinner_id').val() &&
-                                         data.child('startDateAndTime').val() === newData.child('startDateAndTime').val() &&
-                                         data.child('endDateAndTime').val()   === newData.child('endDateAndTime').val() &&
-                                         data.child('business').val()         === newData.child('business').val() &&
-                                         !newData.child('spinnerRating').exists())
-                                              ||
-                                        (data.child('state').val() === 'unmatched' &&
-                                         newData.child('state').isString() &&
-                                         newData.child('state').val() === 'cancelled' &&
-                                         data.child('business').val() === root.child('authentication/users/'+auth.uid+'/business_id').val() &&
-                                         data.child('business').val() === newData.child('business').val())
-                                              ||
-                                        (data.child('state').val()    === 'matched' &&
-                                         newData.child('state').isString() &&
-                                         newData.child('state').val() === 'completed' &&
-                                         data.child('business').val() === root.child('authentication/users/'+auth.uid+'/business_id').val() &&
-                                         !data.child('spinnerRating').exists() &&
-                                         newData.child('spinnerRating').exists() &&
-                                         data.child('startDateAndTime').val() === newData.child('startDateAndTime').val() &&
-                                         data.child('endDateAndTime').val()   === newData.child('endDateAndTime').val() &&
-                                         data.child('business').val()         === newData.child('business').val() &&
-                                         data.child('spinner').val()          === newData.child('spinner').val())",
-        ".validate": "newData.hasChildren(['business', 'startDateAndTime', 'endDateAndTime', 'state'])",
+        ".write": "
+                  (
+                    !data.exists()   &&
+                    newData.exists() &&
+                    newData.child('business').val() === root.child('authentication/users/'+auth.uid+'/business_id').val()
+                  ) ||
+                  (
+                    data.exists() &&
+                    !newData.exists() &&
+                    data.child('business').val() === root.child('authentication/users/'+auth.uid+'/business_id').val() &&
+                    !root.child('businesses/'+data.child('business').val()+'/spinnerShifts/'+$spinner_shift_id).exists()
+                  )",
+
+        // validate that initial state is 'unmatched'
+        ".validate": "newData.hasChildren(['business', 'startDateAndTime', 'endDateAndTime', 'state']) &&
+                      (data.exists() || newData.child('state').val() === 'unmatched')",
 
         "business": {
+          // This rule will allow a user to save() a SpinnerShift model in Ember, without actually permitting changes to this property
+          ".write": "data.exists() && newData.val() === data.val() && root.child('authentication/users/'+auth.uid).exists()",
           ".validate": "root.child('businesses/'+newData.val()).exists()"
         },
 
         "startDateAndTime": {
+          // This rule will allow a user to save() a SpinnerShift model in Ember, without actually permitting changes to this property
+          ".write": "data.exists() && newData.val() === data.val() && root.child('authentication/users/'+auth.uid).exists()",
           ".validate": "newData.isString() && newData.val().length > 0" // TBD - validate it's a date && start < end
         },
 
         "endDateAndTime": {
+          // This rule will allow a user to save() a SpinnerShift model in Ember, without actually permitting changes to this property
+          ".write": "data.exists() && newData.val() === data.val() && root.child('authentication/users/'+auth.uid).exists()",
           ".validate": "newData.isString() && newData.val().length > 0" // TBD - validate it's a date && start < end
         },
 
+        "breakStartDateAndTime": {
+          // This rule will allow a user to save() a SpinnerShift model in Ember, without actually permitting changes to this property
+          ".write": "newData.val() === data.val() && root.child('authentication/users/'+auth.uid).exists()",
+          ".validate": "newData.isString() && newData.val().length > 0" // TBD - validate it's a date && shiftStart < start < end < shiftEnd"
+        },
+
+        "breakEndDateAndTime": {
+          // This rule will allow a user to save() a SpinnerShift model in Ember, without actually permitting changes to this property
+          ".write": "newData.val() === data.val() && root.child('authentication/users/'+auth.uid).exists()",
+          ".validate": "newData.isString() && newData.val().length > 0" // TBD - validate it's a date && shiftStart < start < end < shiftEnd"
+        },
+
+        "lunchStartDateAndTime": {
+          // This rule will allow a user to save() a SpinnerShift model in Ember, without actually permitting changes to this property
+          ".write": "newData.val() === data.val() && root.child('authentication/users/'+auth.uid).exists()",
+          ".validate": "newData.isString() && newData.val().length > 0" // TBD - validate it's a date && shiftStart < start < end < shiftEnd"
+        },
+
+        "lunchEndDateAndTime": {
+          // This rule will allow a user to save() a SpinnerShift model in Ember, without actually permitting changes to this property
+          ".write": "newData.val() === data.val() && root.child('authentication/users/'+auth.uid).exists()",
+          ".validate": "newData.isString() && newData.val().length > 0" // TBD - validate it's a date && shiftStart < start < end < shiftEnd"
+        },
+
         "state": {
+          // This rule will allow a user to save() a SpinnerShift model in Ember, without actually permitting changes to this property
+          // OR
+          // Allow a Spinner to match themself to this SpinnerShift if all of these are true
+          //   1. old state is unmatched
+          //   2. new state is matched
+          //   3. user is a spinner
+          //   4. new spinner is user
+          // Business may cancel an unmatched shift if all these are true
+          //   1. old state is unmatched
+          //   2. new state is cancelled
+          //   3. user owns this business
+          // Business may set spinnerRating and state completed if all these are true
+          //   1. old state is matched
+          //   2. new state is completed
+          //   3. user owns this business
+          //   4. old spinnerRating doesn't exist
+          //   5. new spinnerRating does exist
+          ".write": "(data.exists() && newData.val() === data.val() && root.child('authentication/users/'+auth.uid).exists())
+                        ||
+                      (
+                        data.val() === 'unmatched' &&
+                        newData.val() === 'matched' &&
+                        root.child('authentication/users/'+auth.uid+'/spinner_id').exists() &&
+                        newData.parent().child('spinner').val() === root.child('authentication/users/'+auth.uid+'/spinner_id').val()
+                      )
+                        ||
+                      (
+                        data.val() === 'unmatched' &&
+                        newData.val() === 'cancelled' &&
+                        data.parent().child('business').val() === root.child('authentication/users/'+auth.uid+'/business_id').val()
+                      )
+                        ||
+                      (
+                        data.val() === 'matched' &&
+                        newData.val() === 'completed' &&
+                        data.parent().child('business').val() === root.child('authentication/users/'+auth.uid+'/business_id').val() &&
+                        !data.parent().child('spinnerRating').exists() &&
+                        newData.parent().child('spinnerRating').exists()
+                      )",
           ".validate": "newData.isString() && (newData.val() === 'unmatched' ||
                                                newData.val() === 'matched'   ||
                                                newData.val() === 'completed' ||
                                                newData.val() === 'cancelled' ||
                                                newData.val() === 'error')" // TBD - validate that matched/completed have a spinner; cancelled/unmatched has no spinner;
-                                                                          //        validate that each state transition is legal, ie you can't go from unmatched to completed.
+                                                                           //       validate that each state transition is legal, ie you can't go from unmatched to completed.
         },
 
         "spinner": {
+          // This rule will allow a user to save() a SpinnerShift model in Ember, without actually permitting changes to this property
+          // OR
+          // Allow a Spinner to match themself to this SpinnerShift if all of these are true
+          //   1. old state is unmatched
+          //   2. new state is matched
+          //   3. user is a spinner
+          //   4. new spinner is user
+          ".write": " (newData.val() === data.val() && root.child('authentication/users/'+auth.uid).exists()) 
+                        ||
+                      (
+                        data.parent().child('state').val() === 'unmatched' &&
+                        newData.parent().child('state').val() === 'matched' &&
+                        root.child('authentication/users/'+auth.uid+'/spinner_id').exists() &&
+                        newData.val() === root.child('authentication/users/'+auth.uid+'/spinner_id').val()
+                      )",
           ".validate": "root.child('spinners/'+newData.val()).exists()"
         },
 
         "spinnerRating": {
+          // This rule will allow a user to save() a SpinnerShift model in Ember, without actually permitting changes to this property
+          // OR
+          // Business may set spinnerRating and state completed if all these are true
+          //   1. old state is matched
+          //   2. new state is completed
+          //   3. user owns this business
+          //   4. old spinnerRating doesn't exist
+          //   5. new spinnerRating does exist
+          ".write": " (newData.val() === data.val() && root.child('authentication/users/'+auth.uid).exists())
+                        ||
+                      (
+                        data.parent().child('state').val() === 'matched' &&
+                        newData.parent().child('state').val() === 'completed' &&
+                        data.parent().child('business').val() === root.child('authentication/users/'+auth.uid+'/business_id').val() &&
+                        !data.exists() &&
+                        newData.exists()
+                      )",
           ".validate": "newData.isNumber() && (newData.val() === 1 ||
                                                newData.val() === 2 ||
                                                newData.val() === 3 ||
@@ -217,7 +272,9 @@
         },
 
         "errorReason": {
-          ".validate": "newData.isString()"
+          // Allow any authenticated user to set an errorReason
+          ".write": "root.child('authentication/users/'+auth.uid).exists()",
+          ".validate": "newData.isString() && newData.val().length < 2048"
         },
 
         "$other": { ".validate": false }
