@@ -3,6 +3,24 @@
 # Requires ClockMixin
 LiveShiftPropertiesMixin = Ember.Mixin.create
 
+  actions:
+    startBreak: ->
+      Ember.Logger.debug 'starting startBreak'
+
+      spinnerShift = @get 'model'
+      now = Date()
+      spinnerShift.set 'breakStartDateAndTime', moment(now).add(30, 'seconds').startOf('minute').toDate() # Round to the nearest minute
+      spinnerShift.set 'breakEndDateAndTime', moment(now).add(@get 'breakLengthMinutes', 'minutes').toDate()
+
+      onSaveSuccess = ->
+        Ember.Logger.debug 'saved spinnerShift ' + spinnerShift.get('id') + '. breakStartDateAndTime: ' + spinnerShift.get('breakStartDateAndTime') + '. breakEndDateAndTime: ' + spinnerShift.get('breakEndDateAndTime')
+
+      onSaveFail = (reason) ->
+        Ember.Logger.error 'failed to save spinnerShift ' + spinnerShift.get('id') + '. Rolling back spinnerShift. breakStartDateAndTime: ' + spinnerShift.get('breakStartDateAndTime') + '. breakEndDateAndTime: ' + spinnerShift.get('breakEndDateAndTime')
+        spinnerShift.rollback()
+
+      spinnerShift.save().then onSaveSuccess, onSaveFail
+
   ## Configurable Properties
 
   breakMinutesPerHour: 3,   # every shift recieives 3 break minutes per hour
@@ -12,7 +30,6 @@ LiveShiftPropertiesMixin = Ember.Mixin.create
   minimumMinutesBeforeCanTakeLunch: 120, # ie must complete first two hours of shfit before going on lunch
 
   ## Computed Properties
-
   startDateAndTimeDisplay: (->
     moment(@get 'startDateAndTime').format 'h:mma'
   ).property 'startDateAndTime'
@@ -22,8 +39,8 @@ LiveShiftPropertiesMixin = Ember.Mixin.create
   ).property 'endDateAndTime'
 
   tooEarlyForBreak: (->
-    shiftMinutesElapsed = moment(Date()).diff(@get 'startDateAndTime', 'minutes')
-    Ember.Logger.debug "shift minutes elapsed: " + shiftMinutesElapsed
+    shiftMinutesElapsed = moment(Date()).diff(@get('startDateAndTime'), 'minutes')
+    # Ember.Logger.debug "shift minutes elapsed: " + shiftMinutesElapsed
     shiftMinutesElapsed < @get('minimumMinutesBeforeCanTakeBreak')
   ).property 'eachSecond'
 
@@ -40,11 +57,11 @@ LiveShiftPropertiesMixin = Ember.Mixin.create
   ).property 'eachSecond', 'breakEndDateAndTime'
 
   shiftLengthMinutes: (->
-    moment(@get('endDateAndTime')).diff(@get 'startDateAndTime', 'minutes')
+    moment(@get('endDateAndTime')).diff(@get('startDateAndTime'), 'minutes')
   ).property 'startDateAndTime', 'endDateAndTime'
 
   breakLengthMinutes: (->
-    Math.round(@get('breakMinutesPerHour') * get('shiftLengthMinutes') / 60)
+    Math.round(@get('breakMinutesPerHour') * @get('shiftLengthMinutes') / 60)
   ).property 'shiftLengthMinutes', 'breakMinutesPerHour'
 
   breakEndDateAndTimeDisplay: (->
