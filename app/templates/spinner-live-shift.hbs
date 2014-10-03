@@ -3,7 +3,6 @@
   Today {{startDateAndTimeDisplay}}-{{endDateAndTimeDisplay}} - LIVE NOW<br>
   Customer: {{business.name}}<br>
   Address: TBD map links using a helper {{business.address}}<br>
-  <div class="live-shift-break">
     <p>
       <h4>Debug</h4>
       breakStart: {{breakStartDateAndTime}}<br>
@@ -12,6 +11,7 @@
       lunchEnd:  {{lunchEndDateAndTime}}<br>
       tooEarlyForBreak: {{tooEarlyForBreak}}<br>
       canTakeBreak: {{canTakeBreak}}<br>
+      onLunchAndBreakDisabled: {{onLunchAndBreakDisabled}}<br>
       onBreak: {{onBreak}}<br>
       breakDone: {{breakDone}}<br>
       shiftLengthMinutes: {{shiftLengthMinutes}}<br>
@@ -20,23 +20,25 @@
       shiftHasLunch: {{shiftHasLunch}}<br>
       tooEarlyForLunch: {{tooEarlyForLunch}}<br>
       canTakeLunch: {{canTakeLunch}}<br>
+      onBreakAndLunchDisabled: {{onBreakAndLunchDisabled}}<br>
       onLunch: {{onLunch}}<br>
       lunchDone: {{lunchDone}}<br>
     </p>
+  <div class="live-shift-break">
     {{#if tooEarlyForBreak}}
       {{breakLengthMinutes}}m break available after first hour
     {{/if}}
-    {{#if onLunch}}
+    {{#if onLunchAndBreakDisabled}}
       {{breakLengthMinutes}}m break available after lunch
     {{/if}}
     {{#if canTakeBreak}}
-      {{eui-button action='startBreak' style='primary' disabled=startBreakButtonIsDisabled size='medium' label='Break Time!'}}
+      {{eui-button action='startBreak' style='primary' size='medium' label='Go on Break'}}
     {{/if}}
     {{#if onBreak}}
-      Back at {{breakEndDateAndTimeDisplay}}
+      On break! Back at {{breakEndDateAndTimeDisplay}}
     {{/if}}
     {{#if breakDone}}
-      Break done
+      Your break was over at {{breakEndDateAndTimeDisplay}}
     {{/if}}
     <br>
   </div>
@@ -49,10 +51,10 @@
         {{lunchLengthMinutes}}m lunch available after break
       {{/if}}
       {{#if canTakeLunch}}
-        {{eui-button action='startLunch' size='medium' label='Lunch Time!'}}
+        {{eui-button action='startLunch' style='primary' size='medium' label='Go on Lunch'}}
       {{/if}}
       {{#if onLunch}}
-        Back at {{lunchEndDateAndTimeDisplay}}
+        On lunch! Back at {{lunchEndDateAndTimeDisplay}}
       {{/if}}
       {{#if lunchDone}}
         Lunch done

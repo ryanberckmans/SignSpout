@@ -2,30 +2,55 @@
 <div class="live-shift">
   Today {{startDateAndTimeDisplay}}-{{endDateAndTimeDisplay}} - LIVE NOW<br>
   Spinner: {{spinner.firstName}}<br>
+    <p>
+      <h4>Debug</h4>
+      breakStart: {{breakStartDateAndTime}}<br>
+      breakEnd:  {{breakEndDateAndTime}}<br>
+      lunchStart: {{lunchStartDateAndTime}}<br>
+      lunchEnd:  {{lunchEndDateAndTime}}<br>
+      tooEarlyForBreak: {{tooEarlyForBreak}}<br>
+      canTakeBreak: {{canTakeBreak}}<br>
+      onLunchAndBreakDisabled: {{onLunchAndBreakDisabled}}<br>
+      onBreak: {{onBreak}}<br>
+      breakDone: {{breakDone}}<br>
+      shiftLengthMinutes: {{shiftLengthMinutes}}<br>
+      breakLengthMinutes: {{breakLengthMinutes}}<br>
+      shiftMinutesElapsed: {{shiftMinutesElapsed}}<br>
+      shiftHasLunch: {{shiftHasLunch}}<br>
+      tooEarlyForLunch: {{tooEarlyForLunch}}<br>
+      canTakeLunch: {{canTakeLunch}}<br>
+      onBreakAndLunchDisabled: {{onBreakAndLunchDisabled}}<br>
+      onLunch: {{onLunch}}<br>
+      lunchDone: {{lunchDone}}<br>
+    </p>
   <div class="live-shift-break">
     {{#if tooEarlyForBreak}}
-      Spinner to take {{breakLengthMinutes}}m paid break this shift
+      Spinner to receive {{breakLengthMinutes}}m break this shift
+    {{/if}}
+    {{#if onLunchAndBreakDisabled}}
+      Spinner to receive {{breakLengthMinutes}}m break this shift
     {{/if}}
     {{#if canTakeBreak}}
-      {{!-- handlebars doesn't permit if (x and y) --}}
-      Spinner to receive {{breakLengthMinutes}}m break
+      Spinner to receive {{breakLengthMinutes}}m break this shift
     {{/if}}
     {{#if onBreak}}
       ON BREAK. Due back at {{breakEndDateAndTimeDisplay}}
     {{/if}}
     {{#if breakDone}}
-      Spinner break over. Was due back at {{breakEndDateAndTimeDisplay}}
+      Spinner break was over at {{breakEndDateAndTimeDisplay}}
     {{/if}}
     <br>
   </div>
   {{#if shiftHasLunch}}
     <div class="live-shift-lunch">
       {{#if tooEarlyForLunch}}
-        Spinner to take {{lunchLengthMinutes}}m unpaid lunch this shift
+        Spinner to receive {{lunchLengthMinutes}}m lunch this shift
+      {{/if}}
+      {{#if onBreakAndLunchDisabled}}
+        Spinner to receive {{lunchLengthMinutes}}m lunch this shift
       {{/if}}
       {{#if canTakeLunch}}
-        {{!-- handlebars doesn't permit if (x and y) --}}
-        Spinner to take {{lunchLengthMinutes}}m unpaid lunch this shift
+        Spinner to receive {{lunchLengthMinutes}}m lunch this shift
       {{/if}}
       {{#if onLunch}}
         ON LUNCH. Due back at {{lunchEndDateAndTimeDisplay}}
