@@ -1,5 +1,6 @@
 `import Ember from 'ember'`
 
+# Requires ClockMixin
 LiveShiftPropertiesMixin = Ember.Mixin.create
 
   ## Configurable Properties
@@ -12,7 +13,6 @@ LiveShiftPropertiesMixin = Ember.Mixin.create
 
   ## Computed Properties
 
-
   startDateAndTimeDisplay: (->
     moment(@get 'startDateAndTime').format 'h:mma'
   ).property 'startDateAndTime'
@@ -21,14 +21,37 @@ LiveShiftPropertiesMixin = Ember.Mixin.create
     moment(@get 'endDateAndTime').format 'h:mma'
   ).property 'endDateAndTime'
 
-  tooEarlyForBreak: null
-  canTakeBreak: null
-  onBreak: null
-  breakDone: null
-  breakLengthMinutes: null
-  breakEndDateAndTimeDisplay: null
+  tooEarlyForBreak: (->
+    shiftMinutesElapsed = moment(Date()).diff(@get 'startDateAndTime', 'minutes')
+    Ember.Logger.debug "shift minutes elapsed: " + shiftMinutesElapsed
+    shiftMinutesElapsed < @get('minimumMinutesBeforeCanTakeBreak')
+  ).property 'eachSecond'
 
-  shiftHasLunch: null
+  canTakeBreak: (->
+    !@get('tooEarlyForBreak') && !@get('breakStartDateAndTime')
+  ).property 'tooEarlyForBreak', 'breakStartDateAndTime'
+
+  onBreak: (->
+    @get('breakEndDateAndTime') && moment(Date()).diff(@get('breakEndDateAndTime')) < 0
+  ).property 'eachSecond', 'breakEndDateAndTime'
+
+  breakDone: (->
+    @get('breakEndDateAndTime') && moment(Date()).diff(@get('breakEndDateAndTime')) > 0
+  ).property 'eachSecond', 'breakEndDateAndTime'
+
+  shiftLengthMinutes: (->
+    moment(@get('endDateAndTime')).diff(@get 'startDateAndTime', 'minutes')
+  ).property 'startDateAndTime', 'endDateAndTime'
+
+  breakLengthMinutes: (->
+    Math.round(@get('breakMinutesPerHour') * get('shiftLengthMinutes') / 60)
+  ).property 'shiftLengthMinutes', 'breakMinutesPerHour'
+
+  breakEndDateAndTimeDisplay: (->
+    moment(@get 'breakEndDateAndTime').format 'h:mma'
+  ).property 'breakEndDateAndTime'
+
+  shiftHasLunch: false
   tooEarlyForLunch: null
   canTakeLunch: null
   onLunch: null
