@@ -18,7 +18,8 @@ Ember.onerror = (error) ->
         stack: error.stack,
         otherInformation: 'exception message'
   catch error
-    Ember.Logger 'error while pushing error to firebase: ' + error
-  Ember.Logger.debug 'pushed error to firebase: ' + error.message
+    Ember.Logger.error 'error while pushing error to firebase: ' + error
+  Ember.Logger.warn 'pushed this error to firebase:'
+  Ember.Logger.error error.stack
 
 `export default adapter`
