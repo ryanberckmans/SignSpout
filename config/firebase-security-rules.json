@@ -197,13 +197,41 @@
 
         "lunchStartDateAndTime": {
           // This rule will allow a user to save() a SpinnerShift model in Ember, without actually permitting changes to this property
-          ".write": "newData.val() === data.val() && root.child('authentication/users/'+auth.uid).exists()",
+          // OR
+          // Allow a Spinner, currently working this shift, to go on lunch, ie set lunchStartDateAndTime and lunchEndDateAndTime simultaneously
+          //   1. state is matched
+          //   2. user is this shift's spinner
+          //   3. both lunch{Start,End}DateAndTime don't exist yet
+          //   4. lunch{Start,End}DateAndTime are being set simultaneously
+          //   *. we should test that break/lunch dates are within the interval [startDateAndTime, endDateAndTime]; unsure if rules can compare dates
+          ".write": " (newData.val() === data.val() && root.child('authentication/users/'+auth.uid).exists())
+                        ||
+                      (
+                        data.parent().child('state').val() === 'matched' &&
+                        data.parent().child('spinner').val() === root.child('authentication/users/'+auth.uid+'/spinner_id').val() &&
+                        !data.exists() && !data.parent().child('lunchEndDateAndTime').exists() &&
+                        newData.exists() && newData.parent().child('lunchEndDateAndTime').exists()
+                      )",
           ".validate": "newData.isString() && newData.val().length > 0" // TBD - validate it's a date && shiftStart < start < end < shiftEnd"
         },
 
         "lunchEndDateAndTime": {
           // This rule will allow a user to save() a SpinnerShift model in Ember, without actually permitting changes to this property
-          ".write": "newData.val() === data.val() && root.child('authentication/users/'+auth.uid).exists()",
+          // OR
+          // Allow a Spinner, currently working this shift, to go on lunch, ie set lunchStartDateAndTime and lunchEndDateAndTime simultaneously
+          //   1. state is matched
+          //   2. user is this shift's spinner
+          //   3. both lunch{Start,End}DateAndTime don't exist yet
+          //   4. lunch{Start,End}DateAndTime are being set simultaneously
+          //   *. we should test that break/lunch dates are within the interval [startDateAndTime, endDateAndTime]; unsure if rules can compare dates
+          ".write": " (newData.val() === data.val() && root.child('authentication/users/'+auth.uid).exists())
+                        ||
+                      (
+                        data.parent().child('state').val() === 'matched' &&
+                        data.parent().child('spinner').val() === root.child('authentication/users/'+auth.uid+'/spinner_id').val() &&
+                        !data.exists() && !data.parent().child('lunchStartDateAndTime').exists() &&
+                        newData.exists() && newData.parent().child('lunchStartDateAndTime').exists()
+                      )",
           ".validate": "newData.isString() && newData.val().length > 0" // TBD - validate it's a date && shiftStart < start < end < shiftEnd"
         },
 
