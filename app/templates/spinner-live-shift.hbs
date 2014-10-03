@@ -4,11 +4,20 @@
   Customer: {{business.name}}<br>
   Address: TBD map links using a helper {{business.address}}<br>
   <div class="live-shift-break">
+    <p>
+      <h4>Debug</h4>
+      tooEarlyForBreak: {{tooEarlyForBreak}}<br>
+      canTakeBreak: {{canTakeBreak}}<br>
+      onBreak: {{onBreak}}<br>
+      breakDone: {{breakDone}}<br>
+      shiftLengthMinutes: {{shiftLengthMinutes}}<br>
+      breakLengthMinutes: {{breakLengthMinutes}}<br>
+    </p>
     {{#if tooEarlyForBreak}}
       {{breakLengthMinutes}}m break after first hour
     {{/if}}
     {{#if canTakeBreak}}
-      {{eui-button action='startBreak' size='medium' label='Break Time!'}}
+      {{eui-button action='startBreak' style='primary' disabled=startBreakButtonIsDisabled size='medium' label='Break Time!'}}
     {{/if}}
     {{#if onBreak}}
       Back at {{breakEndDateAndTimeDisplay}}
