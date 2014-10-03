@@ -2,6 +2,7 @@
 <div class="live-shift">
   Today {{startDateAndTimeDisplay}}-{{endDateAndTimeDisplay}} - LIVE NOW<br>
   Spinner: {{spinner.firstName}}<br>
+  <div class="debug" style="display: none;">
     <p>
       <h4>Debug</h4>
       breakStart: {{breakStartDateAndTime}}<br>
@@ -23,6 +24,7 @@
       onLunch: {{onLunch}}<br>
       lunchDone: {{lunchDone}}<br>
     </p>
+  </div>
   <div class="live-shift-break">
     {{#if tooEarlyForBreak}}
       Spinner to receive {{breakLengthMinutes}}m break this shift
