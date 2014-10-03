@@ -1,8 +1,7 @@
 
 <div class="live-shift">
   Today {{startDateAndTimeDisplay}}-{{endDateAndTimeDisplay}} - LIVE NOW<br>
-  Customer: {{business.name}}<br>
-  Address: TBD map links using a helper {{business.address}}<br>
+  Customer: {{business.name}} {{google-maps-link business.address}}<br>
   <div class="debug" style="display: none;">
     <p>
       <h4>Debug</h4>
