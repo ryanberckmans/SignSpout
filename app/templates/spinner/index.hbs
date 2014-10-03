@@ -1,13 +1,14 @@
-<h1>Spinner.index</h1>
-
-Id: {{id}}<br>
-Name: {{firstName}} {{lastName}}<br>
 
 {{#each shift in controllers.spinner.liveShifts}}
   {{render "spinner-live-shift" shift}}
 {{/each}}
 
 <h2>Debug</h2>
+
+<h3>Spinner Profile</h3>
+
+Id: {{id}}<br>
+Name: {{firstName}} {{lastName}}<br>
 
 <h3>Your Shifts</h3>
 

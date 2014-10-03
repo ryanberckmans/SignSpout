@@ -1,14 +1,15 @@
-<h2>business.index</h2>
-
-{{id}}<br>
-{{name}}<br>
-{{address}}<br>
 
 {{#each shift in controllers.business.liveShifts}}
   {{render "business-live-shift" shift}}
 {{/each}}
 
 <h2>Debug</h2>
+
+<h3>Business profile</h3>
+
+{{id}}<br>
+{{name}}<br>
+{{address}}<br>
 
 <h3>Shifts</h3>
 
