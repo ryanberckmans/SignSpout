@@ -6,15 +6,28 @@
   <div class="live-shift-break">
     <p>
       <h4>Debug</h4>
+      breakStart: {{breakStartDateAndTime}}<br>
+      breakEnd:  {{breakEndDateAndTime}}<br>
+      lunchStart: {{lunchStartDateAndTime}}<br>
+      lunchEnd:  {{lunchEndDateAndTime}}<br>
       tooEarlyForBreak: {{tooEarlyForBreak}}<br>
       canTakeBreak: {{canTakeBreak}}<br>
       onBreak: {{onBreak}}<br>
       breakDone: {{breakDone}}<br>
       shiftLengthMinutes: {{shiftLengthMinutes}}<br>
       breakLengthMinutes: {{breakLengthMinutes}}<br>
+      shiftMinutesElapsed: {{shiftMinutesElapsed}}<br>
+      shiftHasLunch: {{shiftHasLunch}}<br>
+      tooEarlyForLunch: {{tooEarlyForLunch}}<br>
+      canTakeLunch: {{canTakeLunch}}<br>
+      onLunch: {{onLunch}}<br>
+      lunchDone: {{lunchDone}}<br>
     </p>
     {{#if tooEarlyForBreak}}
-      {{breakLengthMinutes}}m break after first hour
+      {{breakLengthMinutes}}m break available after first hour
+    {{/if}}
+    {{#if onLunch}}
+      {{breakLengthMinutes}}m break available after lunch
     {{/if}}
     {{#if canTakeBreak}}
       {{eui-button action='startBreak' style='primary' disabled=startBreakButtonIsDisabled size='medium' label='Break Time!'}}
@@ -30,7 +43,10 @@
   {{#if shiftHasLunch}}
     <div class="live-shift-lunch">
       {{#if tooEarlyForLunch}}
-        {{lunchLengthMinutes}}m lunch after two hours
+        {{lunchLengthMinutes}}m lunch available after two hours
+      {{/if}}
+      {{#if onBreak}}
+        {{lunchLengthMinutes}}m lunch available after break
       {{/if}}
       {{#if canTakeLunch}}
         {{eui-button action='startLunch' size='medium' label='Lunch Time!'}}
