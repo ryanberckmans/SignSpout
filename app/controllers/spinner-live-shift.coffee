@@ -7,9 +7,9 @@ SpinnerLiveShiftController = Ember.ObjectController.extend LiveShiftPropertiesMi
       Ember.Logger.debug 'starting startBreak'
 
       spinnerShift = @get 'model'
-      now = Date()
-      spinnerShift.set 'breakStartDateAndTime', moment(now).add(30, 'seconds').startOf('minute').toDate() # Round to the nearest minute
-      spinnerShift.set 'breakEndDateAndTime', moment(now).add(@get('breakLengthMinutes'), 'minutes').toDate()
+      now = moment()
+      spinnerShift.set 'breakStartDateAndTime', now.clone().add(30, 'seconds').startOf('minute').toDate() # Round to the nearest minute
+      spinnerShift.set 'breakEndDateAndTime', now.clone().add(@get('breakLengthMinutes'), 'minutes').add(30, 'seconds').startOf('minute').toDate() # Round to nearest minute
 
       onSaveSuccess = ->
         Ember.Logger.debug 'saved spinnerShift ' + spinnerShift.get('id') + '. breakStartDateAndTime: ' + spinnerShift.get('breakStartDateAndTime') + '. breakEndDateAndTime: ' + spinnerShift.get('breakEndDateAndTime')
@@ -24,9 +24,9 @@ SpinnerLiveShiftController = Ember.ObjectController.extend LiveShiftPropertiesMi
       Ember.Logger.debug 'starting startLunch'
 
       spinnerShift = @get 'model'
-      now = Date()
-      spinnerShift.set 'lunchStartDateAndTime', moment(now).add(30, 'seconds').startOf('minute').toDate() # Round to the nearest minute
-      spinnerShift.set 'lunchEndDateAndTime', moment(now).add(@get('lunchLengthMinutes'), 'minutes').toDate()
+      now = moment()
+      spinnerShift.set 'lunchStartDateAndTime', now.clone().add(30, 'seconds').startOf('minute').toDate() # Round to the nearest minute
+      spinnerShift.set 'lunchEndDateAndTime', now.clone().add(@get('lunchLengthMinutes'), 'minutes').add(30, 'seconds').startOf('minute').toDate() # Round to nearest minute
 
       onSaveSuccess = ->
         Ember.Logger.debug 'saved spinnerShift ' + spinnerShift.get('id') + '. lunchStartDateAndTime: ' + spinnerShift.get('lunchStartDateAndTime') + '. lunchEndDateAndTime: ' + spinnerShift.get('lunchEndDateAndTime')
