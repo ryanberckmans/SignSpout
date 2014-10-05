@@ -45,7 +45,18 @@ controller = Ember.ArrayController.extend
     _this = this
     spinner = @get 'controllers.spinner.model'
     Ember.RSVP.filter(@get('model').toArray(), (spinnerShift) -> spinner.canWorkShift spinnerShift).then (availableShifts) ->
-      _this.set 'availableShifts', availableShifts
+      sortedAvailableShifts = Ember.ArrayProxy.createWithMixins Ember.SortableMixin,
+        sortProperties: ['startDateAndTime']
+        sortFunction: (startDateAndTime1, startDateAndTime2) ->
+          millis1 = moment(startDateAndTime1).valueOf()
+          millis2 = moment(startDateAndTime2).valueOf()
+          return 0 if millis1 == millis2
+          return -1 if millis1 < millis2
+          return 1
+        content: availableShifts
+        sortAscending: true
+      _this.set 'availableShifts', sortedAvailableShifts
+
   ).observes('model.@each', 'controllers.spinner.model.spinnerShifts.@each').on('init')
 
 `export default controller`
