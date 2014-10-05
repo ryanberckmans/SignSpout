@@ -1,20 +1,22 @@
 
 <div class="content-padded">
-  <h3>Waiting for Rating</h3>
-  <ul class="table-view">
-    {{#each controllers.spinner.postLiveShifts}}
-      {{partial "spinner-nonlive-shift"}}
-    {{else}}
-      <p>No shifts waiting for review.</p>
-    {{/each}}
-  </ul>
+  {{#if controllers.spinner.postLiveShifts.length}}
+    <h3>Waiting for Rating</h3>
+    <ul class="table-view">
+      {{#each controllers.spinner.postLiveShifts}}
+        {{partial "spinner-nonlive-shift"}}
+      {{/each}}
+    </ul>
+  {{/if}}
 
   <h3>Shift History</h3>
-  <ul class="table-view">
-    {{#each controllers.spinner.completedShifts}}
-      {{partial "spinner-nonlive-shift"}}
-    {{else}}
-      <p>No shift history.</p>
-    {{/each}}
-  </ul>
+  {{#if controllers.spinner.completedShifts.length}}
+    <ul class="table-view">
+      {{#each controllers.spinner.completedShifts}}
+        {{partial "spinner-nonlive-shift"}}
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>No shift history.</p>
+  {{/if}}
 </div>
