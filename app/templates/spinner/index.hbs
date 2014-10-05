@@ -1,106 +1,23 @@
 
-{{#each shift in controllers.spinner.liveShifts}}
-  {{render "spinner-live-shift" shift}}
-{{/each}}
-
-<h2>Debug</h2>
-
-<h3>Spinner Profile</h3>
-
-Id: {{id}}<br>
-Name: {{firstName}} {{lastName}}<br>
-
-<h3>Your Shifts</h3>
-
-Shift count: {{spinnerShifts.length}}
-<ul>
-  {{#each spinnerShifts}}
-    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, Business: {{business.name}}, State: {{state}}</li>
+<div class="content-padded">
+  <h3>Happening Now</h3>
+  {{#each shift in controllers.spinner.liveShifts}}
+    {{render "spinner-live-shift" shift}}
+  {{else}}
+    <p>No shifts right now.</p>
   {{/each}}
-</ul>
 
-<h3>Live shifts</h3>
-
-Live count: {{controllers.spinner.liveShifts.length}}
-
-<ul>
-  {{#each controllers.spinner.liveShifts}}
-    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+  <h3>Happening Soon</h3>
+  {{#each controllers.spinner.nearFutureShifts}}
+    <p>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</p>
+  {{else}}
+    <p>No shifts soon.</p>
   {{/each}}
-</ul>
 
-<h3>PostLive shifts</h3>
-
-PostLive count: {{controllers.spinner.postLiveShifts.length}}
-
-<ul>
-  {{#each controllers.spinner.postLiveShifts}}
-    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
-  {{/each}}
-</ul>
-
-<h3>Upcoming shifts</h3>
-
-Upcoming count: {{controllers.spinner.upcomingShifts.length}}
-
-<ul>
+  <h3>Other Shifts</h3>
   {{#each controllers.spinner.upcomingShifts}}
-    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
+    <p>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</p>
+  {{else}}
+    <p>No other shifts scheduled.</p>
   {{/each}}
-</ul>
-
-<h3>Completed shifts</h3>
-
-Completed count: {{controllers.spinner.completedShifts.length}}
-
-<ul>
-  {{#each controllers.spinner.completedShifts}}
-    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}, SpinnerRating: {{spinnerRating}}</li>
-  {{/each}}
-</ul>
-
-<h3>Matched shifts</h3>
-
-Matched count: {{controllers.spinner.matchedShifts.length}}
-
-<ul>
-  {{#each controllers.spinner.matchedShifts}}
-    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
-  {{/each}}
-</ul>
-
-<h3>Unmatched shifts</h3>
-
-Unmatched count: {{controllers.spinner.unmatchedShifts.length}} - Should always be zero since this is from spinner point of view
-
-<ul>
-  {{#each controllers.spinner.unmatchedShifts}}
-    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
-  {{/each}}
-</ul>
-
-<h3>Cancelled shifts</h3>
-
-Cancelled count: {{controllers.spinner.cancelledShifts.length}} - Should always be zero since, at this time, shifts may only be cancelled before a spinner is matched
-
-<ul>
-  {{#each controllers.spinner.cancelledShifts}}
-    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
-  {{/each}}
-</ul>
-
-<h3>Errored shifts</h3>
-
-Errored count: {{controllers.spinner.erroredShifts.length}}
-
-<ul>
-  {{#each controllers.spinner.erroredShifts}}
-    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
-  {{/each}}
-</ul>
-
-<h3>Clock</h3>
-
-Seconds: {{controllers.spinner.clock.eachSecond}}<br>
-Minutes: {{controllers.spinner.clock.eachMinute}}<br>
-Hours: {{controllers.spinner.clock.eachHour}}<br>
+</div>
