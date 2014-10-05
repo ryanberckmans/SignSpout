@@ -1,10 +1,5 @@
-<h1>Find Work</h1>
-
-<p>Work for spinner: {{controllers.spinner.model.firstName}}</p> {{! TODO: find out why I have to use controllers.spinner.model.firstName here, instead of just controllers.spinner.firstName}}
-
-<h2>Available Shifts</h2>
-
-<ul>
+<div class="content-padded">
+  <h3>Shifts Available</h3>
   {{#each spinnerShift in availableShifts}}
     <li>
       <button {{bind-attr disabled=areTakeShiftButtonsDisabled}} {{action 'signupForSpinnerShift' spinnerShift}}>
@@ -12,5 +7,7 @@
         Take Shift</button> Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}
       {{/with}}
     </li>
+  {{else}}
+  <p>No shifts available. Check back soon!</p>
   {{/each}}
-</ul>
+</div>
