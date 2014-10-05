@@ -2,30 +2,50 @@
 
 # Requires Clock
 SpinnerShiftSorterMixin = Ember.Mixin.create
-  unmatchedShifts: (->
-    @get('spinnerShifts').filter (spinnerShift) ->
-        spinnerShift.unmatched()
+  sortedSpinnerShifts: (->
+    spinnerShifts = @get 'spinnerShifts'
+    nowMillis = moment().valueOf()
+    Ember.ArrayProxy.createWithMixins Ember.SortableMixin,
+      sortProperties: ['startDateAndTime']
+      # sortFunction compares each shift's closeness to now.
+      # This provides desired behavior when sortedSpinnerShifts is partitioned:
+      #   1. shifts in the past are sorted most recent first
+      #   2. shifts in the future are sorted soonest first
+      # If we simply sorted by startDateAndTime, we could get (1.) xor (2.)
+      sortFunction: (startDateAndTime1, startDateAndTime2) ->
+        millis1AwayFromNow = Math.abs(nowMillis - moment(startDateAndTime1).valueOf())
+        millis2AwayFromNow = Math.abs(nowMillis - moment(startDateAndTime2).valueOf())
+        return 0 if millis1AwayFromNow == millis2AwayFromNow
+        return -1 if millis1AwayFromNow < millis2AwayFromNow
+        return 1
+      content: spinnerShifts
+      sortAscending: true
   ).property 'spinnerShifts.@each.state'
+
+  unmatchedShifts: (->
+    @get('sortedSpinnerShifts').filter (spinnerShift) ->
+        spinnerShift.unmatched()
+  ).property 'sortedSpinnerShifts'
 
   matchedShifts: (->
-    @get('spinnerShifts').filter (spinnerShift) ->
+    @get('sortedSpinnerShifts').filter (spinnerShift) ->
         spinnerShift.matched()
-  ).property 'spinnerShifts.@each.state'
+  ).property 'sortedSpinnerShifts'
 
   completedShifts: (->
-    @get('spinnerShifts').filter (spinnerShift) ->
+    @get('sortedSpinnerShifts').filter (spinnerShift) ->
         spinnerShift.completed()
-  ).property 'spinnerShifts.@each.state'
+  ).property 'sortedSpinnerShifts'
 
   cancelledShifts: (->
-    @get('spinnerShifts').filter (spinnerShift) ->
+    @get('sortedSpinnerShifts').filter (spinnerShift) ->
         spinnerShift.cancelled()
-  ).property 'spinnerShifts.@each.state'
+  ).property 'sortedSpinnerShifts'
 
   erroredShifts: (->
-    @get('spinnerShifts').filter (spinnerShift) ->
+    @get('sortedSpinnerShifts').filter (spinnerShift) ->
         spinnerShift.errored()
-  ).property 'spinnerShifts.@each.state'
+  ).property 'sortedSpinnerShifts'
 
 
   # Time-dependent partition of matchedShifts
@@ -41,26 +61,26 @@ SpinnerShiftSorterMixin = Ember.Mixin.create
     now = moment()
     @get('matchedShifts').filter (spinnerShift) ->
       now.isAfter(moment(spinnerShift.get 'startDateAndTime')) && now.isBefore(moment(spinnerShift.get 'endDateAndTime'))
-  ).property 'matchedShifts.@each', 'clock.eachSecond'
+  ).property 'matchedShifts', 'clock.eachSecond'
 
   postLiveShifts: (->
     now = moment()
     @get('matchedShifts').filter (spinnerShift) ->
       now.isAfter(moment(spinnerShift.get 'endDateAndTime'))
-  ).property 'matchedShifts.@each', 'clock.eachSecond'
+  ).property 'matchedShifts', 'clock.eachSecond'
 
   nearFutureShifts: (->
     now = moment()
     nearFutureThresholdMinutes = @get('nearFutureThresholdMinutes')
     @get('matchedShifts').filter (spinnerShift) ->
       now.isAfter(moment(spinnerShift.get 'startDateAndTime').subtract(nearFutureThresholdMinutes, 'minutes')) && now.isBefore(moment(spinnerShift.get 'startDateAndTime'))
-  ).property 'matchedShifts.@each', 'clock.eachSecond'
+  ).property 'matchedShifts', 'clock.eachSecond'
 
   upcomingShifts: (->
     now = moment()
     nearFutureThresholdMinutes = @get('nearFutureThresholdMinutes')
     @get('matchedShifts').filter (spinnerShift) ->
       now.isBefore(moment(spinnerShift.get 'startDateAndTime').subtract(nearFutureThresholdMinutes, 'minutes'))
-  ).property 'matchedShifts.@each', 'clock.eachSecond'
+  ).property 'matchedShifts', 'clock.eachSecond'
 
 `export default SpinnerShiftSorterMixin`
