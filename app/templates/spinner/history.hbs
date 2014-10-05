@@ -1,29 +1,20 @@
-<h3>PostLive shifts</h3>
 
-PostLive count: {{controllers.spinner.postLiveShifts.length}}
+<div class="content-padded">
+  <h3>Waiting for Rating</h3>
+  <ul class="table-view">
+    {{#each controllers.spinner.postLiveShifts}}
+      {{partial "spinner-nonlive-shift"}}
+    {{else}}
+      <p>No shifts waiting for review.</p>
+    {{/each}}
+  </ul>
 
-<ul>
-  {{#each controllers.spinner.postLiveShifts}}
-    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
-  {{/each}}
-</ul>
-
-<h3>Completed shifts</h3>
-
-Completed count: {{controllers.spinner.completedShifts.length}}
-
-<ul>
-  {{#each controllers.spinner.completedShifts}}
-    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}, SpinnerRating: {{spinnerRating}}</li>
-  {{/each}}
-</ul>
-
-<h3>Errored shifts</h3>
-
-Errored count: {{controllers.spinner.erroredShifts.length}}
-
-<ul>
-  {{#each controllers.spinner.erroredShifts}}
-    <li>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</li>
-  {{/each}}
-</ul>
+  <h3>Shift History</h3>
+  <ul class="table-view">
+    {{#each controllers.spinner.completedShifts}}
+      {{partial "spinner-nonlive-shift"}}
+    {{else}}
+      <p>No shift history.</p>
+    {{/each}}
+  </ul>
+</div>
