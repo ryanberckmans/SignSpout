@@ -1,0 +1,18 @@
+<nav class="bar bar-tab">
+  {{#link-to 'spinner.index' auth.spinnerId classNames='tab-item'}}
+    <span class="icon icon-home"></span>
+    <span class="tab-label">Today</span>
+  {{/link-to}}
+  {{#link-to 'spinner.shift-signup' auth.spinnerId classNames='tab-item'}}
+    <span class="icon icon-search"></span>
+    <span class="tab-label">Get Work</span>
+  {{/link-to}}
+  {{#link-to 'spinner.history' auth.spinnerId classNames='tab-item'}}
+    <span class="icon fa fa-history"></span>
+    <span class="tab-label">History</span>
+  {{/link-to}}
+  {{#link-to 'spinner.profile' auth.spinnerId classNames='tab-item'}}
+    <span class="icon icon-person"></span>
+    <span class="tab-label">Profile</span>
+  {{/link-to}}
+</nav>
