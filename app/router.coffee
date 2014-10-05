@@ -10,6 +10,8 @@ Router.map ->
   this.resource 'spinner', { path: '/spinner/:spinner_id' }, ->
     this.route 'shift-signup'
     this.route 'history'
+    this.route 'profile'
   this.route 'fourOhFour', { path: '*path' } # Catch-all, glob route. See https://stackoverflow.com/questions/14548594/how-to-handle-no-route-matched-in-ember-js-and-show-404-page
+  @route 'spinner/profile'
 
 `export default Router`
