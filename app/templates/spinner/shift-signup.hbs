@@ -1,13 +1,22 @@
 <div class="content-padded">
-  <h3>Shifts Available</h3>
-  {{#each spinnerShift in availableShifts}}
-    <li>
-      <button {{bind-attr disabled=areTakeShiftButtonsDisabled}} {{action 'signupForSpinnerShift' spinnerShift}}>
-      {{#with spinnerShift}}
-        Take Shift</button> Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}
-      {{/with}}
-    </li>
+  {{#if availableShifts.length}}
+    <h3>Shifts Available</h3>
+    <ul class="table-view">
+      {{#each spinnerShift in availableShifts}}
+        <li class="table-view-cell">
+          {{format-day-of-month spinnerShift.startDateAndTime}}
+          <p>{{format-shift-time-of-day spinnerShift}}</p>
+          <p>{{spinnerShift.business.name}} 
+            {{#with spinnerShift.business}}
+              {{google-maps-link name address}}
+            {{/with}}
+          </p>
+          <button class="btn btn-positive" {{bind-attr disabled=areTakeShiftButtonsDisabled}} {{action 'signupForSpinnerShift' spinnerShift}}>Take Shift</button>
+        </li>
+      {{/each}}
+    </ul>
   {{else}}
-  <p>No shifts available. Check back soon!</p>
-  {{/each}}
+    <h3>No Shifts Available</h3>
+    <p>Check back soon!</p>
+  {{/if}}
 </div>
