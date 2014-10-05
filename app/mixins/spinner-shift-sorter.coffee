@@ -27,11 +27,15 @@ SpinnerShiftSorterMixin = Ember.Mixin.create
         spinnerShift.errored()
   ).property 'spinnerShifts.@each.state'
 
-  upcomingShifts: (->
-    now = moment()
-    @get('matchedShifts').filter (spinnerShift) ->
-      now.isBefore(moment(spinnerShift.get 'startDateAndTime'))
-  ).property 'matchedShifts.@each', 'clock.eachSecond'
+
+  # Time-dependent partition of matchedShifts
+  #
+  # liveShifts - happening now
+  # postLiveShifts - over and not yet completed
+  # nearFutureShifts - shifts which are happening today, or within nearFutureThresholdMinutes
+  # upcomingShifts - all other matched shifts, ie shifts too far in future to be included in nearFutureShifts
+
+  nearFutureThresholdMinutes: 60*24
 
   liveShifts: (->
     now = moment()
@@ -43,6 +47,20 @@ SpinnerShiftSorterMixin = Ember.Mixin.create
     now = moment()
     @get('matchedShifts').filter (spinnerShift) ->
       now.isAfter(moment(spinnerShift.get 'endDateAndTime'))
+  ).property 'matchedShifts.@each', 'clock.eachSecond'
+
+  nearFutureShifts: (->
+    now = moment()
+    nearFutureThresholdMinutes = @get('nearFutureThresholdMinutes')
+    @get('matchedShifts').filter (spinnerShift) ->
+      now.isAfter(moment(spinnerShift.get 'startDateAndTime').subtract(nearFutureThresholdMinutes, 'minutes')) && now.isBefore(moment(spinnerShift.get 'startDateAndTime'))
+  ).property 'matchedShifts.@each', 'clock.eachSecond'
+
+  upcomingShifts: (->
+    now = moment()
+    nearFutureThresholdMinutes = @get('nearFutureThresholdMinutes')
+    @get('matchedShifts').filter (spinnerShift) ->
+      now.isBefore(moment(spinnerShift.get 'startDateAndTime').subtract(nearFutureThresholdMinutes, 'minutes'))
   ).property 'matchedShifts.@each', 'clock.eachSecond'
 
 `export default SpinnerShiftSorterMixin`
