@@ -1,10 +1,13 @@
 
-<div class="live-shift">
-  Today {{startDateAndTimeDisplay}}-{{endDateAndTimeDisplay}} - LIVE NOW<br>
-  {{business.name}} 
-  {{#with business}}
-    {{google-maps-link name address}}
-  {{/with}}<br>
+{{! expects to be wrapped in a <ul class="table-view"> }}
+<li class="table-view-cell">
+  {{format-shift-time-of-day this}}
+  <p>Today - LIVE NOW</p>
+  <p>{{business.name}} 
+     {{#with business}}
+      {{google-maps-link name address}}
+     {{/with}}
+  </p>
   <div class="debug" style="display: none;">
     <p>
       <h4>Debug</h4>
@@ -29,25 +32,26 @@
     </p>
   </div>
   <div class="live-shift-break">
-    {{#if tooEarlyForBreak}}
-      {{breakLengthMinutes}}m break available after first hour
-    {{/if}}
-    {{#if onLunchAndBreakDisabled}}
-      {{breakLengthMinutes}}m break available after lunch
-    {{/if}}
-    {{#if canTakeBreak}}
-      {{eui-button action='startBreak' style='primary' size='medium' label='Go on Break'}}
-    {{/if}}
-    {{#if onBreak}}
-      On break! Back at {{breakEndDateAndTimeDisplay}}
-    {{/if}}
-    {{#if breakDone}}
-      Your break was over at {{breakEndDateAndTimeDisplay}}
-    {{/if}}
-    <br>
-  </div>
+    <p>
+      {{#if tooEarlyForBreak}}
+        {{breakLengthMinutes}}m break available after first hour
+      {{/if}}
+      {{#if onLunchAndBreakDisabled}}
+        {{breakLengthMinutes}}m break available after lunch
+      {{/if}}
+      {{#if canTakeBreak}}
+        <button class='btn btn-primary' {{action 'startBreak'}}>Go on Break</button>
+      {{/if}}
+      {{#if onBreak}}
+        On break! Back at {{breakEndDateAndTimeDisplay}}
+      {{/if}}
+      {{#if breakDone}}
+        Your break was over at {{breakEndDateAndTimeDisplay}}
+      {{/if}}
+    </p>
+  </div>  
   {{#if shiftHasLunch}}
-    <div class="live-shift-lunch">
+    <p>
       {{#if tooEarlyForLunch}}
         {{lunchLengthMinutes}}m lunch available after two hours
       {{/if}}
@@ -55,7 +59,7 @@
         {{lunchLengthMinutes}}m lunch available after break
       {{/if}}
       {{#if canTakeLunch}}
-        {{eui-button action='startLunch' style='primary' size='medium' label='Go on Lunch'}}
+        <button class='btn btn-primary' {{action 'startLunch'}}>Go on Lunch</button>
       {{/if}}
       {{#if onLunch}}
         On lunch! Back at {{lunchEndDateAndTimeDisplay}}
@@ -63,11 +67,7 @@
       {{#if lunchDone}}
         Lunch done
       {{/if}}
-      <br>
-    </div>
+    </p>
   {{/if}}
-  Working this shift right now!<br>
-  <div class=".restroom-notice">
-    Restroom at any time, drop by {{business.name}}.
-  </div>
-</div>
+  <p class="restroom-notice">Restroom at any time, drop by {{business.name}}.</p>
+</li>
