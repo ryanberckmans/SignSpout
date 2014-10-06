@@ -1,6 +1,12 @@
-{{#if auth.spinnerId}}
-  {{partial "spinner-nav-bar"}}
+{{#if auth.businessId}}
+  {{partial "business-nav-bar"}}
+{{else}}
+  {{#if auth.spinnerId}}
+    {{partial "spinner-nav-bar"}}
+  {{/if}}
 {{/if}}
+
+
 
 <div class="content">
   <a href="/"><button>Reload</button></a><br>
