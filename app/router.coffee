@@ -7,6 +7,7 @@ Router = Ember.Router.extend
 Router.map ->
   this.resource 'business', { path: '/business/:business_id' }, ->
     this.route 'book-spinner'
+    this.route 'history'
   this.resource 'spinner', { path: '/spinner/:spinner_id' }, ->
     this.route 'shift-signup'
     this.route 'history'
