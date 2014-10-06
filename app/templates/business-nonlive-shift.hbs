@@ -6,12 +6,5 @@
   <p>Spinner: {{spinner.firstName}}</p>
   {{#if spinnerRating}}
     <p>Rated {{spinner.firstName}}: {{spinnerRating}} of 5 stars</p>
-  {{else}}
-    How did it go?<br> 
-    {{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=this spinnerRating=1 icon='fa fa-star'}}
-    {{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=this spinnerRating=2 icon='fa fa-star'}}
-    {{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=this spinnerRating=3 icon='fa fa-star'}}
-    {{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=this spinnerRating=4 icon='fa fa-star'}}
-    {{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=this spinnerRating=5 icon='fa fa-star'}}
   {{/if}}
 </li>  
