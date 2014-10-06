@@ -17,7 +17,6 @@
       lunchEnd:  {{lunchEndDateAndTime}}<br>
       tooEarlyForBreak: {{tooEarlyForBreak}}<br>
       canTakeBreak: {{canTakeBreak}}<br>
-      onLunchAndBreakDisabled: {{onLunchAndBreakDisabled}}<br>
       onBreak: {{onBreak}}<br>
       breakDone: {{breakDone}}<br>
       shiftLengthMinutes: {{shiftLengthMinutes}}<br>
@@ -26,46 +25,41 @@
       shiftHasLunch: {{shiftHasLunch}}<br>
       tooEarlyForLunch: {{tooEarlyForLunch}}<br>
       canTakeLunch: {{canTakeLunch}}<br>
-      onBreakAndLunchDisabled: {{onBreakAndLunchDisabled}}<br>
+      lunchDisabledUntilBreakDone: {{lunchDisabledUntilBreakDone}}<br>
       onLunch: {{onLunch}}<br>
       lunchDone: {{lunchDone}}<br>
     </p>
   </div>
-  <div class="live-shift-break">
-    <p>
-      {{#if tooEarlyForBreak}}
-        {{breakLengthMinutes}}m break available after first hour
-      {{/if}}
-      {{#if onLunchAndBreakDisabled}}
-        {{breakLengthMinutes}}m break available after lunch
-      {{/if}}
-      {{#if canTakeBreak}}
-        <button class='btn btn-primary' {{action 'startBreak'}}>Go on Break</button>
-      {{/if}}
-      {{#if onBreak}}
-        On break! Back at {{breakEndDateAndTimeDisplay}}
-      {{/if}}
-      {{#if breakDone}}
-        Your break was over at {{breakEndDateAndTimeDisplay}}
-      {{/if}}
-    </p>
-  </div>  
+  <p>
+    {{#if tooEarlyForBreak}}
+      {{breakLengthMinutes}}m break available after first hour
+    {{/if}}
+    {{#if canTakeBreak}}
+      <button class='btn btn-primary' {{action 'startBreak'}}>Go on Break</button>
+    {{/if}}
+    {{#if onBreak}}
+      <span style="font-weight: bold;">ON BREAK!</span> Back at {{format-time-of-day breakEndDateAndTime}}
+    {{/if}}
+    {{#if breakDone}}
+      Break was over at {{format-time-of-day breakEndDateAndTime}}
+    {{/if}}
+  </p>
   {{#if shiftHasLunch}}
     <p>
       {{#if tooEarlyForLunch}}
         {{lunchLengthMinutes}}m lunch available after two hours
       {{/if}}
-      {{#if onBreakAndLunchDisabled}}
+      {{#if lunchDisabledUntilBreakDone}}
         {{lunchLengthMinutes}}m lunch available after break
       {{/if}}
       {{#if canTakeLunch}}
         <button class='btn btn-primary' {{action 'startLunch'}}>Go on Lunch</button>
       {{/if}}
       {{#if onLunch}}
-        On lunch! Back at {{lunchEndDateAndTimeDisplay}}
+        <span style="font-weight: bold;">ON LUNCH!</span> Back at {{format-time-of-day lunchEndDateAndTime}}
       {{/if}}
       {{#if lunchDone}}
-        Lunch done
+        Lunch was over at {{format-time-of-day lunchEndDateAndTime}}
       {{/if}}
     </p>
   {{/if}}

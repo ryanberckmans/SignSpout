@@ -1,7 +1,9 @@
 
-<div class="live-shift">
-  Today {{startDateAndTimeDisplay}}-{{endDateAndTimeDisplay}} - LIVE NOW<br>
-  Spinner: {{spinner.firstName}}<br>
+{{! expects to be wrapped in a <ul class="table-view"> }}
+<li class="table-view-cell">
+  {{format-shift-time-of-day this}}
+  <p>Today - LIVE NOW</p>
+  <p>Spinner: {{spinner.firstName}}</p>
   <div class="debug" style="display: none;">
     <p>
       <h4>Debug</h4>
@@ -11,7 +13,6 @@
       lunchEnd:  {{lunchEndDateAndTime}}<br>
       tooEarlyForBreak: {{tooEarlyForBreak}}<br>
       canTakeBreak: {{canTakeBreak}}<br>
-      onLunchAndBreakDisabled: {{onLunchAndBreakDisabled}}<br>
       onBreak: {{onBreak}}<br>
       breakDone: {{breakDone}}<br>
       shiftLengthMinutes: {{shiftLengthMinutes}}<br>
@@ -20,51 +21,43 @@
       shiftHasLunch: {{shiftHasLunch}}<br>
       tooEarlyForLunch: {{tooEarlyForLunch}}<br>
       canTakeLunch: {{canTakeLunch}}<br>
-      onBreakAndLunchDisabled: {{onBreakAndLunchDisabled}}<br>
+      lunchDisabledUntilBreakDone: {{lunchDisabledUntilBreakDone}}<br>
       onLunch: {{onLunch}}<br>
       lunchDone: {{lunchDone}}<br>
     </p>
   </div>
-  <div class="live-shift-break">
+  <p>
     {{#if tooEarlyForBreak}}
-      Spinner to receive {{breakLengthMinutes}}m break this shift
-    {{/if}}
-    {{#if onLunchAndBreakDisabled}}
-      Spinner to receive {{breakLengthMinutes}}m break this shift
+      Receives {{breakLengthMinutes}}m break
     {{/if}}
     {{#if canTakeBreak}}
-      Spinner to receive {{breakLengthMinutes}}m break this shift
+      Receives {{breakLengthMinutes}}m break
     {{/if}}
     {{#if onBreak}}
-      ON BREAK. Due back at {{breakEndDateAndTimeDisplay}}
+      <span style="font-weight: bold;">ON BREAK.</span> Due back at {{format-time-of-day breakEndDateAndTime}}
     {{/if}}
     {{#if breakDone}}
-      Spinner break was over at {{breakEndDateAndTimeDisplay}}
+      Break was over at {{format-time-of-day breakEndDateAndTime}}
     {{/if}}
-    <br>
-  </div>
+  </p>
   {{#if shiftHasLunch}}
-    <div class="live-shift-lunch">
+    <p>
       {{#if tooEarlyForLunch}}
-        Spinner to receive {{lunchLengthMinutes}}m lunch this shift
+        Receives {{lunchLengthMinutes}}m lunch
       {{/if}}
-      {{#if onBreakAndLunchDisabled}}
-        Spinner to receive {{lunchLengthMinutes}}m lunch this shift
+      {{#if lunchDisabledUntilBreakDone}}
+        Receives {{lunchLengthMinutes}}m lunch
       {{/if}}
       {{#if canTakeLunch}}
-        Spinner to receive {{lunchLengthMinutes}}m lunch this shift
+        Receives {{lunchLengthMinutes}}m lunch
       {{/if}}
       {{#if onLunch}}
-        ON LUNCH. Due back at {{lunchEndDateAndTimeDisplay}}
+        <span style="font-weight: bold;">ON LUNCH.</span> Due back at {{format-time-of-day lunchEndDateAndTime}}
       {{/if}}
       {{#if lunchDone}}
-        Spinner lunch over. Was due back at {{lunchEndDateAndTimeDisplay}}
+        Lunch was over at {{format-time-of-day lunchEndDateAndTime}}
       {{/if}}
-      <br>
-    </div>
+    </p>
   {{/if}}
-  Working this shift right now!<br>
-  <div class=".restroom-notice">
-    Kindly allow {{spinner.firstName}} to use your restroom as needed.
-  </div>
-</div>
+  <p class="restroom-notice">Kindly allow {{spinner.firstName}} to use your restroom as needed.</p>
+</li>
