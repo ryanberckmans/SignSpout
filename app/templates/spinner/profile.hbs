@@ -1,11 +1,15 @@
 
-<ul class="table-view">
-  <li class="table-view-divider">Name</li>
-  <li class="table-view-cell">{{firstName}} {{lastName}}</li>
-  <li class="table-view-divider">Email</li>
-  <li class="table-view-cell">{{auth.email}}</li>
-  <li class="table-view-divider">Spinner Rating</li>
-  <li class="table-view-cell table-view-cell">4.5 out of 5 stars</li>
-</ul>
+<div class="content-padded">
+  <ul class="table-view">
+    <li class="table-view-divider">Name</li>
+    <li class="table-view-cell">{{firstName}} {{lastName}}</li>
+    <li class="table-view-divider">Email</li>
+    <li class="table-view-cell">{{auth.email}}</li>
+    {{#if averageRating}}
+      <li class="table-view-divider">Spinner Rating</li>
+      <li class="table-view-cell table-view-cell">{{averageRating}} out of 5 stars</li>
+    {{/if}}
+  </ul>
 
-<button {{action 'logout'}} class="btn btn-negative">Log Out</button>
+  <button {{action 'logout'}} class="btn btn-negative">Log Out</button>
+</div>
