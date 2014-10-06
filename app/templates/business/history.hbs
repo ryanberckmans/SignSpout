@@ -1,14 +1,5 @@
 
 <div class="content-padded">
-  {{#if controllers.business.postLiveShifts.length}}
-    <h3>Not Yet Rated</h3>
-    <ul class="table-view">
-      {{#each controllers.business.postLiveShifts}}
-        {{partial "business-nonlive-shift"}}
-      {{/each}}
-    </ul>
-  {{/if}}
-
   <h3>Shift History</h3>
   {{#if controllers.business.completedShifts.length}}
     <ul class="table-view">

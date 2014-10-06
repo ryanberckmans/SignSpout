@@ -2,8 +2,8 @@
 
 BusinessRoute = Ember.Route.extend
   actions:
-    cancelSpinnerShift: (context) ->
-      context.spinnerShift.cancel().catch (reason) ->
+    cancelSpinnerShift: (spinnerShift) ->
+      spinnerShift.cancel().catch (reason) ->
         Ember.Logger.error "business index: cancel failed. This error isn't rethrown and is trapped here. Reason: " + reason
       null
 
