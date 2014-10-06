@@ -113,6 +113,7 @@ var SignSpinnersAuthentication =  Ember.Object.extend(SignSpinnersAuthentication
   // @return {Promise} for convenience, returns the new Promise, or existing Promise if it hasn't been settled yet
   _getFirebaseSimpleLoginPromise: function() {
     var _this = this;
+    var firebaseSimpleLoginPromiseWithFinally = null; // see note below
     var firebaseSimpleLoginPromise = this.get('_firebaseSimpleLoginPromise');
     if (firebaseSimpleLoginPromise === null) {
       firebaseSimpleLoginPromise = new Ember.RSVP.Promise(function(resolve, reject) {
@@ -127,11 +128,25 @@ var SignSpinnersAuthentication =  Ember.Object.extend(SignSpinnersAuthentication
           throw new Error('expected _firebaseSimpleLoginPromiseReject to be null since _firebaseSimpleLoginPromise is null');
         }
       });
-      firebaseSimpleLoginPromise.finally(function() {
+
+      // _firebaseSimpleLoginPromise must be set to firebaseSimpleLoginPromiseWithFinally.
+      // Otherwise, the finally() call here forks the promise tree, and if this promise rejects,
+      // an uncaught error will bubble up through this finally() fork we have created.
+      // How it works now:
+      //    Promise -> finally() -> returned to client // All errors bubble to client
+      // How it would work if we didn't set firebaseSimpleLoginPromiseWithFinally
+      //    Promise -> finally() // reject() will be uncaught
+      //         +---> returned to client // reject() bubbles here
+      //                                  // but *also* bubbles through finally() fork
+      //                                  // resulting in uncaught errors
+      // N.B technically we could reuse the firebaseSimpleLoginPromise referenece,
+      //     instead of declaring firebaseSimpleLoginPromiseWithFinally, but the second reference
+      //     clarifies this important point.
+      firebaseSimpleLoginPromiseWithFinally = firebaseSimpleLoginPromise.finally(function() {
         // Remove this Promise from this Object when it has been settled - it should be used exactly once in the FirebaseSimpleLogin callback
         // When this finally() handler is invoked, we expect that _firebaseSimpleLoginPromise is still set to this new Promise
         var firebaseSimpleLoginPromise2 = _this.get('_firebaseSimpleLoginPromise');
-        if (firebaseSimpleLoginPromise2 !== firebaseSimpleLoginPromise) {
+        if (firebaseSimpleLoginPromise2 !== firebaseSimpleLoginPromiseWithFinally) {
           throw new Error("_firebaseSimpleLoginPromise appears to have been set to a new Promise before the old Promise's finally() handler was invoked");
         }
         _this.set('_firebaseSimpleLoginPromise', null);
@@ -140,11 +155,11 @@ var SignSpinnersAuthentication =  Ember.Object.extend(SignSpinnersAuthentication
         Ember.Logger.debug('cleared _firebaseSimpleLoginPromise');
       });
       Ember.Logger.debug('set new _firebaseSimpleLoginPromise');
-      this.set('_firebaseSimpleLoginPromise', firebaseSimpleLoginPromise);
+      this.set('_firebaseSimpleLoginPromise', firebaseSimpleLoginPromiseWithFinally);
     } else {
       throw new Error("FirebaseSimpleLogin operation already in progress: _firebaseSimpleLoginPromise not null");
     }
-    return firebaseSimpleLoginPromise;
+    return firebaseSimpleLoginPromiseWithFinally;
   },
 
   // Must be preceeded with a call to _getFirebaseSimpleLoginPromise(), which sets up a new Promise for use in any FirebaseSimpleLogin operation
@@ -156,10 +171,7 @@ var SignSpinnersAuthentication =  Ember.Object.extend(SignSpinnersAuthentication
       Ember.Logger.debug('creating new FirebaseSimpleLogin client');
       firebaseSimpleLoginClient = new window.FirebaseSimpleLogin(dbRef, function(error, user) {
         Ember.run(function() {
-          if (error && error.code === 'INVALID_USER') {
-            Ember.Logger.warn('SignSpinnersAuthentication: received INVALID_USER');
-            _this.get('_firebaseSimpleLoginPromiseResolve')(false);
-          } else if (error) {
+          if (error) {
             _this.get('_firebaseSimpleLoginPromiseReject')(error);
           } else if (!error && !user) {
             Ember.Logger.info('SignSpinnersAuthentication: logged out or found no existing session');
