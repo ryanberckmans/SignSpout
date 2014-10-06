@@ -1,23 +1,38 @@
 
 <div class="content-padded">
-  <h3>Happening Now</h3>
-  {{#each shift in controllers.spinner.liveShifts}}
-    {{render "spinner-live-shift" shift}}
-  {{else}}
-    <p>No shifts right now.</p>
-  {{/each}}
+  {{#if controllers.spinner.liveShifts.length}}
+    <h3>Happening Now</h3>
+    <ul class="table-view">
+      {{#each shift in controllers.spinner.liveShifts}}
+        {{render "spinner-live-shift" shift}}
+      {{/each}}
+    </ul>
+  {{/if}}
 
-  <h3>Happening Soon</h3>
-  {{#each controllers.spinner.nearFutureShifts}}
-    <p>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</p>
-  {{else}}
-    <p>No shifts soon.</p>
-  {{/each}}
+  {{#if controllers.spinner.nearFutureShifts.length}}
+    <h3>Happening Soon</h3>
+    <ul class="table-view">
+      {{#each controllers.spinner.nearFutureShifts}}
+        {{partial "spinner-nonlive-shift"}}
+      {{/each}}
+    </ul>
+  {{/if}}
 
-  <h3>Other Shifts</h3>
-  {{#each controllers.spinner.upcomingShifts}}
-    <p>Start: {{startDateAndTime}}, End: {{endDateAndTime}}, State: {{state}}, Spinner: {{#if spinner}}{{spinner.firstName}} {{spinner.lastName}}{{else}}(no spinner yet){{/if}}</p>
-  {{else}}
-    <p>No other shifts scheduled.</p>
-  {{/each}}
+  {{#if controllers.spinner.upcomingShifts.length}}
+    <h3>Upcoming Shifts</h3>
+    <ul class="table-view">
+      {{#each controllers.spinner.upcomingShifts}}
+        {{partial "spinner-nonlive-shift"}}
+      {{/each}}
+    </ul>
+  {{/if}}
+
+  {{#unless controllers.spinner.liveShifts.length}}
+    {{#unless controllers.spinner.nearFutureShifts.length}}
+      {{#unless controllers.spinner.upcomingShifts.length}}
+        <h3>You have no shifts!</h3>
+        <p>Press 'Get Work' to get some shifts.</p>
+      {{/unless}}
+    {{/unless}}
+  {{/unless}}
 </div>
