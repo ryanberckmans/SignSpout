@@ -24,6 +24,29 @@ AuthenticatedRouteMixin = Ember.Mixin.create
       @_super transition
       return @requireAuthentication()
 
+    # @param {Controller} - the Controller holding parameters for the login form.
+    #                       Expects these properties on the passed controller:
+    #                               loginEmail, 
+    #                               loginPassword, 
+    #                               isLoginButtonDisabled
+    #                               loginErrorMessage
+    #                       I shouldn't really pass a nested controller up the route chain,
+    #                       but this provides an easy way to encapsulate login functionality in AuthenticatedRouteMixin.
+    login: (controller)->
+      controller.set 'isLoginButtonDisabled', true
+      controller.set 'loginErrorMessage', null
+      email = controller.get 'loginEmail'
+      password = controller.get 'loginPassword'
+      controller.set 'loginPassword', null # clear the cached password immediately for security
+      email = "" unless email?
+      password = "" unless password?
+      promise = @get('auth').login(email,password).finally(->
+        controller.set 'isLoginButtonDisabled', false
+      ).catch (error) ->
+        Ember.Logger.debug "login received error: " + error.message
+        controller.set 'loginErrorMessage', error.message.replace(/FirebaseSimpleLogin: /, "")
+      null
+
     loginRyan: ->
       @get('auth').login 'ryanberckmans@gmail.com', 'password'
 
