@@ -1,0 +1,7 @@
+{{! business-postlive-shift exists because SpinnerShift.unmatched() isn't a property and can't be called from handlebars. This was an easy way to get around that and compartmentalizes the problem nicely }}
+{{! expects to be wrapped in a <ul class="table-view"> }}
+<li class="table-view-cell">
+  {{format-day-of-month startDateAndTime}}
+  <p>{{format-shift-time-of-day this}}</p>
+  <button class="btn btn-negative" {{action 'cancelSpinnerShift' this}}>Cancel</button>
+</li>
