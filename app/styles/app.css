@@ -10,3 +10,7 @@ html, body {
 .restroom-notice {
   font-style: italic;
 }
+
+.error-message {
+  color: red;
+}
