@@ -8,28 +8,6 @@
       {{google-maps-link name address}}
      {{/with}}
   </p>
-  <div class="debug" style="display: none;">
-    <p>
-      <h4>Debug</h4>
-      breakStart: {{breakStartDateAndTime}}<br>
-      breakEnd:  {{breakEndDateAndTime}}<br>
-      lunchStart: {{lunchStartDateAndTime}}<br>
-      lunchEnd:  {{lunchEndDateAndTime}}<br>
-      tooEarlyForBreak: {{tooEarlyForBreak}}<br>
-      canTakeBreak: {{canTakeBreak}}<br>
-      onBreak: {{onBreak}}<br>
-      breakDone: {{breakDone}}<br>
-      shiftLengthMinutes: {{shiftLengthMinutes}}<br>
-      breakLengthMinutes: {{breakLengthMinutes}}<br>
-      shiftMinutesElapsed: {{shiftMinutesElapsed}}<br>
-      shiftHasLunch: {{shiftHasLunch}}<br>
-      tooEarlyForLunch: {{tooEarlyForLunch}}<br>
-      canTakeLunch: {{canTakeLunch}}<br>
-      lunchDisabledUntilBreakDone: {{lunchDisabledUntilBreakDone}}<br>
-      onLunch: {{onLunch}}<br>
-      lunchDone: {{lunchDone}}<br>
-    </p>
-  </div>
   <p>
     {{#if tooEarlyForBreak}}
       {{breakLengthMinutes}}m break available after first hour
@@ -38,7 +16,7 @@
       <button class='btn btn-primary' {{action 'startBreak'}}>Go on Break</button>
     {{/if}}
     {{#if onBreak}}
-      <span style="font-weight: bold;">ON BREAK!</span> Back at {{format-time-of-day breakEndDateAndTime}}
+      <span class='bold'>ON BREAK!</span> Back at {{format-time-of-day breakEndDateAndTime}}
     {{/if}}
     {{#if breakDone}}
       Break was over at {{format-time-of-day breakEndDateAndTime}}
@@ -56,7 +34,7 @@
         <button class='btn btn-primary' {{action 'startLunch'}}>Go on Lunch</button>
       {{/if}}
       {{#if onLunch}}
-        <span style="font-weight: bold;">ON LUNCH!</span> Back at {{format-time-of-day lunchEndDateAndTime}}
+        <span class='bold'>ON LUNCH!</span> Back at {{format-time-of-day lunchEndDateAndTime}}
       {{/if}}
       {{#if lunchDone}}
         Lunch was over at {{format-time-of-day lunchEndDateAndTime}}

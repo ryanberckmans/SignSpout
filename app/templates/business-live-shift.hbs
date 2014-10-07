@@ -3,29 +3,7 @@
 <li class="table-view-cell">
   {{format-shift-time-of-day this}}
   <p>Today - LIVE NOW</p>
-  <p>Spinner: {{spinner.firstName}}</p>
-  <div class="debug" style="display: none;">
-    <p>
-      <h4>Debug</h4>
-      breakStart: {{breakStartDateAndTime}}<br>
-      breakEnd:  {{breakEndDateAndTime}}<br>
-      lunchStart: {{lunchStartDateAndTime}}<br>
-      lunchEnd:  {{lunchEndDateAndTime}}<br>
-      tooEarlyForBreak: {{tooEarlyForBreak}}<br>
-      canTakeBreak: {{canTakeBreak}}<br>
-      onBreak: {{onBreak}}<br>
-      breakDone: {{breakDone}}<br>
-      shiftLengthMinutes: {{shiftLengthMinutes}}<br>
-      breakLengthMinutes: {{breakLengthMinutes}}<br>
-      shiftMinutesElapsed: {{shiftMinutesElapsed}}<br>
-      shiftHasLunch: {{shiftHasLunch}}<br>
-      tooEarlyForLunch: {{tooEarlyForLunch}}<br>
-      canTakeLunch: {{canTakeLunch}}<br>
-      lunchDisabledUntilBreakDone: {{lunchDisabledUntilBreakDone}}<br>
-      onLunch: {{onLunch}}<br>
-      lunchDone: {{lunchDone}}<br>
-    </p>
-  </div>
+  <p>Spinner: {{spinner.firstName}}</p> 
   <p>
     {{#if tooEarlyForBreak}}
       Receives {{breakLengthMinutes}}m break
@@ -34,7 +12,7 @@
       Receives {{breakLengthMinutes}}m break
     {{/if}}
     {{#if onBreak}}
-      <span style="font-weight: bold;">ON BREAK.</span> Due back at {{format-time-of-day breakEndDateAndTime}}
+      <span class='bold'>ON BREAK.</span> Due back at {{format-time-of-day breakEndDateAndTime}}
     {{/if}}
     {{#if breakDone}}
       Break was over at {{format-time-of-day breakEndDateAndTime}}
@@ -52,7 +30,7 @@
         Receives {{lunchLengthMinutes}}m lunch
       {{/if}}
       {{#if onLunch}}
-        <span style="font-weight: bold;">ON LUNCH.</span> Due back at {{format-time-of-day lunchEndDateAndTime}}
+        <span class='bold'>ON LUNCH.</span> Due back at {{format-time-of-day lunchEndDateAndTime}}
       {{/if}}
       {{#if lunchDone}}
         Lunch was over at {{format-time-of-day lunchEndDateAndTime}}

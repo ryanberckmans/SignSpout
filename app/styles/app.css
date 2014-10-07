@@ -14,3 +14,7 @@ html, body {
 .error-message {
   color: red;
 }
+
+.bold {
+  font-weight: bold;
+}
