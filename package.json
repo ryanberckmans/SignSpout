@@ -30,7 +30,7 @@
     "ember-cli-qunit": "0.1.0",
     "ember-cli-ratchet": "0.0.1",
     "ember-data": "1.0.0-beta.10",
-    "emberfire": "^1.2.5",
+    "emberfire": "^1.2.6",
     "express": "^4.8.5",
     "glob": "^4.0.5"
   }
