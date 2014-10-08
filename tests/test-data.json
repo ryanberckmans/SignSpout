@@ -108,5 +108,8 @@
       "endDateAndTime" : "Fri, 17 Jul 2015 11:30:00 GMT",
       "state" : "unmatched"
     }
+  },
+  "errors": {
+    "empty-on-data-import": { "empty-on-data-import": true }
   }
 }
