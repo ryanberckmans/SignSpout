@@ -18,3 +18,10 @@ html, body {
 .bold {
   font-weight: bold;
 }
+
+/* prevents the worst display issues on desktop */
+@media (min-width: 380px) {
+  form, .content-padded {
+    max-width: 380px;
+  }
+}
