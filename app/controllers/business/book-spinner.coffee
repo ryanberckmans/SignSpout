@@ -58,6 +58,7 @@ controller = Ember.ObjectController.extend
   latestShiftEndTimeOfDayAsMoment: moment().hour(19).startOf 'hour' # ie, 7pm is the latest shift end time of day
   
   shiftMinimumDurationInMinutes: 120
+  shiftMaximumDurationInMinutes: 8*60
 
   shiftTimeIncrementInMinutes: 30 # ie allow shift start / end times in increments of 30 minutes
 
@@ -111,12 +112,18 @@ controller = Ember.ObjectController.extend
     selectedStartTimeOfDayAsMoment = @get 'selectedStartTimeOfDayAsMoment'
     latestShiftEndTimeOfDayAsMoment = @get 'latestShiftEndTimeOfDayAsMoment'
     shiftMinimumDurationInMinutes = @get 'shiftMinimumDurationInMinutes'
+    shiftMaximumDurationInMinutes = @get 'shiftMaximumDurationInMinutes'
     shiftTimeIncrementInMinutes = @get 'shiftTimeIncrementInMinutes'
     nextShiftEndTime = selectedStartTimeOfDayAsMoment.clone().add 'minutes', shiftMinimumDurationInMinutes
     loop
       shiftEndTimesOfDayAsMoments.push nextShiftEndTime
       nextShiftEndTime = nextShiftEndTime.clone().add 'minutes', shiftTimeIncrementInMinutes
+
+      # Exclude end times exceeding latestShiftEndTimeOfDayAsMoment
       break unless nextShiftEndTime.isBefore(latestShiftEndTimeOfDayAsMoment) or nextShiftEndTime.isSame(latestShiftEndTimeOfDayAsMoment, 'minute')
+
+      # Exclude shifts longer than shiftMaximumDurationInMinutes
+      break if nextShiftEndTime.diff(selectedStartTimeOfDayAsMoment, 'minutes') > shiftMaximumDurationInMinutes
     shiftEndTimesOfDayAsMoments
   ).property 'selectedStartTimeOfDayAsMoment', 'latestShiftEndTimeOfDayAsMoment', 'shiftMinimumDurationInMinutes', 'shiftTimeIncrementInMinutes'
 
