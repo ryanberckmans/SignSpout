@@ -31,7 +31,9 @@
     {{#unless controllers.spinner.nearFutureShifts.length}}
       {{#unless controllers.spinner.upcomingShifts.length}}
         <h3>You have no shifts!</h3>
-        <p>Press 'Get Work' to get some shifts.</p>
+        {{#link-to 'spinner.shift-signup'}}
+          <button class="btn btn-positive">Get Work</button>
+        {{/link-to}}
       {{/unless}}
     {{/unless}}
   {{/unless}}

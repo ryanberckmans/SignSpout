@@ -45,4 +45,17 @@
       {{/each}}
     </ul>
   {{/if}}
+
+  {{#unless controllers.business.liveShifts.length}}
+    {{#unless controllers.business.nearFutureShifts.length}}
+      {{#unless controllers.business.upcomingShifts.length}}
+        {{#unless controllers.business.unmatchedShifts.length}}
+          <h3>You have no upcoming shifts!</h3>
+          {{#link-to 'business.book-spinner'}}
+            <button class="btn btn-primary">Book Spinner</button>
+          {{/link-to}}
+        {{/unless}}
+      {{/unless}}
+    {{/unless}}
+  {{/unless}}
 </div>
