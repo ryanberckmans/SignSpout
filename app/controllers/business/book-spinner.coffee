@@ -30,22 +30,25 @@ controller = Ember.ObjectController.extend
       
       onSpinnerShiftSaveSuccess = ->
         Ember.Logger.info 'book-spinner: created new spinnerShift' + newSpinnerShift.id + '. attempting to associate it with business ' + business.id
-
-        # Warning, when using belongsTo:hasMany, the belongsTo side must be set BEFORE the hasMany side.
-        # Ie, SpinnerShift.belongsTo Business must be set BEFORE Business.hasMany SpinnerShift.
-        business.addSpinnerShift(newSpinnerShift).then onAssociationSuccess, onAssociationFail
+        business.rollbackUnlessSave().then onAssociationSuccess, onAssociationFail
 
       onSpinnerShiftSaveFail = (reason) ->
         Ember.Logger.warn 'book-spinner: failed to create new spinner shift, most likely this user ' + _this.get('auth.uid') + ' isn\'t the owner of business ' + business.id + ". This error isn't rethrown and is trapped here. Reason: " + reason
         newSpinnerShift.rollback() # Since the newSpinnerShift failed to save, it's now transient and inconsistent, and should be deleted from the store. rollback() on a new record causes deletion from the store.
-        Ember.Logger.debug 'book-spinner: newSpinnerShift, which failed to save, has been deleted from the local store'
+        business.rollback() # newSpinnerShift was already added to the business (which hasn't been save()) and the business must be rollback().
+        Ember.Logger.debug 'book-spinner: newSpinnerShift, which failed to save, has been deleted from the local store. Business ' + business.get('id') + ' has been rolled back.'
         _this.set 'bookSpinnerButtonIsDisabled', false
 
-      newSpinnerShift.save().then onSpinnerShiftSaveSuccess, onSpinnerShiftSaveFail
-
-      # TODO TODO TODO
-      # TODO TODO TODO - when anything fails, need transition to some kind of error page. Or set an error message. Can't just transition back to 'business' silently
-      # TODO TODO TODO
+      # WARNING: As of emberfire 1.2.6, this order of events must occur for the association to persist:
+      #          Association must be locally and bidirectionally wired before any save(),
+      #          then belongsTo.save() must occur before hasMany.save():
+      #            1. (existing Business)
+      #            2. locally create newSpinnerShift with business set, no save()
+      #            3. add newSpinnerShift to business.spinnerShifts, no save()
+      #            4. newSpinnerShift.save()
+      #            5. business.save()
+      business.addSpinnerShift(newSpinnerShift).then ->
+        newSpinnerShift.save().then onSpinnerShiftSaveSuccess, onSpinnerShiftSaveFail
       
       null
 
