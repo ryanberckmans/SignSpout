@@ -1,11 +1,1 @@
-{{#if auth.businessId}}
-  {{partial "business-nav-bar"}}
-{{else}}
-  {{#if auth.spinnerId}}
-    {{partial "spinner-nav-bar"}}
-  {{/if}}
-{{/if}}
-
-<div class="content">
-  {{outlet}}
-</div>
+{{outlet}}
