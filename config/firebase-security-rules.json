@@ -391,6 +391,14 @@
       }
     },
 
+    "content_security_policy_violations": {
+      "$content_security_policy_violation_id": {
+        ".write": "!data.exists()"
+        // Content security policy violation reports don't POST right now. Tracked as issue #16
+        // ".validate": "newData.hasChildren(['document-uri','referrer','blocked-uri'... TBD])",
+      }
+    },
+
     "$other": { ".validate": false }
   }
 }
