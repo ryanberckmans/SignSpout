@@ -21,15 +21,21 @@ module.exports = function(environment) {
 
     contentSecurityPolicy: {
       'connect-src': "'self' https://auth.firebase.com wss://*.firebaseio.com",
+      'script-src': "'self' https://*.firebaseio.com",
+      'frame-src': "https://*.firebaseio.com",
       // 'unsafe-inline' is required for eui elements to avoid CSP violations. TODO remove this when I get rid of emberui
       'style-src': "'self' 'unsafe-inline'"
     }
   };
 
+  // 'report-uri' is not POSTing. Tracked as issue #16
+  ENV.contentSecurityPolicy['report-uri'] = "https://" + ENV.firebase_instance + ".firebaseio.com/content_security_policy_violations";
+
   if (environment === 'development') {
+    ENV.contentSecurityPolicy['script-src'] = ENV.contentSecurityPolicy['script-src'] + " 'unsafe-eval'";
     // ENV.APP.LOG_RESOLVER = true;
     ENV.APP.LOG_ACTIVE_GENERATION = true;
-    // ENV.APP.LOG_TRANSITIONS = true;
+    ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     ENV.APP.LOG_VIEW_LOOKUPS = true;
   }
