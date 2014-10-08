@@ -1,7 +1,7 @@
 {
   "authentication" : {
     "owned_businesses": {
-      "cricket-wireless": "simplelogin:1",
+      "cricket-wireless": "simplelogin:4",
       "larry's-giant-subs": "simplelogin:3"
     },
     "owned_spinners": {
@@ -10,7 +10,6 @@
     },
     "users": {
       "simplelogin:1": {
-        "business_id": "cricket-wireless",
         "spinner_id": "ryan-berckmans",
         "email": "ryanberckmans@gmail.com"
       },
@@ -21,6 +20,10 @@
       "simplelogin:3": {
         "business_id": "larry's-giant-subs",
         "email": "larrysgiantsubs@gmail.com"
+      },
+      "simplelogin:4": {
+        "business_id": "cricket-wireless",
+        "email": "cricketwireless@gmail.com"
       }
     }
   },

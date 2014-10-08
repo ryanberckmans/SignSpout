@@ -56,6 +56,9 @@ AuthenticatedRouteMixin = Ember.Mixin.create
     loginLarry: ->
       @get('auth').login 'larrysgiantsubs@gmail.com', 'larrys'
 
+    loginCricket: ->
+      @get('auth').login 'cricketwireless@gmail.com', 'password'
+
     logout: ->
       @get('auth').logout()
 
