@@ -1,8 +1,14 @@
 `import DS from 'ember-data'`
 
 Spinner = DS.Model.extend
-  # Warning, when using belongsTo:hasMany, the belongsTo side must be set BEFORE the hasMany side.
-  # Ie, SpinnerShift.belongsTo Spinner must be set BEFORE Spinner.hasMany SpinnerShift.
+  # WARNING: As of emberfire 1.2.6, this order of events must occur for the association to persist:
+  #          Association must be locally and bidirectionally wired before any save(),
+  #          then belongsTo.save() must occur before hasMany.save():
+  #            1. (existing spinner, existing spinnerShift)
+  #            2. spinnerShift set to spinner, no save()
+  #            3. add spinnerShift to spinner.spinnerShifts, no save()
+  #            4. spinnerShift.save()
+  #            5. spinner.save()
   spinnerShifts: DS.hasMany 'spinner-shift', { async: true }
   firstName: DS.attr 'string'
   lastName: DS.attr 'string'
@@ -19,15 +25,34 @@ Spinner = DS.Model.extend
         alreadyWorkingThatDay ||= newShiftDayOfYear == moment(existingShift.get 'startDateAndTime').dayOfYear()      
       !alreadyWorkingThatDay
 
-  # Add a SpinnerShift to this Spinner. Mutate and save only this Spinner; the SpinnerShift is updated elsewhere.
-  # @return {Promise} resolves when the passed spinnerShift is added to this Spinner
+  # Add a SpinnerShift to this Spinner.
+  #
+  # @param spinnerShift {SpinnerShift} - new SpinnerShift to add to this Spinner
+  #   WARNING - spinnerShift should already be set to this spinner, but not yet saved()  
+  #
+  # WARNING: As of emberfire 1.2.6, this order of events must occur for the association to persist:
+  #          Association must be locally and bidirectionally wired before any save(),
+  #          then belongsTo.save() must occur before hasMany.save():
+  #            1. (existing spinner, existing spinnerShift)
+  #            2. spinnerShift set to spinner, no save()
+  #            3. add spinnerShift to spinner.spinnerShifts, no save()
+  #            4. spinnerShift.save()
+  #            5. spinner.save()
+  #
+  # @return {Promise} Returns a promise that resolves when the passed spinnerShift has been added to this spinner, however the spinner hasn't been save()
   addSpinnerShift: (spinnerShift) ->
-    _spinner = this
+    _this = this
     @get('spinnerShifts').then (spinnerShifts) ->
-        spinnerShifts.addObject spinnerShift
-        _spinner.save().catch (reason) ->
-          Ember.Logger.error "Spinner " + _spinner.get('id') + " save() failed on addSpinnerShift with spinnerShift " + spinnerShift.get('id') + " . Rolling back this Spinner. Reason " + reason
-          _spinner.rollback()
+      spinnerShifts.addObject spinnerShift
+      Ember.Logger.debug 'Spinner.addSpinnerShift, added spinnerShift ' + spinnerShift.get('id') + ' to spinner ' + _this.get('id') + '. Has not been save()'
+
+  # Save this Spinner and rollback if the save fails.
+  # Rolling back ensures local and remote data are syncd
+  rollbackUnlessSave: ->
+    _this = this
+    @save().catch (reason) ->
+          Ember.Logger.error "Spinner " + _this.get('id') + " save() failed. Rolling back. Reason " + reason
+          _this.rollback()
           throw reason
 
 `export default Spinner`

@@ -20,20 +20,23 @@ controller = Ember.ArrayController.extend
       onSetSpinnerSuccess = ->
         Ember.Logger.info "shift-signup: spinnerShift " + spinnerShift.id + " had spinner set to " + spinner.id
         # spinner.addSpinnerShift must occur AFTER spinnerShift.setSpinner
-        spinner.addSpinnerShift(spinnerShift).then onAddSpinnerShiftSuccess, onAddSpinnerShiftFail
+        spinner.rollbackUnlessSave().then onAddSpinnerShiftSuccess, onAddSpinnerShiftFail
 
       onSetSpinnerFail = (reason) ->
-        Ember.Logger.error "shift-signup: spinnerShift " + spinnerShift.id + " failed to set spinner " + spinner.id + ". This error isn't rethrown and is trapped here. Reason: " + reason
+        spinner.rollback()
+        Ember.Logger.error "shift-signup: spinnerShift " + spinnerShift.id + " failed to set spinner " + spinner.id + ". Spinner has been rolled back. This error isn't rethrown and is trapped here. Reason: " + reason
         _this.set 'areTakeShiftButtonsDisabled', false
 
-      # WARNING WARNING
-      # spinnerShift.setSpinner must occur BEFORE spinner.addSpinnerShift, or else setSpinner will fail silently and not update the SpinnerShift model
-      # Ie, the belongsTo side must be set before the hasMany side.
-      spinnerShift.setSpinner(spinner).then onSetSpinnerSuccess, onSetSpinnerFail
-
-      # TODO TODO TODO
-      # TODO TODO TODO - when anything fails, need transition to some kind of error page. Or set an error message.
-      # TODO TODO TODO
+      # WARNING: As of emberfire 1.2.6, this order of events must occur for the association to persist:
+      #          Association must be locally and bidirectionally wired before any save(),
+      #          then belongsTo.save() must occur before hasMany.save():
+      #            1. (existing spinner, existing spinnerShift)
+      #            2. spinnerShift set to spinner, no save()
+      #            3. add spinnerShift to spinner.spinnerShifts, no save()
+      #            4. spinnerShift.save()
+      #            5. spinner.save()
+      spinner.addSpinnerShift(spinnerShift).then ->
+        spinnerShift.setSpinner(spinner).then onSetSpinnerSuccess, onSetSpinnerFail
 
       null
 

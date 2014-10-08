@@ -1,8 +1,14 @@
 `import DS from 'ember-data'`
 
-Business = DS.Model.extend
-  # Warning, when using belongsTo:hasMany, the belongsTo side must be set BEFORE the hasMany side.
-  # Ie, SpinnerShift.belongsTo Business must be set BEFORE Business.hasMany SpinnerShift.
+Business = DS.Model.extend  
+  # WARNING: As of emberfire 1.2.6, this order of events must occur for the association to persist:
+  #          Association must be locally and bidirectionally wired before any save(),
+  #          then belongsTo.save() must occur before hasMany.save():
+  #            1. (existing Business)
+  #            2. locally create newSpinnerShift with business set, no save()
+  #            3. add newSpinnerShift to business.spinnerShifts, no save()
+  #            4. newSpinnerShift.save()
+  #            5. business.save()
   spinnerShifts: DS.hasMany 'spinner-shift', { async: true }
   name: DS.attr 'string'
   address: DS.attr 'string'

@@ -8,19 +8,25 @@ STATE_CANCELLED = "cancelled"
 STATE_ERROR     = "error"
 
 SpinnerShift = DS.Model.extend
-  # Warning, when using belongsTo:hasMany, the belongsTo side must be set BEFORE the hasMany side.
-  # Ie, SpinnerShift.belongsTo Business must be set BEFORE Business.hasMany SpinnerShift.
+  # WARNING: As of emberfire 1.2.6, this order of events must occur for the association to persist:
+  #          Association must be locally and bidirectionally wired before any save(),
+  #          then belongsTo.save() must occur before hasMany.save():
+  #            1. (existing Business)
+  #            2. locally create newSpinnerShift with business set, no save()
+  #            3. add newSpinnerShift to business.spinnerShifts, no save()
+  #            4. newSpinnerShift.save()
+  #            5. business.save()
   business: DS.belongsTo 'business', { async:true }
   spinner: DS.belongsTo 'spinner', { async:true }
-  startDateAndTime: DS.attr 'date' # ISO 8601. Example of UTC date-time that is ISO 8601 compliant: "2014-07-16T14:30Z" is July 16th, 2014, at 2:30pm UTC.
-  endDateAndTime:   DS.attr 'date' # ISO 8601. Example of UTC date-time that is ISO 8601 compliant: "2014-07-16T14:30Z" is July 16th, 2014, at 2:30pm UTC.
+  startDateAndTime: DS.attr 'date'
+  endDateAndTime:   DS.attr 'date'
 
   # {break,lunch}{Start,End}DateAndTime have no associated functions and should be set directly.
   # Eventually we may want to perform additional validation and create functions such as setBreakTimes( start, end )
-  breakStartDateAndTime: DS.attr 'date' # ISO 8601. Example of UTC date-time that is ISO 8601 compliant: "2014-07-16T14:30Z" is July 16th, 2014, at 2:30pm UTC.
-  breakEndDateAndTime:   DS.attr 'date' # ISO 8601. Example of UTC date-time that is ISO 8601 compliant: "2014-07-16T14:30Z" is July 16th, 2014, at 2:30pm UTC.
-  lunchStartDateAndTime: DS.attr 'date' # ISO 8601. Example of UTC date-time that is ISO 8601 compliant: "2014-07-16T14:30Z" is July 16th, 2014, at 2:30pm UTC.
-  lunchEndDateAndTime:   DS.attr 'date' # ISO 8601. Example of UTC date-time that is ISO 8601 compliant: "2014-07-16T14:30Z" is July 16th, 2014, at 2:30pm UTC.
+  breakStartDateAndTime: DS.attr 'date'
+  breakEndDateAndTime:   DS.attr 'date'
+  lunchStartDateAndTime: DS.attr 'date'
+  lunchEndDateAndTime:   DS.attr 'date'
 
   state: DS.attr 'string', { defaultValue: STATE_UNMATCHED }
   errorReason: DS.attr 'string' # only defined if state == STATE_ERROR
@@ -73,6 +79,7 @@ SpinnerShift = DS.Model.extend
     _this = this
     @save().catch (reason) ->
       Ember.Logger.error "SpinnerShift " + _this.get('id') + " save() failed on setSpinner with spinner " + spinner.get('id') + ". Rolling back this SpinnerShift. Reason " + reason
+      # WARNING - for some reason, _this.rollback() isn't correctly clearing the spinner.. TBD
       _this.rollback()
       throw reason
 
