@@ -1,0 +1,6 @@
+{{! expects to be wrapped in a <ul class="table-view"> }}
+<li class="table-view-cell">
+  {{format-day-of-month startDateAndTime}}
+  <p>{{format-shift-time-of-day this}}</p>
+  <button class="btn btn-positive" {{action 'cancelSpinnerShift' this}}>Clean Up</button>
+</li>

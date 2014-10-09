@@ -37,11 +37,21 @@
     </ul>
   {{/if}}
 
-  {{#if controllers.business.unmatchedShifts.length}}
+  {{#if controllers.business.noMatchFoundShifts.length}}
+    <h3>No Spinner Found</h3>
+    <p>We weren't able to find a spinner in time for your shift. Sorry about that!</p>
+    <ul class="table-view">
+      {{#each controllers.business.noMatchFoundShifts}}
+        {{partial "business-no-match-found-shift"}}
+      {{/each}}
+    </ul>
+  {{/if}}
+
+    {{#if controllers.business.availableShifts.length}}
     <h3>Finding a Spinner</h3>
     <ul class="table-view">
-      {{#each controllers.business.unmatchedShifts}}
-        {{partial "business-unmatched-shift"}}
+      {{#each controllers.business.availableShifts}}
+        {{partial "business-available-shift"}}
       {{/each}}
     </ul>
   {{/if}}
@@ -49,7 +59,7 @@
   {{#unless controllers.business.liveShifts.length}}
     {{#unless controllers.business.nearFutureShifts.length}}
       {{#unless controllers.business.upcomingShifts.length}}
-        {{#unless controllers.business.unmatchedShifts.length}}
+        {{#unless controllers.business.availableShifts.length}}
           <h3>You have no upcoming shifts!</h3>
           {{#link-to 'business.book-spinner'}}
             <button class="btn btn-primary">Book Spinner</button>

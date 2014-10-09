@@ -2,13 +2,19 @@
 
 # Requires Clock
 SpinnerShiftSorterMixin = Ember.Mixin.create
-  sortedSpinnerShifts: (->
+
+  # Configuration
+  shiftCanMatchDeadlineMinutes: 180 # unmatchedShifts whose start time is sooner than shiftCanMatchDeadlineMinutes are partitioned as noMatchFoundShifts
+  nearFutureThresholdMinutes: 60*24 # matchedShifts whose start time is sooner than nearFutureThresholdMinutes (without actually having started) are partitioned as nearFutureShifts
+
+  # Private.
+  _sortedSpinnerShifts: (->
     spinnerShifts = @get 'spinnerShifts'
     nowMillis = moment().valueOf()
     Ember.ArrayProxy.createWithMixins Ember.SortableMixin,
       sortProperties: ['startDateAndTime']
       # sortFunction compares each shift's closeness to now.
-      # This provides desired behavior when sortedSpinnerShifts is partitioned:
+      # This provides desired behavior when _sortedSpinnerShifts is later partitioned:
       #   1. shifts in the past are sorted most recent first
       #   2. shifts in the future are sorted soonest first
       # If we simply sorted by startDateAndTime, we could get (1.) xor (2.)
@@ -22,65 +28,83 @@ SpinnerShiftSorterMixin = Ember.Mixin.create
       sortAscending: true
   ).property 'spinnerShifts.@each.state'
 
-  unmatchedShifts: (->
-    @get('sortedSpinnerShifts').filter (spinnerShift) ->
+  # Private. _unmatchedShifts is partitioned into availableShifts and noMatchFoundShifts
+  _unmatchedShifts: (->
+    @get('_sortedSpinnerShifts').filter (spinnerShift) ->
         spinnerShift.unmatched()
-  ).property 'sortedSpinnerShifts'
+  ).property '_sortedSpinnerShifts'
 
-  matchedShifts: (->
-    @get('sortedSpinnerShifts').filter (spinnerShift) ->
+  # Private. _matchedShifts is partitioned into liveShifts, postLiveShifts, nearFutureShifts and upcomingShifts
+  _matchedShifts: (->
+    @get('_sortedSpinnerShifts').filter (spinnerShift) ->
         spinnerShift.matched()
-  ).property 'sortedSpinnerShifts'
+  ).property '_sortedSpinnerShifts'
 
   completedShifts: (->
-    @get('sortedSpinnerShifts').filter (spinnerShift) ->
+    @get('_sortedSpinnerShifts').filter (spinnerShift) ->
         spinnerShift.completed()
-  ).property 'sortedSpinnerShifts'
+  ).property '_sortedSpinnerShifts'
 
   cancelledShifts: (->
-    @get('sortedSpinnerShifts').filter (spinnerShift) ->
+    @get('_sortedSpinnerShifts').filter (spinnerShift) ->
         spinnerShift.cancelled()
-  ).property 'sortedSpinnerShifts'
+  ).property '_sortedSpinnerShifts'
 
   erroredShifts: (->
-    @get('sortedSpinnerShifts').filter (spinnerShift) ->
+    @get('_sortedSpinnerShifts').filter (spinnerShift) ->
         spinnerShift.errored()
-  ).property 'sortedSpinnerShifts'
+  ).property '_sortedSpinnerShifts'
 
+  # Time-dependent partition of _unmatchedShifts
+  #
+  # availableShifts    - unmatched shifts waiting for a Spinner
+  # noMatchFoundShifts - unmatched shifts whose start time is sooner than shiftCanMatchDeadlineMinutes
 
-  # Time-dependent partition of matchedShifts
+  availableShifts: (->
+    now = moment()
+    shiftCanMatchDeadlineMinutes = @get 'shiftCanMatchDeadlineMinutes'
+    @get('_unmatchedShifts').filter (spinnerShift) ->
+      now.isBefore(moment(spinnerShift.get('startDateAndTime')).subtract(shiftCanMatchDeadlineMinutes, 'minutes'))      
+  ).property '_unmatchedShifts', 'clock.eachSecond'
+
+  noMatchFoundShifts: (->
+    now = moment()
+    shiftCanMatchDeadlineMinutes = @get 'shiftCanMatchDeadlineMinutes'
+    @get('_unmatchedShifts').filter (spinnerShift) ->
+      now.isAfter(moment(spinnerShift.get('startDateAndTime')).subtract(shiftCanMatchDeadlineMinutes, 'minutes'))      
+  ).property '_unmatchedShifts', 'clock.eachSecond'
+
+  # Time-dependent partition of _matchedShifts
   #
   # liveShifts - happening now
   # postLiveShifts - over and not yet completed
   # nearFutureShifts - shifts which are happening today, or within nearFutureThresholdMinutes
   # upcomingShifts - all other matched shifts, ie shifts too far in future to be included in nearFutureShifts
 
-  nearFutureThresholdMinutes: 60*24
-
   liveShifts: (->
     now = moment()
-    @get('matchedShifts').filter (spinnerShift) ->
+    @get('_matchedShifts').filter (spinnerShift) ->
       now.isAfter(moment(spinnerShift.get 'startDateAndTime')) && now.isBefore(moment(spinnerShift.get 'endDateAndTime'))
-  ).property 'matchedShifts', 'clock.eachSecond'
+  ).property '_matchedShifts', 'clock.eachSecond'
 
   postLiveShifts: (->
     now = moment()
-    @get('matchedShifts').filter (spinnerShift) ->
+    @get('_matchedShifts').filter (spinnerShift) ->
       now.isAfter(moment(spinnerShift.get 'endDateAndTime'))
-  ).property 'matchedShifts', 'clock.eachSecond'
+  ).property '_matchedShifts', 'clock.eachSecond'
 
   nearFutureShifts: (->
     now = moment()
     nearFutureThresholdMinutes = @get('nearFutureThresholdMinutes')
-    @get('matchedShifts').filter (spinnerShift) ->
+    @get('_matchedShifts').filter (spinnerShift) ->
       now.isAfter(moment(spinnerShift.get 'startDateAndTime').subtract(nearFutureThresholdMinutes, 'minutes')) && now.isBefore(moment(spinnerShift.get 'startDateAndTime'))
-  ).property 'matchedShifts', 'clock.eachSecond'
+  ).property '_matchedShifts', 'clock.eachSecond'
 
   upcomingShifts: (->
     now = moment()
     nearFutureThresholdMinutes = @get('nearFutureThresholdMinutes')
-    @get('matchedShifts').filter (spinnerShift) ->
+    @get('_matchedShifts').filter (spinnerShift) ->
       now.isBefore(moment(spinnerShift.get 'startDateAndTime').subtract(nearFutureThresholdMinutes, 'minutes'))
-  ).property 'matchedShifts', 'clock.eachSecond'
+  ).property '_matchedShifts', 'clock.eachSecond'
 
 `export default SpinnerShiftSorterMixin`
