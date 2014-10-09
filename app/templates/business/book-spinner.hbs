@@ -17,4 +17,5 @@
                       value=selectedEndTimeOfDayAsMoment}}
   <br>
   {{eui-button label='Book Spinner' style='primary' size='large' disabled=bookSpinnerButtonIsDisabled action='createSpinnerShift' icon='fa fa-check'}}
+  <p><br>Note: Shifts with less than {{shiftCanMatchDeadlineMinutesDisplay}}' notice will never find a spinner.</p>
 </div>

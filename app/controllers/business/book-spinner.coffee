@@ -1,7 +1,10 @@
 `import Ember from 'ember'`
+`import { SHIFT_CAN_MATCH_DEADLINE_MINUTES } from '../../mixins/spinner-shift-sorter'`
 
 controller = Ember.ObjectController.extend
   needs: 'business'
+
+  shiftCanMatchDeadlineMinutesDisplay: (SHIFT_CAN_MATCH_DEADLINE_MINUTES / 60) + ' hours'
 
   actions:
     createSpinnerShift: ->
@@ -63,11 +66,6 @@ controller = Ember.ObjectController.extend
   shiftTimeIncrementInMinutes: 30 # ie allow shift start / end times in increments of 30 minutes
 
   defaultShiftEndTimeIndex: 4 # set the shift end time to this default index when the page loads or the start time changes.                              
-
-  # TODO - these properties are currently unused and are meant to be used with a calendar gui to constrain the selectable calendar dates.
-  #        these properties were previously used with emberui-calendar, however the calendar is buggy and I have switched to a selectbox of booking dates in the interim.
-  soonestBookingDateAsMoment: moment().add('days', 1).startOf 'day' # ie tomorrow is the soonest you can book a shift  
-  latestBookingDateAsMoment: moment().add('days', 8).startOf 'day' # ie a week from tomorrow is the soonest you can book a shift
 
   #############################
   # Shift start time of day
@@ -142,11 +140,10 @@ controller = Ember.ObjectController.extend
 
   ##############################
   # Shift booking date
-  #  TBD - what happens if the user leaves the page open past midnight and then books a shift? Then they would be able to book a shift with less than 24 hours notice.
-  #        --> can probbly have bookingDatesAsMoments depend on clock.eachMinute, and the dropdown boxes should update automatically.
   ##############################
 
-  bookingDatesAsMoments: [ # ie tomorrow is the soonest you can book, and a week from tomorrow is the latest you can book a shift
+  bookingDatesAsMoments: [ # ie today is the soonest you can book, and a week from tomorrow is the latest you can book a shift
+    moment().add('days', 0).startOf('day'),
     moment().add('days', 1).startOf('day'),
     moment().add('days', 2).startOf('day'),
     moment().add('days', 3).startOf('day'),
@@ -159,6 +156,12 @@ controller = Ember.ObjectController.extend
   bookingDatesAsStrings: (-> # Wed Jan 21
     bookingDatesAsStrings = []
     bookingDatesAsStrings.push s.format('ddd MMM Do') for s in @get 'bookingDatesAsMoments'
+
+    # START - HACK HACK HACK
+    bookingDatesAsStrings[0] = "Today - " + bookingDatesAsStrings[0]
+    bookingDatesAsStrings[1] = "Tomorrow - " + bookingDatesAsStrings[1]
+    # END - HACK HACK HACK
+
     bookingDatesAsStrings
   ).property 'bookingDatesAsMoments'
   
