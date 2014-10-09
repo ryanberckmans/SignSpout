@@ -1,6 +1,6 @@
 `import Ember from 'ember'`
 
-SHIFT_CAN_MATCH_DEADLINE_MINUTES = 180
+SHIFT_CAN_MATCH_DEADLINE_MINUTES = 120
 
 # Requires Clock
 SpinnerShiftSorterMixin = Ember.Mixin.create
