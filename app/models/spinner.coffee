@@ -20,7 +20,7 @@ Spinner = DS.Model.extend
           alreadyWorkingThatDay ||= newShiftDayOfYear == moment(existingShift.get 'startDateAndTime').dayOfYear()      
         !alreadyWorkingThatDay
 
-      # An unmatched shift cannot be matched if its start time is sooner than SpinnerShiftSorterMixin.shiftCanMatchDeadlineMinutes
+      # An unmatched shift cannot be matched if its start time is sooner than SHIFT_CAN_MATCH_DEADLINE_MINUTES
       shiftAvailable = ->
         moment().isBefore(moment(spinnerShift.get('startDateAndTime')).subtract(SHIFT_CAN_MATCH_DEADLINE_MINUTES, 'minutes'))
 
