@@ -40,23 +40,29 @@ controller = Ember.ArrayController.extend
   areTakeShiftButtonsDisabled: false
   availableShifts: []
 
+  _availableShiftsUnsorted: []
+
+  sortAvailableShifts: (->
+    _availableShiftsUnsorted = @get '_availableShiftsUnsorted'
+    sortedAvailableShifts = Ember.ArrayProxy.createWithMixins Ember.SortableMixin,
+      sortProperties: ['startDateAndTime']
+      sortFunction: (startDateAndTime1, startDateAndTime2) ->
+        millis1 = moment(startDateAndTime1).valueOf()
+        millis2 = moment(startDateAndTime2).valueOf()
+        return 0 if millis1 == millis2
+        return -1 if millis1 < millis2
+        return 1
+      content: _availableShiftsUnsorted
+      sortAscending: true
+    @set 'availableShifts', sortedAvailableShifts
+  ).observes '_availableShiftsUnsorted'
+
   # This observer is a work-around to Store.filter not accepting Promises. See https://github.com/emberjs/data/issues/1865
   computeAvailableShifts: (->
     _this = this
     spinner = @get 'controllers.spinner.model'
     Ember.RSVP.filter(@get('model').toArray(), (spinnerShift) -> spinner.canWorkShift spinnerShift).then (availableShifts) ->
-      sortedAvailableShifts = Ember.ArrayProxy.createWithMixins Ember.SortableMixin,
-        sortProperties: ['startDateAndTime']
-        sortFunction: (startDateAndTime1, startDateAndTime2) ->
-          millis1 = moment(startDateAndTime1).valueOf()
-          millis2 = moment(startDateAndTime2).valueOf()
-          return 0 if millis1 == millis2
-          return -1 if millis1 < millis2
-          return 1
-        content: availableShifts
-        sortAscending: true
-      _this.set 'availableShifts', sortedAvailableShifts
-
-  ).observes('model.@each', 'controllers.spinner.model.spinnerShifts.@each').on('init')
+      _this.set '_availableShiftsUnsorted', availableShifts
+  ).observes('model.@each', 'controllers.spinner.model.spinnerShifts.@each', 'clock.eachSecond').on('init')
 
 `export default controller`
