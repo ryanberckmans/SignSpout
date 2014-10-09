@@ -1,10 +1,12 @@
 `import Ember from 'ember'`
 
+SHIFT_CAN_MATCH_DEADLINE_MINUTES = 180
+
 # Requires Clock
 SpinnerShiftSorterMixin = Ember.Mixin.create
 
   # Configuration
-  shiftCanMatchDeadlineMinutes: 180 # unmatchedShifts whose start time is sooner than shiftCanMatchDeadlineMinutes are partitioned as noMatchFoundShifts
+  shiftCanMatchDeadlineMinutes: SHIFT_CAN_MATCH_DEADLINE_MINUTES # unmatchedShifts whose start time is sooner than shiftCanMatchDeadlineMinutes are partitioned as noMatchFoundShifts
   nearFutureThresholdMinutes: 60*24 # matchedShifts whose start time is sooner than nearFutureThresholdMinutes (without actually having started) are partitioned as nearFutureShifts
 
   # Private.
@@ -108,3 +110,12 @@ SpinnerShiftSorterMixin = Ember.Mixin.create
   ).property '_matchedShifts', 'clock.eachSecond'
 
 `export default SpinnerShiftSorterMixin`
+
+# This constant is used in models/Spinner.canWorkShift, to prevent a spinner from signing up for a shift in noMatchFoundShifts
+#
+# Why export SHIFT_CAN_MATCH_DEADLINE_MINUTES? I considered two options:
+#  1. declare the constant in SpinnerShiftSorter and use export
+#  2. declare the constant in config/environment.js, and import config into SpinnerShiftSorter and Spinner.
+#
+# I chose to go with (1.) because this App has a convention of placing configurable busines logic constants in the module owning that business logic. I don't store any business logic in config/environment.js, and I didn't want to start now.
+`export { SHIFT_CAN_MATCH_DEADLINE_MINUTES }`
