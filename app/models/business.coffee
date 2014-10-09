@@ -6,6 +6,7 @@ Business = DS.Model.extend
   spinnerShifts: DS.hasMany 'spinner-shift', { async: true }
   name: DS.attr 'string'
   address: DS.attr 'string'
+  phone: DS.attr 'string'
 
   # Add a SpinnerShift to this Business. Mutate and save only this Business; the SpinnerShift is updated elsewhere.
   # @return {Promise} Returns a promise that resolves when spinnerShift has been added to this business

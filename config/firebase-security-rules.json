@@ -101,6 +101,12 @@
           ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 100"
         },
 
+        "phone": {
+          // This rule will allow a user to save() their Business model in Ember, without actually permitting changes to address
+          ".write": "data.exists() && newData.val() === data.val() && $business_id === root.child('authentication/users/'+auth.uid+'/business_id').val()",
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
+        },
+
         "spinnerShifts": {
           "$spinner_shift_id": {
             // create, but not update or delete, for this user's business
@@ -355,6 +361,12 @@
           // This rule will allow a user to save() their Spinner model in Ember, without actually permitting changes to lastName
           ".write": "data.exists() && newData.val() === data.val() && $spinner_id === root.child('authentication/users/'+auth.uid+'/spinner_id').val()",
           ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 45"
+        },
+
+        "phone": {
+          // This rule will allow a user to save() their Business model in Ember, without actually permitting changes to address
+          ".write": "data.exists() && newData.val() === data.val() && $spinner_id === root.child('authentication/users/'+auth.uid+'/spinner_id').val()",
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
         },
 
         "spinnerShifts": {

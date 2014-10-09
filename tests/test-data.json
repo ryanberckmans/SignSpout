@@ -31,6 +31,7 @@
     "cricket-wireless" : {
       "address" : "8221 Southside Blvd #13, Jacksonville, FL 32256",
       "name" : "Cricket Wireless",
+      "phone" : "(904) 647-5411",
       "spinnerShifts" : {
         "abc0" : true,
         "abc1" : true,
@@ -42,6 +43,7 @@
     "larry's-giant-subs" : {
       "address" : "4479 Deerwood Lake Pkwy #1, Jacksonville, FL 32216",
       "name" : "Larry's Giant Subs",
+      "phone" : "(904) 764-9999",
       "spinnerShifts" : {
         "abc2" : true,
         "abc3" : true
@@ -52,6 +54,7 @@
     "ryan-berckmans" : {
       "lastName" : "Berckmans",
       "firstName" : "Ryan",
+      "phone" : "(904) 000-0000",
       "spinnerShifts" : {
         "abc0" : true
       }
@@ -59,6 +62,7 @@
     "toby" : {
       "lastName" : "Jones Berckmans",
       "firstName" : "Toby",
+      "phone" : "(904) 000-0000",
       "spinnerShifts" : {
         "abc1" : true,
         "abc2" : true
