@@ -21,6 +21,10 @@ a.title-right {
   color: #0000FF;
 }
 
+.title-image {
+  margin-right: 5px;
+}
+
 .restroom-notice {
   font-style: italic;
 }
