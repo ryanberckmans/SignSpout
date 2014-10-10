@@ -1,6 +1,6 @@
 
 <div class="content-padded">
-  <h3>SignSpout</h3>
+  <h3><img class="title-image" src="/assets/images/favicon.50x50.png" height="16" width="16"/>SignSpout</h3>
   <p>Hire Sign Spinners in the Jacksonville Southside</p>
   <form>
     <p class="error-message">
@@ -13,7 +13,7 @@
     <label for="email">Email</label>
     {{view Ember.TextField valueBinding="loginEmail" placeholder="Login or Email"}}
     <label for="password">Password</label>
-    {{view Ember.TextField valueBinding="loginPassword" placeholder="Password"}}
+    {{view Ember.TextField valueBinding="loginPassword" placeholder="Password" type='password'}}
     <button class="btn btn-block btn-primary" {{bind-attr disabled=isLoginButtonDisabled}} {{action 'login' controller}}>Login</button>
   </form>
 </div>
