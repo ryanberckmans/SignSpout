@@ -2,7 +2,7 @@
 
 module.exports = function(environment) {
   var ENV = {
-    firebase_instance: 'dazzling-fire-1404',
+    firebase_instance: 'signspout',
     modulePrefix: 'sign-spinners',
     environment: environment,
     baseURL: '/',
