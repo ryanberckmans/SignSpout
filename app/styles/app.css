@@ -7,6 +7,20 @@ html, body {
   overflow: auto;
 }
 
+.title-left {
+  text-align: left;
+  padding-left: 20px;
+}
+
+.title-right {
+  text-align: right;
+  padding-right: 20px;
+}
+
+a.title-right {
+  color: #0000FF;
+}
+
 .restroom-notice {
   font-style: italic;
 }
