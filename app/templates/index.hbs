@@ -16,9 +16,4 @@
     {{view Ember.TextField valueBinding="loginPassword" placeholder="Password"}}
     <button class="btn btn-block btn-primary" {{bind-attr disabled=isLoginButtonDisabled}} {{action 'login' controller}}>Login</button>
   </form>
-  <h3>Debug</h3>
-  <button {{action 'loginRyan'}}>Login Ryan</button>
-  <button {{action 'loginToby'}}>Login Toby</button><br>
-  <button {{action 'loginLarry'}}>Login Larrys</button>
-  <button {{action 'loginCricket'}}>Login Cricket</button>
 </div>
