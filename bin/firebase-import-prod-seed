@@ -1,0 +1,1 @@
+firebase-import -f https://signspout.firebaseio.com/ -j prod-seed.json

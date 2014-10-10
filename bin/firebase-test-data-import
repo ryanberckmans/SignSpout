@@ -1,1 +1,0 @@
-firebase-import -f https://dazzling-fire-1404.firebaseio.com/ -j tests/test-data.json

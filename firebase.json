@@ -1,5 +1,5 @@
 {
-  "firebase": "dazzling-fire-1404",
+  "firebase": "signspout",
   "public": "dist",
   "ignore": [
     "firebase.json",
