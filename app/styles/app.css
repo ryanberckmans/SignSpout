@@ -37,6 +37,55 @@ a.title-right {
   font-weight: bold;
 }
 
+/* 5-star rating from https://fortawesome.github.io/Font-Awesome/examples/
+   Heavily modified to work with Ember actions. Original version uses css content property
+   to render the star glyphs, which isn't compatible with ember actions.
+   I render fa-star-o glyph inline using its unicode number. The highlighted stars are rendered atop
+   the static stars using z-index. Click events are filtered through using point-events: none.
+*/
+.rating {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+  font-size: 24px;
+}
+.rating span.star {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+}
+
+.rating span.star:hover {
+  cursor: pointer;
+}
+
+span.star > i {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  color: #777777;
+}
+
+/*) disabled this block and added <i> elements in the template
+.rating span.star:before {
+  content: "\f006";
+  padding-right: 5px;
+  color: #777777;
+}*/
+
+.rating span.star:hover:before,
+.rating span.star:hover ~ span.star:before {
+  content: "\f005";
+  color: #e3cf7a;
+
+  /* I added point-events, z-index and position:absolute to render the highlighted stars
+     atop the static stars. */
+  pointer-events: none;
+  z-index: 10;
+  position: absolute;
+}
+
 /* prevents the worst display issues on desktop */
 @media (min-width: 380px) {
   form, .content-padded {

@@ -1,5 +1,4 @@
 
-{{! business-postlive-shift exists because I didn't have an easier way to avoid displaying the 5-star rating widget on other nonlive shifts }}
 {{! expects to be wrapped in a <ul class="table-view"> }}
 <li class="table-view-cell">
   {{format-day-of-month startDateAndTime}}
@@ -8,11 +7,14 @@
   {{#if spinnerRating}}
     <p>Rated {{spinner.firstName}}: {{spinnerRating}} of 5 stars</p>
   {{else}}
-    How did it go?<br> 
-    {{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=this spinnerRating=1 icon='fa fa-star'}}
-    {{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=this spinnerRating=2 icon='fa fa-star'}}
-    {{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=this spinnerRating=3 icon='fa fa-star'}}
-    {{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=this spinnerRating=4 icon='fa fa-star'}}
-    {{eui-button action='setShiftSpinnerRating' size='small' spinnerShift=this spinnerRating=5 icon='fa fa-star'}}
+    How did it go?<br>
+    <span class="rating">
+      {{! These rating numbers appear 'backward' - ie 5-star is first and 1-star last - because they are reversed in css }}
+      <span class="star"><i {{action 'setShiftSpinnerRating' this 5}}>&#xf006;</i></span>
+      <span class="star"><i {{action 'setShiftSpinnerRating' this 4}}>&#xf006;</i></span>
+      <span class="star"><i {{action 'setShiftSpinnerRating' this 3}}>&#xf006;</i></span>
+      <span class="star"><i {{action 'setShiftSpinnerRating' this 2}}>&#xf006;</i></span>
+      <span class="star"><i {{action 'setShiftSpinnerRating' this 1}}>&#xf006;</i></span>
+    </span>
   {{/if}}
-</li>  
+</li>
