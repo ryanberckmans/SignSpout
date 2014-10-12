@@ -26,23 +26,7 @@ var fontawesomeFonts = PickFiles('bower_components/fontawesome/fonts',{
   files: ['*'],
   destDir: '/fonts'
 });
-
-app.import('bower_components/velocity/velocity.js');
-
-app.import('bower_components/twix/bin/twix.js');
-
-// TODO I'm unsure why this http dependency is downloaded as index.js:
-//  "ember-list-view": "http://builds.emberjs.com/list-view/list-view-latest.js",
-app.import('bower_components/ember-list-view/index.js');
-  
+ 
 app.import('bower_components/moment/moment.js');
-
-app.import('bower_components/emberui/dist/named-amd/emberui.js', {
-  exports: {
-    'emberui': ['default']
-  }
-});
-app.import('bower_components/emberui/dist/emberui.css');
-app.import('bower_components/emberui/dist/default-theme.css');
 
 module.exports = MergeTrees([app.toTree(), fontawesomeFonts]);
