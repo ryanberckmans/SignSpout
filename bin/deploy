@@ -1,0 +1,3 @@
+#!/bin/sh
+# Run from project root
+ember build --environment=production && firebase deploy
