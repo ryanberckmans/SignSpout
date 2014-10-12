@@ -2,11 +2,6 @@ html, body {
   margin: 20px;
 }
 
-/* emberui was setting overflow: scroll, which caused scroll bars to permanently appear. TODO: probably want to remove this when emberui/etc. updates and I start doing more css work */
-.ember-application {
-  overflow: auto;
-}
-
 .title-left {
   text-align: left;
   padding-left: 20px;
