@@ -7,8 +7,8 @@ BusinessRoute = Ember.Route.extend
         Ember.Logger.error "business index: cancel failed. This error isn't rethrown and is trapped here. Reason: " + reason
       null
 
-    setShiftSpinnerRating: (context) ->
-      context.spinnerShift.setSpinnerRating(context.spinnerRating).catch (reason) ->
+    setShiftSpinnerRating: (spinnerShift, spinnerRating) ->
+      spinnerShift.setSpinnerRating(spinnerRating).catch (reason) ->
         Ember.Logger.error "busines index: setSpinnerRating failed. This error isn't rethrown and is trapped here. Reason: " + reason
       null
 

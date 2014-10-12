@@ -14,11 +14,7 @@
     "ember-qunit-notifications": "0.0.4",
     "qunit": "~1.15.0",
     "emberfire": "1.2.5",
-    "emberui": "^0.3.6",
-    "ember-list-view": "http://builds.emberjs.com/list-view/list-view-latest.js",
-    "twix": "~0.4.0",
     "moment": "~2.6.0",
-    "velocity": "~1.0.0",
     "fontawesome": "~4.1.0",
     "firebase-simple-login": "~1.6.4"
   }
