@@ -32,6 +32,12 @@ a.title-right {
   font-weight: bold;
 }
 
+div.loading {
+  margin: 0 auto;
+  margin-top: 40px;
+  width: 100px;
+}
+
 /* btn-large copied from bootstrap's btn-lg at https://github.com/twbs/bootstrap/blob/master/dist/css/bootstrap.css */
 .btn-large {
   padding: 10px 16px;

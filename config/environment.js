@@ -22,7 +22,7 @@ module.exports = function(environment) {
     contentSecurityPolicy: {
       'connect-src': "'self' https://auth.firebase.com wss://*.firebaseio.com",
       'script-src': "'self' https://*.firebaseio.com",
-      'frame-src': "https://*.firebaseio.com",
+      // 'frame-src': "https://*.firebaseio.com",
       // 'unsafe-inline' is required for eui elements to avoid CSP violations. TODO remove this when I get rid of emberui
       'style-src': "'self' 'unsafe-inline'"
     }
