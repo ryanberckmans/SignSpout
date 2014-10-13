@@ -68,4 +68,9 @@
       {{/unless}}
     {{/unless}}
   {{/unless}}
+
+  {{#if isDemoButton}}
+    <br><br>
+    {{#link-to 'demo'}}<button class="btn btn-primary">Demo</button>{{/link-to}}
+  {{/if}}
 </div>
