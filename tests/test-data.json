@@ -24,6 +24,10 @@
       "simplelogin:4": {
         "business_id": "cricket-wireless",
         "email": "cricketwireless@gmail.com"
+      },
+      "simplelogin:7": {
+        "business_id": "demo",
+        "email": "demo@demo.com"
       }
     }
   },
@@ -48,6 +52,11 @@
         "abc2" : true,
         "abc3" : true
       }
+    },
+    "demo" : {
+      "address" : "4375 Southside Blvd, Jacksonville, FL 32216",
+      "name" : "Demo Inc.",
+      "phone" : "(904) 000-0000"
     }
   },
   "spinners" : {
