@@ -1,7 +1,8 @@
 {
   "authentication" : {
     "owned_businesses": {
-      "cricket-wireless": "simplelogin:2"
+      "cricket-wireless": "simplelogin:2",
+      "demo": "simplelogin:3"
     },
     "owned_spinners": {
       "ryan-berckmans": "simplelogin:1"
@@ -14,6 +15,10 @@
       "simplelogin:2": {
         "business_id": "cricket-wireless",
         "email": "monique@cricketwireless.com"
+      },
+      "simplelogin:3": {
+        "business_id": "demo",
+        "email": "demo@demo.com"
       }
     }
   },
@@ -22,6 +27,11 @@
       "address" : "8221 Southside Blvd #13, Jacksonville, FL 32256",
       "name" : "Cricket Wireless",
       "phone" : "(904) 647-5411"
+    },
+    "demo" : {
+      "address" : "4375 Southside Blvd, Jacksonville, FL 32216",
+      "name" : "Demo Inc.",
+      "phone" : "(904) 000-0000"
     }
   },
   "spinners" : {
