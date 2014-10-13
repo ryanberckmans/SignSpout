@@ -5,6 +5,8 @@
 # Uncomment next line to use fixtures
 #adapter = DS.FixtureAdapter.extend()
 
+window.Firebase.enableLogging true, true if config.environment == 'development'
+
 # Uncomment next lines to use Firebase
 adapter = DS.FirebaseAdapter.extend
   firebase: new window.Firebase 'https://' + config.firebase_instance + '.firebaseio.com'
