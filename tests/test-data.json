@@ -2,7 +2,8 @@
   "authentication" : {
     "owned_businesses": {
       "cricket-wireless": "simplelogin:4",
-      "larry's-giant-subs": "simplelogin:3"
+      "larry's-giant-subs": "simplelogin:3",
+      "demo": "simplelogin:7"
     },
     "owned_spinners": {
       "ryan-berckmans": "simplelogin:1",
