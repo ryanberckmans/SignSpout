@@ -6,7 +6,7 @@ Sign Spinners are popular in the American South due to high rates of vehicle own
 
 Businesses may directly schedule sign spinners with as little as two hours notice, or up to one week in advance. Businesses assign a 5-star rating to a spinner after each shift. Shifts automatically manage breaks and lunches; shifts notify a business what break and/or lunch the spinner is to receive; and, shifts notify a business when the spinner is actually on break or lunch.
 
-This product was developed with early customers and is ready to go. Payments / billing haven't been integrated yet - needless to say this is a top priority - SignSpout is a convenience-oriented service and there's nothing convenient about manual payments.
+This product was developed with early customers and is ready to go. Firebase, the real-time backend used by SignSpout, means that most updates are instant for all users. Payments / billing haven't been integrated yet - needless to say this is a top priority - SignSpout is a convenience-oriented service and there's nothing convenient about manual payments.
 
 It's Uber for Sign Spinners.
 
