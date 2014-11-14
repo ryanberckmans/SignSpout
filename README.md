@@ -1,15 +1,24 @@
-# Sign-spinners
+# SignSpout
 
-This README outlines the details of collaborating on this Ember application.
+SignSpout is an e-commerce platform for businesses to hire sign spinners on-demand. Sign Spinners are humans holding advertisement signs at the side of the road, called Humans Directionals by the industry. 
 
-A short introduction of this app could easily go here.
+Sign Spinners are popular in the American South due to high rates of vehicle ownership and arterial traffic patterns. When many potential customers drive themselves by your business each day, sign spinners are a cheap and effective form of advertising. This is further supported by the relatively warm climate in the South, allowing spinners to work outside year-round. Businesses with a high 'impulse factor', such an ice cream shop or cellphone store, are more likely to receive significant ROI from sign spinning.
 
-## Prerequisites
+Businesses may directly schedule sign spinners with as little as two hours notice, or up to one week in advance. Businesses assign a 5-star rating to a spinner after each shift. Shifts automatically manage breaks and lunches; shifts notify a business what break and/or lunch the spinner is to receive; and, shifts notify a business when the spinner is actually on break or lunch.
 
-You will need the following things properly installed on your computer.
+This product was developed with early customers and is ready to go. Payments / billing haven't been integrated yet - needless to say this is a top priority - SignSpout is a convenience-oriented service and there's nothing convenient about manual payments.
 
-* [Git](http://git-scm.com/)
-* [Node.js](http://nodejs.org/) (with NPM) and [Bower](http://bower.io/)
+It's Uber for Sign Spinners.
+
+# Demo
+
+[SignSpout live](http://www.signspout.com/). Try username "demo@demo.com", password "demo". Click the Demo / Launch Demo buttons. The demo doesn't save any data, which causes certain features to malfunction, such as the 5-star rating system. Try booking a real shift with "Book Spinner".
+
+SignSpout is built for mobile and looks a bit wonky on desktop.
+
+# Built With
+
+SignSpout is built with [ember-cli](http://www.ember-cli.com/) and [Firebase](https://www.firebase.com/).
 
 ## Installation
 
@@ -22,30 +31,3 @@ You will need the following things properly installed on your computer.
 
 * `ember server`
 * Visit your app at http://localhost:4200.
-
-### Code Generators
-
-Make use of the many generators for code, try `ember help generate` for more details
-
-### Running Tests
-
-* `ember test`
-* `ember test --server`
-
-### Building
-
-* `ember build` (development)
-* `ember build --environment production` (production)
-
-### Deploying
-
-Specify what it takes to deploy your app.
-
-## Further Reading / Useful Links
-
-* ember: http://emberjs.com/
-* ember-cli: http://www.ember-cli.com/
-* Development Browser Extensions
-  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
-

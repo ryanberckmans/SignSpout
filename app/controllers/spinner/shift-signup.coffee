@@ -9,31 +9,29 @@ controller = Ember.ArrayController.extend
       @set 'areTakeShiftButtonsDisabled', true
       spinner = @get 'controllers.spinner.model'
 
-      onAddSpinnerShiftSuccess = ->
-        Ember.Logger.info "shift-signup: spinner " + spinner.id + " added spinnerShift " + spinnerShift.id
+      done = ->
         _this.set 'areTakeShiftButtonsDisabled', false
 
-      onAddSpinnerShiftFail = (reason) ->
-        Ember.Logger.error "shift-signup: spinner " + spinner.id + " failed to add spinnerShift " + spinnerShift.id + ". The spinner was already set on the spinnerShift, and we're now inconsistent. This error cannot be recovered from right now, since SpinnerShift has no api to delete a matched spinner and revert to unmatched. What I really need here is a transaction() on the Spinner and SpinnerShift. Emberfire doesn't support transactions as of 2014/10. This error isn't rethrown and is trapped here. Reason: " + reason
-        _this.set 'areTakeShiftButtonsDisabled', false
+      onSpinnerSaveSuccess = ->
+        Ember.Logger.info "shift-signup: spinner " + spinner.id + " added spinnerShift " + spinnerShift.id
+        done()
+
+      onSpinnerSaveFail = (reason) ->
+        Ember.Logger.error "shift-signup: spinner " + spinner.id + " failed to add spinnerShift " + spinnerShift.id + ". The spinner was already set on the spinnerShift, and we're now inconsistent. This error cannot be recovered from right now, since SpinnerShift has no api to delete a matched spinner and revert to unmatched. This error isn't rethrown and is trapped here. Reason: " + reason
+        spinner.rollback()
+        done()
 
       onSetSpinnerSuccess = ->
-        Ember.Logger.info "shift-signup: spinnerShift " + spinnerShift.id + " had spinner set to " + spinner.id
-        # spinner.addSpinnerShift must occur AFTER spinnerShift.setSpinner
-        spinner.addSpinnerShift(spinnerShift).then onAddSpinnerShiftSuccess, onAddSpinnerShiftFail
+        Ember.Logger.info "shift-signup: spinnerShift " + spinnerShift.id + " had spinner set to " + spinner.id + ". Saving spinner.."
+        spinner.save().then onSpinnerSaveSuccess, onSpinnerSaveFail
 
       onSetSpinnerFail = (reason) ->
-        Ember.Logger.error "shift-signup: spinnerShift " + spinnerShift.id + " failed to set spinner " + spinner.id + ". This error isn't rethrown and is trapped here. Reason: " + reason
-        _this.set 'areTakeShiftButtonsDisabled', false
-
-      # WARNING WARNING
-      # spinnerShift.setSpinner must occur BEFORE spinner.addSpinnerShift, or else setSpinner will fail silently and not update the SpinnerShift model
-      # Ie, the belongsTo side must be set before the hasMany side.
+        spinnerShift.rollback()
+        spinner.rollback()
+        Ember.Logger.error "shift-signup: spinnerShift " + spinnerShift.id + " failed to set spinner " + spinner.id + ". Spinner and spinnerShift have been rolled back. This error isn't rethrown and is trapped here. Reason: " + reason
+        done()
+      
       spinnerShift.setSpinner(spinner).then onSetSpinnerSuccess, onSetSpinnerFail
-
-      # TODO TODO TODO
-      # TODO TODO TODO - when anything fails, need transition to some kind of error page. Or set an error message.
-      # TODO TODO TODO
 
       null
 

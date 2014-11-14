@@ -1,9 +1,6 @@
 `import Ember from 'ember'`
 
-route = Ember.Route.extend  
-  model: ->
-    null # No model is needed. The new SpinnerShift is created when "Book Spinner" is clicked, see controllers/book-spinner action createSpinnerShift
-
+route = Ember.Route.extend
   setupController: (controller, model) ->
     @_super(controller, model)
     controller.set 'selectedDateAsMoment', controller.get('bookingDatesAsMoments')[0]
