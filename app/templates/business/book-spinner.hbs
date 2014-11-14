@@ -17,5 +17,10 @@
                       value=selectedEndTimeOfDayAsMoment}}
   <br>
   <button class="fa fa-check btn-large btn btn-primary" {{bind-attr disabled=bookSpinnerButtonIsDisabled}} {{action 'createSpinnerShift'}}>Book Spinner</button>
+  
+  {{#if errorCreatingShift}}
+    <p class="error-message"><br>{{errorCreatingShift}}</p>
+  {{/if}}
+
   <p><br>Note: Shifts with less than {{shiftCanMatchDeadlineMinutesDisplay}}' notice will never find a spinner.</p>
 </div>

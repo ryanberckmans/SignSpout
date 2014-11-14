@@ -2,8 +2,7 @@
 `import { SHIFT_CAN_MATCH_DEADLINE_MINUTES } from '../../mixins/spinner-shift-sorter'`
 
 controller = Ember.ObjectController.extend
-  needs: 'business'
-
+  errorCreatingShift: null
   shiftCanMatchDeadlineMinutesDisplay: (SHIFT_CAN_MATCH_DEADLINE_MINUTES / 60) + ' hours'
 
   actions:
@@ -12,44 +11,46 @@ controller = Ember.ObjectController.extend
 
       @set 'bookSpinnerButtonIsDisabled', true
 
-      business = @get 'controllers.business.model'
+      business = @get 'model' 
 
       newSpinnerShift = @store.createRecord 'spinner-shift', { business: business, startDateAndTime: @get('selectedStartDateAndTimeAsMoment').toDate(), endDateAndTime: @get('selectedEndDateAndTimeAsMoment').toDate() }
 
-      onAssociationSuccess = ->
-        Ember.Logger.info 'book-spinner: associated new spinnerShift ' + newSpinnerShift.id + ' with business ' + business.id
+      done = ->
+        _this.set 'bookSpinnerButtonIsDisabled', false
         _this.transitionToRoute 'business'
 
-      onAssociationFail = (reason) ->
+      error = ->
+        _this.set 'errorCreatingShift', "Sorry, we couldn't create your shift. Please refresh the page and try again."
+
+      onBusinessSaveSuccess = ->
+        Ember.Logger.info 'book-spinner: associated new spinnerShift ' + newSpinnerShift.id + ' with business ' + business.id
+        done()
+
+      onBusinessSaveFail = (reason) ->
         # When failing to associate a new SpinnerShift with its Business, we must delete the new SpinnerShift avoid inconsistent state
         Ember.Logger.warn 'book-spinner: failed to associate new spinnerShift ' + newSpinnerShift.id + ' with business ' + business.id + ". deleting this spinnerShift. This error isn't rethrown and is trapped here. Reason: " + reason
         onDestroySuccess = ->
-          Ember.Logger.warn 'book-spinner: destroyed unassociated spinnerShift ' + newSpinnerShift.id + '. Transitioning to business route, although no new SpinnerShift was created.'
-          _this.transitionToRoute 'business'
+          Ember.Logger.warn 'book-spinner: destroyed unassociated spinnerShift ' + newSpinnerShift.id
+          error()
         onDestroyFail = (failedToDestroyReason) ->
-          Ember.Logger.error 'book-spinner: failed destroy unassociated spinnerShift ' + newSpinnerShift.id + '. This error is intentionally rethrown, which will break the UI right now, because this should not happen.'
-          throw failedToDestroyReason
+          Ember.Logger.error 'book-spinner: failed destroy unassociated spinnerShift ' + newSpinnerShift.id + '. WARNING - There is now a DANGLING SpinnerShift in the data store!'
+          error()
+        business.rollback() # rollback the business so the local state is sync'd with the failure to save
         newSpinnerShift.destroyRecord().then onDestroySuccess, onDestroyFail
       
       onSpinnerShiftSaveSuccess = ->
-        Ember.Logger.info 'book-spinner: created new spinnerShift' + newSpinnerShift.id + '. attempting to associate it with business ' + business.id
-
-        # Warning, when using belongsTo:hasMany, the belongsTo side must be set BEFORE the hasMany side.
-        # Ie, SpinnerShift.belongsTo Business must be set BEFORE Business.hasMany SpinnerShift.
-        business.addSpinnerShift(newSpinnerShift).then onAssociationSuccess, onAssociationFail
+        Ember.Logger.info 'book-spinner: created new spinnerShift ' + newSpinnerShift.id + '. Saving business..'
+        business.save().then onBusinessSaveSuccess, onBusinessSaveFail
 
       onSpinnerShiftSaveFail = (reason) ->
         Ember.Logger.warn 'book-spinner: failed to create new spinner shift, most likely this user ' + _this.get('auth.uid') + ' isn\'t the owner of business ' + business.id + ". This error isn't rethrown and is trapped here. Reason: " + reason
         newSpinnerShift.rollback() # Since the newSpinnerShift failed to save, it's now transient and inconsistent, and should be deleted from the store. rollback() on a new record causes deletion from the store.
-        Ember.Logger.debug 'book-spinner: newSpinnerShift, which failed to save, has been deleted from the local store'
-        _this.set 'bookSpinnerButtonIsDisabled', false
-
+        business.rollback() # newSpinnerShift was already added to the business (which hasn't been save()) and the business must be rollback().
+        Ember.Logger.debug 'book-spinner: newSpinnerShift, which failed to save, has been deleted from the local store. Business ' + business.get('id') + ' has been rolled back.'
+        error()
+      
       newSpinnerShift.save().then onSpinnerShiftSaveSuccess, onSpinnerShiftSaveFail
 
-      # TODO TODO TODO
-      # TODO TODO TODO - when anything fails, need transition to some kind of error page. Or set an error message. Can't just transition back to 'business' silently
-      # TODO TODO TODO
-      
       null
 
   ##############################

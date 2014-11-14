@@ -2,8 +2,6 @@
 `import { SHIFT_CAN_MATCH_DEADLINE_MINUTES } from '../mixins/spinner-shift-sorter'`
 
 Spinner = DS.Model.extend
-  # Warning, when using belongsTo:hasMany, the belongsTo side must be set BEFORE the hasMany side.
-  # Ie, SpinnerShift.belongsTo Spinner must be set BEFORE Spinner.hasMany SpinnerShift.
   spinnerShifts: DS.hasMany 'spinner-shift', { async: true }
   firstName: DS.attr 'string'
   lastName: DS.attr 'string'
@@ -26,16 +24,5 @@ Spinner = DS.Model.extend
         moment().isBefore(moment(spinnerShift.get('startDateAndTime')).subtract(SHIFT_CAN_MATCH_DEADLINE_MINUTES, 'minutes'))
 
       notYetWorkingThatDay() && shiftAvailable()
-
-  # Add a SpinnerShift to this Spinner. Mutate and save only this Spinner; the SpinnerShift is updated elsewhere.
-  # @return {Promise} resolves when the passed spinnerShift is added to this Spinner
-  addSpinnerShift: (spinnerShift) ->
-    _spinner = this
-    @get('spinnerShifts').then (spinnerShifts) ->
-        spinnerShifts.addObject spinnerShift
-        _spinner.save().catch (reason) ->
-          Ember.Logger.error "Spinner " + _spinner.get('id') + " save() failed on addSpinnerShift with spinnerShift " + spinnerShift.get('id') + " . Rolling back this Spinner. Reason " + reason
-          _spinner.rollback()
-          throw reason
 
 `export default Spinner`
